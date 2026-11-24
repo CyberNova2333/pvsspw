@@ -1,0 +1,92 @@
+{
+  "time": "2026-11-22T10:54:13.617Z",
+  "engine": "vita3k",
+  "revision": "4c8ead371ef4e6a1f2cef2504ef12a441bcb4ee2",
+  "titleId": "PCSG00214",
+  "sampleSha256": "e99a19869e9c83a5fce6862286a3541a997ec6e5fecd336aa7ecc5d8b1d4fd88",
+  "deviceClass": "desktop",
+  "environment": {
+    "os": "linux",
+    "arch": "x64",
+    "launchArgs": [
+      "--enable-unsafe-webgpu",
+      "--ignore-gpu-blocklist",
+      "--use-angle=gl",
+      "--enable-features=Vulkan"
+    ],
+    "headed": false,
+    "channel": "msedge"
+  },
+  "phases": [
+    {
+      "name": "open",
+      "at": "2026-11-22T10:54:13.967Z"
+    },
+    {
+      "name": "import-firmware",
+      "at": "2026-11-22T10:54:14.445Z"
+    },
+    {
+      "name": "import-game",
+      "at": "2026-11-22T10:54:51.612Z"
+    },
+    {
+      "name": "play",
+      "at": "2026-11-22T10:55:06.966Z"
+    }
+  ],
+  "visual": "unverified",
+  "sustainedFps": null,
+  "saveReload": "not-tested",
+  "status": "frames-observed-scene-unverified",
+  "bootSeconds": 90,
+  "vulkanDriver": "intel_icd.json",
+  "browser": "157.0.4341.57",
+  "capabilities": {
+    "ua": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36 Edg/157.0.0.0",
+    "gpu": {
+      "vendor": "intel",
+      "architecture": "xe-lpg",
+      "isFallbackAdapter": false
+    },
+    "jspi": true,
+    "isolated": true,
+    "opfs": true,
+    "wasmMemory64": true
+  },
+  "initialOpfsEntries": [],
+  "visibleText": "劇場版 魔法少女まどか☆マギカ The Battle Pentagram\nPCSG00214\n0 FPS\nPVSSPW 对测",
+  "probe": {
+    "engine": "vita3k",
+    "revision": "4c8ead371ef4e6a1f2cef2504ef12a441bcb4ee2",
+    "sampleSha256": "e99a19869e9c83a5fce6862286a3541a997ec6e5fecd336aa7ecc5d8b1d4fd88",
+    "titleId": "PCSG00214",
+    "documentId": "1ecf5a7b-cf66-43fb-baf9-182eb0728b2d",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36 Edg/157.0.0.0",
+    "isolated": true,
+    "started": 1795344907021.82,
+    "firstFrameMs": 43733,
+    "events": 1,
+    "pictureConfirmed": false,
+    "pictureConfirmedMs": null,
+    "fpsWindow": null,
+    "save": null,
+    "fault": null,
+    "coreNotes": [
+      "[2026-11-22 18:55:27.923] [warning] [regmgr.cpp:401] Failed to load system.dreg, attempting to create it",
+      "[vita3k-web] missing function _sceUlobjMgrStartSupportingUserlevelObject (NID=08769991) called on thread 50: it returns 0, as on desktop Vita3K",
+      "[vita3k-web] missing function _sceUlobjMgrRegisterLibultProtocolRevision (NID=50f2f2aa) called on thread 52: it returns 0, as on desktop Vita3K",
+      "[vita3k-web]   unserviced NID=013e7f74 sceSaveDataDialogAbort",
+      "[vita3k-web]   unserviced NID=2f2c6046 sceClibAbort",
+      "[vita3k-web] AOT build ok in 12.2s: functions=32524 members=689941 translated=687892 untranslatable=19 entries=682599 split_roots=2649 emit_rejects=0 roots=33107 bytes=213714836",
+      "[vita3k-web] missing function sceScreenShotDisable (NID=50ae9ff9) called on thread 57: it returns 0, as on desktop Vita3K",
+      "[vita3k-web] missing function sceScreenShotSetOverlayImage (NID=7061665b) called on thread 57: it returns 0, as on desktop Vita3K",
+      "[vita3k-web] missing function sceKernelWaitSignal (NID=adca94e5) called on thread 70: it returns 0, as on desktop Vita3K",
+      "[2026-11-22 18:55:42.067] [info] [SceLibKernel.cpp:406] Semaphore.h:230:[ult] Assertion Failed:\tdret==NULL:The actual value is -858993460(0xcccccccc), but expected value is 0(0)",
+      "WasmJitCPU rejected Thumb PC=8051e1c8 opcode(bytes LE)=00 be fe e7",
+      "WasmJitCPU PC=8051e1c8: unsupported Dynarmic IR or terminal (no fallback)"
+    ]
+  },
+  "errors": [],
+  "httpErrors": []
+}

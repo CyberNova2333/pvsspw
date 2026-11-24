@@ -1,0 +1,392 @@
+{
+  "titleId": "PCSG00214",
+  "version": "01.00",
+  "sampleSha256": "e99a19869e9c83a5fce6862286a3541a997ec6e5fecd336aa7ecc5d8b1d4fd88",
+  "deviceClass": "desktop",
+  "channel": "msedge",
+  "headless": true,
+  "browser": "Microsoft Edge 157.0.4341.57",
+  "adapter": "Linux 桌面 Intel Xe-LPG 硬件 WebGPU",
+  "scene": "PCSG00214-first-battle-idle-v1",
+  "viewport": [
+    1440,
+    900
+  ],
+  "nativeStage": [
+    960,
+    544
+  ],
+  "outputResolution": [
+    1440,
+    816
+  ],
+  "guestWorkers": 3,
+  "revision": "a6bd7788c9205ab9208f1970bc2de8e49e3ccd2e+8fa6cd62f5e0e79ab07cdb95fad0761b91f450ef87ccef1e9b0486074bd322c8+d1aab43f4be0a16a7c2c6ebc04ceac22817c3f7f1b507613867dd07bbb604eb8+00f61b90b2b15e9ee43ca9103df167c6a39cd140be2a4070d1c3b6db91b919ee+43d04335f9b36f6eae7854cfc551a9cd9a7312a1c72671ffd6050249c84781f8",
+  "fsrPatchSha256": "43d04335f9b36f6eae7854cfc551a9cd9a7312a1c72671ffd6050249c84781f8",
+  "method": "Same process and idle spawn scene on PCSG00214 floor 1. Capture lossless native (960x544), FSR OFF (present-scale, 1440x816) and FSR ON (fsr1-easu + fsr1-rcas, 1440x816) from the exact same stage frame in one WebGPU submit with opaque alpha matching the swapchain. Then measure sequential 600 s GPU RGB8 pixel-change FPS windows at 1440x816 for FSR OFF and FSR ON via the real UI toggle.",
+  "probeSha256": {
+    "bench/worker-probe.js": "0449ab080fa055ccd2ff0f7073f814e6185a49b3860734fdad5899b99906df32",
+    "bench/picture-surface.js": "f5714ad85c31e9d6391c3ce1ac3d2972ee51862a1b0768e48afb92447242feed",
+    "bench/picture-rate.js": "c94f121a1aa917dce7a789b7269adf7c645c4b2162b9345097860ddeaabc3920",
+    "bench/fsr-passes.js": "e52dde9e07970592ad315304225c02d9db154fe3ffbbe6b2c3d2cc5cd643f3d5",
+    "bench/fsr-comparison.mjs": "6e596ae76b4f4303856b4588422393e1045dc80f20c4c0fa4aa1a7882f8c1994"
+  },
+  "sameFrameEvidence": {
+    "nativeSize": [
+      960,
+      544
+    ],
+    "nativeSha256": "f6392b6c3189d7f6d1c03c4652ab9da514cae1403040da0bee4818466c9c6145",
+    "offImage": "frames/pentagram-fsr/fsr-off.png",
+    "offSha256": "cd1ff978c52dcd795bf765fe97dfa6193e5547dadcb1cc3a681e15875f256628",
+    "onImage": "frames/pentagram-fsr/fsr-on.png",
+    "onSha256": "aab6a7f614d32b96a266fa273a4124b832689a122dc5718881e4c3e1ec7083d1",
+    "zoomImage": "frames/pentagram-fsr/fsr-zoom-compare.png",
+    "zoomSha256": "1becadaa5306097782f19249a66f3d07d4c8c696a67f36704c3f3957ff33ce24",
+    "rgbDiff": {
+      "mean": [
+        1.424,
+        1.49,
+        1.307
+      ],
+      "rms": [
+        3.797,
+        3.936,
+        3.633
+      ],
+      "extrema": [
+        [
+          0,
+          97
+        ],
+        [
+          0,
+          111
+        ],
+        [
+          0,
+          110
+        ]
+      ]
+    }
+  },
+  "arms": {
+    "off": {
+      "fsr1": false,
+      "smp": 1,
+      "guestWorkers": 3,
+      "worker": "http://127.0.0.1:18751/worker.js?smp=1&uiGpu=high-performance&uiMode=core",
+      "gpu": "adapter: vendor=intel arch=xe-lpg device=? desc=? featureLevel=(not reported) | wgpu name unavailable | GPU",
+      "surface": "surface: format Rgba8Unorm, rendered through Rgba8Unorm, alpha Opaque, present Fifo | offered formats [Rgba8Unorm, Bgra8Unorm, Rgba16Float], alpha modes [Opaque]",
+      "browserVersion": "157.0.4341.57",
+      "revision": "a6bd7788c9205ab9208f1970bc2de8e49e3ccd2e+8fa6cd62f5e0e79ab07cdb95fad0761b91f450ef87ccef1e9b0486074bd322c8+d1aab43f4be0a16a7c2c6ebc04ceac22817c3f7f1b507613867dd07bbb604eb8+00f61b90b2b15e9ee43ca9103df167c6a39cd140be2a4070d1c3b6db91b919ee+43d04335f9b36f6eae7854cfc551a9cd9a7312a1c72671ffd6050249c84781f8",
+      "overlaySha256": "76ee9f3bb4f821588e611e2647674a211a7ef7b57d009ad821bbc41c418e3719",
+      "sampleSha256": "e99a19869e9c83a5fce6862286a3541a997ec6e5fecd336aa7ecc5d8b1d4fd88",
+      "wasmSha256": "a50246eb375902ef80214357eb511a9850a73d34d43d0ab459fcc1803f0eb875",
+      "passes": {
+        "present-scale": 12917,
+        "fsr1-easu": 0,
+        "fsr1-rcas": 0
+      },
+      "measurement": {
+        "status": "complete",
+        "seconds": 600,
+        "startEpochMs": 1795358468967.255,
+        "width": 1440,
+        "height": 816,
+        "format": "rgba8unorm",
+        "submissions": 12872,
+        "changed": 12872,
+        "centerChanged": 12872,
+        "duplicates": 0,
+        "pictureFps": 21.453333333333333,
+        "centerFps": 21.453333333333333,
+        "submissionRate": 21.453333333333333,
+        "p50ChangeGapMs": 33.90500000119209,
+        "p95ChangeGapMs": 129.47500000149012,
+        "longestGapIncludingTailMs": 528.8850000016391,
+        "minutes": [
+          {
+            "submissions": 1800,
+            "changed": 1800,
+            "centerChanged": 1800
+          },
+          {
+            "submissions": 1320,
+            "changed": 1320,
+            "centerChanged": 1320
+          },
+          {
+            "submissions": 1239,
+            "changed": 1239,
+            "centerChanged": 1239
+          },
+          {
+            "submissions": 1250,
+            "changed": 1250,
+            "centerChanged": 1250
+          },
+          {
+            "submissions": 1252,
+            "changed": 1252,
+            "centerChanged": 1252
+          },
+          {
+            "submissions": 1214,
+            "changed": 1214,
+            "centerChanged": 1214
+          },
+          {
+            "submissions": 1196,
+            "changed": 1196,
+            "centerChanged": 1196
+          },
+          {
+            "submissions": 1222,
+            "changed": 1222,
+            "centerChanged": 1222
+          },
+          {
+            "submissions": 1192,
+            "changed": 1192,
+            "centerChanged": 1192
+          },
+          {
+            "submissions": 1187,
+            "changed": 1187,
+            "centerChanged": 1187
+          }
+        ]
+      },
+      "evidence": "frames/pentagram-fsr/fsr-off-battle.jpg",
+      "evidenceSha256": "e44f5cff7f9b705f416ad0ad27a93c8e098e9c65d6f6f64a542c35092cd27f63",
+      "screenshots": [
+        {
+          "label": "jump-proof",
+          "screenshotSecondsFromStart": -104.956,
+          "originalSha256": "9cdbd2e50907d27ce009c88d8c2d5084425c275ef7c03464699f0d046d4820bd"
+        },
+        {
+          "label": "fsr-off-start",
+          "screenshotSecondsFromStart": 0.0,
+          "originalSha256": "06d1aa6b16f8627b998e519fddf11b282f1ef7f02c667ca1033ee233e068d2ca"
+        },
+        {
+          "label": "fsr-off-minute-1",
+          "screenshotSecondsFromStart": 60.232,
+          "originalSha256": "07b60d21e148bf362ee65cfa3aadfe870affc8ea15b013326b0c96635f5a3517"
+        },
+        {
+          "label": "fsr-off-minute-2",
+          "screenshotSecondsFromStart": 120.811,
+          "originalSha256": "be99e8b1126b4d0581a9e9de9ef96376927a8342723ea56245b32caf703777ee"
+        },
+        {
+          "label": "fsr-off-minute-3",
+          "screenshotSecondsFromStart": 181.472,
+          "originalSha256": "11a0516ab30c54f437ee3149deab7a63a8f1d8f738c93f10c0c49f2ec506dde2"
+        },
+        {
+          "label": "fsr-off-minute-4",
+          "screenshotSecondsFromStart": 242.355,
+          "originalSha256": "d4e4d4221a791f437b3a472f9b7d9cba569807fa5f618cde62bb3b9e5df9b19f"
+        },
+        {
+          "label": "fsr-off-minute-5",
+          "screenshotSecondsFromStart": 300.677,
+          "originalSha256": "cbad4b35c44c5cfc220897cf07f6dbd747950783526c02b440ba4d23beb128e8"
+        },
+        {
+          "label": "fsr-off-minute-6",
+          "screenshotSecondsFromStart": 361.251,
+          "originalSha256": "29e2a6efc30bf79c761440acf5a7f88fbfb35ddf7b8f9197252087d953d91ce0"
+        },
+        {
+          "label": "fsr-off-minute-7",
+          "screenshotSecondsFromStart": 422.03,
+          "originalSha256": "436a0bebd67051c4cd3bfa7acd5247de7bf1edbb1eafa5aad30b4aeae473706c"
+        },
+        {
+          "label": "fsr-off-minute-8",
+          "screenshotSecondsFromStart": 482.798,
+          "originalSha256": "b3a9a23fb8197259979fd660b44363a093e00c43187604e27ecec10d238f5437"
+        },
+        {
+          "label": "fsr-off-minute-9",
+          "screenshotSecondsFromStart": 540.918,
+          "originalSha256": "ec189d01ad56906f86a654debac335c770e440f79d50a4d11e9c6a3b3d3b6e51"
+        },
+        {
+          "label": "fsr-off-end",
+          "screenshotSecondsFromStart": 601.779,
+          "originalSha256": "7539ba20050b2cbb1feb130ca67caf96b8de90d5f252dfa04d48d4d07de92502"
+        }
+      ],
+      "controlVerified": true,
+      "sceneReviewed": true
+    },
+    "on": {
+      "fsr1": true,
+      "smp": 1,
+      "guestWorkers": 3,
+      "worker": "http://127.0.0.1:18751/worker.js?smp=1&uiGpu=high-performance&uiMode=core",
+      "gpu": "adapter: vendor=intel arch=xe-lpg device=? desc=? featureLevel=(not reported) | wgpu name unavailable | GPU",
+      "surface": "surface: format Rgba8Unorm, rendered through Rgba8Unorm, alpha Opaque, present Fifo | offered formats [Rgba8Unorm, Bgra8Unorm, Rgba16Float], alpha modes [Opaque]",
+      "browserVersion": "157.0.4341.57",
+      "revision": "a6bd7788c9205ab9208f1970bc2de8e49e3ccd2e+8fa6cd62f5e0e79ab07cdb95fad0761b91f450ef87ccef1e9b0486074bd322c8+d1aab43f4be0a16a7c2c6ebc04ceac22817c3f7f1b507613867dd07bbb604eb8+00f61b90b2b15e9ee43ca9103df167c6a39cd140be2a4070d1c3b6db91b919ee+43d04335f9b36f6eae7854cfc551a9cd9a7312a1c72671ffd6050249c84781f8",
+      "overlaySha256": "76ee9f3bb4f821588e611e2647674a211a7ef7b57d009ad821bbc41c418e3719",
+      "sampleSha256": "e99a19869e9c83a5fce6862286a3541a997ec6e5fecd336aa7ecc5d8b1d4fd88",
+      "wasmSha256": "a50246eb375902ef80214357eb511a9850a73d34d43d0ab459fcc1803f0eb875",
+      "passes": {
+        "present-scale": 0,
+        "fsr1-easu": 11228,
+        "fsr1-rcas": 11228
+      },
+      "measurement": {
+        "status": "complete",
+        "seconds": 600,
+        "startEpochMs": 1795359079970.1948,
+        "width": 1440,
+        "height": 816,
+        "format": "rgba8unorm",
+        "submissions": 11186,
+        "changed": 11186,
+        "centerChanged": 11186,
+        "duplicates": 0,
+        "pictureFps": 18.643333333333334,
+        "centerFps": 18.643333333333334,
+        "submissionRate": 18.643333333333334,
+        "p50ChangeGapMs": 34.21499999985099,
+        "p95ChangeGapMs": 149.14000000059605,
+        "longestGapIncludingTailMs": 1657.824999999255,
+        "minutes": [
+          {
+            "submissions": 1130,
+            "changed": 1130,
+            "centerChanged": 1130
+          },
+          {
+            "submissions": 1152,
+            "changed": 1152,
+            "centerChanged": 1152
+          },
+          {
+            "submissions": 1205,
+            "changed": 1205,
+            "centerChanged": 1205
+          },
+          {
+            "submissions": 1121,
+            "changed": 1121,
+            "centerChanged": 1121
+          },
+          {
+            "submissions": 1096,
+            "changed": 1096,
+            "centerChanged": 1096
+          },
+          {
+            "submissions": 1103,
+            "changed": 1103,
+            "centerChanged": 1103
+          },
+          {
+            "submissions": 1091,
+            "changed": 1091,
+            "centerChanged": 1091
+          },
+          {
+            "submissions": 1089,
+            "changed": 1089,
+            "centerChanged": 1089
+          },
+          {
+            "submissions": 1101,
+            "changed": 1101,
+            "centerChanged": 1101
+          },
+          {
+            "submissions": 1098,
+            "changed": 1098,
+            "centerChanged": 1098
+          }
+        ]
+      },
+      "evidence": "frames/pentagram-fsr/fsr-on-battle.jpg",
+      "evidenceSha256": "64856563c70b53873250753e7fcfb7290d0dd5be26771b39adf9df07d9c8562b",
+      "screenshots": [
+        {
+          "label": "jump-proof",
+          "screenshotSecondsFromStart": -715.979,
+          "originalSha256": "9cdbd2e50907d27ce009c88d8c2d5084425c275ef7c03464699f0d046d4820bd"
+        },
+        {
+          "label": "fsr-on-start",
+          "screenshotSecondsFromStart": 0.0,
+          "originalSha256": "b1d58d8888cc392fd7e8fbd10f8d41774643f0368665789f8c83987af624deb5"
+        },
+        {
+          "label": "fsr-on-minute-1",
+          "screenshotSecondsFromStart": 61.01,
+          "originalSha256": "3d5b2e3a9fe0612cc64490378b823b0f4234ccb4150b37ee3521787dd112623c"
+        },
+        {
+          "label": "fsr-on-minute-2",
+          "screenshotSecondsFromStart": 121.901,
+          "originalSha256": "fbe9467ac6db674b9a9746735719624c1d30d17d3c68116e059770c3961eb8a4"
+        },
+        {
+          "label": "fsr-on-minute-3",
+          "screenshotSecondsFromStart": 182.68,
+          "originalSha256": "b72f81003b888b3b13712d06e070fb3548d03d5a529cc5380e104ae8f50117c0"
+        },
+        {
+          "label": "fsr-on-minute-4",
+          "screenshotSecondsFromStart": 241.122,
+          "originalSha256": "420805fdc8e038277eabb971d61b4950c3cb06b089bb03894926d8fb01da853c"
+        },
+        {
+          "label": "fsr-on-minute-5",
+          "screenshotSecondsFromStart": 301.927,
+          "originalSha256": "55248fd37bb0b6772e73697a3267db7a1c43cde91c2a6943116998ce5d1fad57"
+        },
+        {
+          "label": "fsr-on-minute-6",
+          "screenshotSecondsFromStart": 362.994,
+          "originalSha256": "1397c4225857db43d85e45a332fd6ed95c84d9fc47ae094a09aeebca0d9c76eb"
+        },
+        {
+          "label": "fsr-on-minute-7",
+          "screenshotSecondsFromStart": 421.321,
+          "originalSha256": "41ec07b2ff18882f1b0603c6a0d225aacc39691ed2d88cd290ccd11a53f0db0c"
+        },
+        {
+          "label": "fsr-on-minute-8",
+          "screenshotSecondsFromStart": 482.445,
+          "originalSha256": "ec89e1fd3347d965ebd3a9a21b1f51bc387272a6d7c5c53c445af5534411f1da"
+        },
+        {
+          "label": "fsr-on-minute-9",
+          "screenshotSecondsFromStart": 541.117,
+          "originalSha256": "182225186db8291d62f3fbbf38700b137c7d0e3b8d5d19243db915c046c2f2a5"
+        },
+        {
+          "label": "fsr-on-end",
+          "screenshotSecondsFromStart": 603.224,
+          "originalSha256": "9610e23b912e068332e3b34d4628764694b3ae135dc08ba6b4986bdd3352710c"
+        }
+      ],
+      "controlVerified": true,
+      "sceneReviewed": true
+    }
+  },
+  "priorTrial": {
+    "directory": "artifacts/fsr-battle",
+    "includedInTable": false,
+    "offPictureFps": 17.63,
+    "onPictureFps": 21.07,
+    "reason": "Recorded immediately after a 24-thread Rust build (1-min host load average 11.51 at start of OFF window, causing 12.28/13.87 FPS in minutes 1-2) and before bench/fsr-passes.js forced opaque alpha=255 on readback PNGs."
+  },
+  "androidPhysical": "untested",
+  "assessment": "在 1440×816 输出分辨率（960×544 放大 1.5 倍）、3 个游戏执行线程下，同帧无损对比显示 FSR 1（EASU 边缘定向放大 + RCAS 锐化）平滑了角色轮廓、头发与饰边的斜向像素阶梯，同时保持 2D 头像与日文技能文字边缘清晰，无明显振铃或色偏。600 秒实际画面帧率对照中，关闭组为 21.45 FPS（画面更新间隔 P95 129.5 毫秒），开启组为 18.64 FPS（P95 149.1 毫秒），总体低 2.81 FPS（-13.1%）。关闭组第 1 分钟在刚唤醒冷机状态下达到 30.00 FPS，第 2–10 分钟稳定在 19.78–22.00 FPS（均值 20.50 FPS）；紧随其后的开启组全程稳定在 18.15–20.08 FPS，与关闭组稳态相比约低 1.86 FPS（-9.1%）。两端均由 GPU 通道计数核验：关闭组仅运行 present-scale（12,917 次），开启组仅运行 fsr1-easu 与 fsr1-rcas（各 11,228 次）。此前一轮在修复不透明 Alpha 读回前、紧随编译高负载执行的试次（关 17.63 FPS / 开 21.08 FPS）未计入正式表。反向顺序（先开后关）复测与 Android 真机超分开销仍待验证。"
+}

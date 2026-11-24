@@ -1,0 +1,313 @@
+/* Layout and color tokens come from the PPSSPW stylesheet. Keep the Vita canvas inside the stage. */
+#engine {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: black;
+}
+#sidePanel .pane {
+  overflow: auto;
+  min-height: 0;
+  padding: 18px 16px 28px;
+  overscroll-behavior: contain;
+}
+#sidePanel .pane h3 {
+  font-size: 14px;
+  margin: 16px 0 8px;
+}
+#sidePanel .pane > p {
+  margin-block: 10px;
+}
+.tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0;
+}
+.pane input[type='search'],
+.pane input[type='text'] {
+  width: 100%;
+  padding: 8px;
+  color: var(--text);
+  border: 1px solid var(--border2);
+  background: var(--bg);
+}
+.pane progress {
+  width: 100%;
+}
+.entry {
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  margin: 10px 0;
+  padding: 12px;
+  background: var(--surface);
+}
+.entry img {
+  width: 44px;
+  height: 44px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+.entry-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.entry strong,
+.entry small {
+  display: block;
+  overflow-wrap: anywhere;
+}
+.entry small,
+.empty-note {
+  color: var(--muted);
+}
+.entry .tools {
+  margin: 10px 0 0;
+}
+.readings {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0 14px;
+}
+.readings dt,
+.readings dd {
+  margin: 0;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+  overflow-wrap: anywhere;
+}
+.readings dt {
+  color: var(--muted);
+}
+.readings dd {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+#messages {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 55dvh;
+  overflow: auto;
+  font: 12px/1.6 monospace;
+}
+#fileTree details {
+  padding: 3px 0 3px 10px;
+}
+#fileTree summary {
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+#fileTree .file-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 5px;
+  padding-block: 4px;
+  overflow-wrap: anywhere;
+}
+#fullExit {
+  margin-top: 8px;
+}
+.panel-navigation {
+  padding: 8px 14px;
+}
+.panel-section-caption {
+  margin: 0 0 6px;
+}
+@media (max-width: 680px), (max-height: 500px) {
+  #sidePanel .pane {
+    overflow: visible;
+  }
+  #sidePanel {
+    overflow-y: auto;
+  }
+  .tools button {
+    white-space: normal;
+  }
+}
+
+[hidden] {
+  display: none !important;
+}
+@media (max-width: 700px),
+  (pointer: coarse) and (max-width: 920px),
+  (pointer: coarse) and (max-height: 560px) {
+  .player-header {
+    grid-template-columns: minmax(0, 1fr) auto auto auto;
+  }
+  .player-header #displayGroup {
+    gap: 4px;
+  }
+  #sidePanel .pane {
+    min-width: 0;
+  }
+}
+#gamePage {
+  box-sizing: border-box;
+  margin: auto;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border2);
+  width: min(510px, calc(100% - 24px));
+  max-height: min(84dvh, 820px);
+  border-radius: 8px;
+  padding: 0;
+  box-shadow: 0 12px 44px #0005;
+}
+#gamePage[open] {
+  display: flex;
+  flex-direction: column;
+}
+#gamePage::backdrop {
+  background: #101620a8;
+}
+.page-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px 0;
+}
+.page-scope,
+.page-group p,
+.page-identity,
+.page-note {
+  color: var(--muted);
+  font-size: 13px;
+}
+#gamePage h2 {
+  margin: 12px 18px;
+  font-size: 19px;
+  overflow-wrap: anywhere;
+}
+.page-body {
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  border-top: 1px solid var(--border);
+  padding: 0 18px 14px;
+}
+.page-group {
+  border-bottom: 1px solid var(--border);
+  padding: 10px 0 14px;
+}
+.page-group h3 {
+  font-size: 15px;
+}
+.page-identity,
+.installed-row,
+.page-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 10px 0;
+}
+.page-identity img {
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+}
+.installed-row strong {
+  margin-right: auto;
+  overflow-wrap: anywhere;
+}
+.page-field {
+  justify-content: space-between;
+}
+.page-field input,
+.page-field select,
+.page-field textarea,
+.mapping-grid select {
+  max-width: 60%;
+  font: inherit;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border2);
+  border-radius: 5px;
+  padding: 6px;
+}
+.mapping-grid {
+  display: grid;
+  grid-template-columns: minmax(76px, 1fr) minmax(70px, 1fr) minmax(80px, 1.2fr);
+  align-items: center;
+  gap: 8px;
+}
+.mapping-grid select {
+  max-width: 100%;
+  width: 100%;
+}
+.mapping-grid strong {
+  font-size: 12px;
+  color: var(--muted);
+}
+.file-pick {
+  position: relative;
+  overflow: hidden;
+}
+.file-pick input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  width: 100%;
+  cursor: pointer;
+}
+.file-pick:focus-within {
+  outline: 2px solid var(--accent);
+}
+.page-note {
+  margin: 0;
+  padding: 8px 18px;
+}
+.page-note:empty {
+  display: none;
+}
+#environmentHelp code,
+#backendWindowCmd {
+  display: block;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 12px;
+  margin: 8px 0;
+  padding: 8px 10px;
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  background: var(--bg);
+}
+.backend-window-box {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+.backend-launcher-shortcut {
+  margin-top: 8px;
+}
+#gpuAttempts {
+  margin-top: 10px;
+}
+#gpuAttempts li {
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 600px) {
+  #gamePage {
+    width: 100%;
+    max-width: 100%;
+    max-height: 90dvh;
+    margin: auto 0 0;
+    border-radius: 10px 10px 0 0;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+.launch-problem {
+  border-left: 3px solid var(--accent);
+  padding: 7px 10px;
+  margin: 12px 0;
+  color: var(--text);
+  line-height: 1.5;
+  font-size: 13px;
+}
+.launch-problem button {
+  margin-left: 4px;
+}

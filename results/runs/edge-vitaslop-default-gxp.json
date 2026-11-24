@@ -1,0 +1,96 @@
+{
+  "time": "2026-11-22T10:48:26.111Z",
+  "engine": "vitaslop",
+  "revision": "a6bd7788c9205ab9208f1970bc2de8e49e3ccd2e+f313f6a15ae9b10884b1ab0cb268ed812b1d3160d67082672ff02a9bc48dfe83",
+  "titleId": "PCSG00214",
+  "sampleSha256": "e99a19869e9c83a5fce6862286a3541a997ec6e5fecd336aa7ecc5d8b1d4fd88",
+  "deviceClass": "desktop",
+  "environment": {
+    "os": "linux",
+    "arch": "x64",
+    "launchArgs": [
+      "--enable-unsafe-webgpu",
+      "--ignore-gpu-blocklist",
+      "--use-angle=gl",
+      "--enable-features=Vulkan"
+    ],
+    "headed": false,
+    "channel": "msedge"
+  },
+  "phases": [
+    {
+      "name": "open",
+      "at": "2026-11-22T10:48:26.436Z"
+    },
+    {
+      "name": "import-game",
+      "at": "2026-11-22T10:48:26.837Z"
+    },
+    {
+      "name": "import-firmware-overlay",
+      "at": "2026-11-22T10:48:35.490Z"
+    },
+    {
+      "name": "play",
+      "at": "2026-11-22T10:48:35.699Z"
+    }
+  ],
+  "visual": "unverified",
+  "sustainedFps": null,
+  "saveReload": "not-tested",
+  "status": "no-frame-before-timeout",
+  "bootSeconds": 130,
+  "vulkanDriver": "intel_icd.json",
+  "browser": "157.0.4341.57",
+  "gameCaptures": [],
+  "diagnostics": [],
+  "workerReports": {
+    "adapter": "adapter: vendor=intel arch=xe-lpg device=? desc=? featureLevel=(not reported) | wgpu name unavailable | GPU",
+    "status": "frame 1 (live via WebGPU) | 434 ms, 0 host calls (0 through the non-suspending trap, no timing this frame) | FramesReached(1)"
+  },
+  "wasmSha256": {
+    "pkg/vitaslop_web_bg.wasm": "4eaba7b96405f3a60f99707d54cb3e0bbc58255d415714b31b8abaf45efb9e1c",
+    "pkg-threads/vitaslop_web_bg.wasm": "38a33991bb2b1b894374da9eb576be3826025959de61ba3ebb39bb3b141bb45c"
+  },
+  "capabilities": {
+    "ua": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36 Edg/157.0.0.0",
+    "gpu": {
+      "vendor": "intel",
+      "architecture": "xe-lpg",
+      "isFallbackAdapter": false
+    },
+    "jspi": true,
+    "isolated": true,
+    "opfs": true,
+    "wasmMemory64": true
+  },
+  "initialOpfsEntries": [],
+  "overlaySha256": "76ee9f3bb4f821588e611e2647674a211a7ef7b57d009ad821bbc41c418e3719",
+  "overlayDescription": "vitaslop-sas.zip\n1 files · 1 over the game, 0 over add-ons · 100 KB · replaces sce_module/libsas.suprx · added 2026/11/22 18:48:35\nOn\nRemove",
+  "visibleText": "🔊\n☰\nPVSSPW 对测",
+  "probe": {
+    "engine": "vitaslop",
+    "revision": "a6bd7788c9205ab9208f1970bc2de8e49e3ccd2e+f313f6a15ae9b10884b1ab0cb268ed812b1d3160d67082672ff02a9bc48dfe83",
+    "sampleSha256": "e99a19869e9c83a5fce6862286a3541a997ec6e5fecd336aa7ecc5d8b1d4fd88",
+    "titleId": "PCSG00214",
+    "documentId": "a4ba53c3-5a53-4ebc-8699-138068156e46",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36 Edg/157.0.0.0",
+    "isolated": true,
+    "started": 1795344515729.5652,
+    "firstFrameMs": null,
+    "events": 0,
+    "pictureConfirmed": false,
+    "pictureConfirmedMs": null,
+    "fpsWindow": null,
+    "save": null,
+    "fault": null,
+    "coreNotes": []
+  },
+  "errors": [],
+  "httpErrors": [
+    [
+      404,
+      "/system-font.ttf"
+    ]
+  ]
+}

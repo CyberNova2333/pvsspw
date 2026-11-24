@@ -1,0 +1,318 @@
+{
+  "time": "2026-11-22T10:57:33.783Z",
+  "engine": "vitaslop",
+  "revision": "a6bd7788c9205ab9208f1970bc2de8e49e3ccd2e+8fa6cd62f5e0e79ab07cdb95fad0761b91f450ef87ccef1e9b0486074bd322c8",
+  "titleId": "PCSG00214",
+  "sampleSha256": "e99a19869e9c83a5fce6862286a3541a997ec6e5fecd336aa7ecc5d8b1d4fd88",
+  "deviceClass": "desktop",
+  "environment": {
+    "os": "linux",
+    "arch": "x64",
+    "launchArgs": [
+      "--enable-unsafe-webgpu",
+      "--ignore-gpu-blocklist",
+      "--use-angle=gl",
+      "--enable-features=Vulkan"
+    ],
+    "headed": false,
+    "channel": "msedge"
+  },
+  "phases": [
+    {
+      "name": "open",
+      "at": "2026-11-22T10:57:34.061Z"
+    },
+    {
+      "name": "import-game",
+      "at": "2026-11-22T10:57:34.179Z"
+    },
+    {
+      "name": "import-firmware-overlay",
+      "at": "2026-11-22T10:57:40.739Z"
+    },
+    {
+      "name": "play",
+      "at": "2026-11-22T10:57:40.929Z"
+    }
+  ],
+  "visual": "unverified",
+  "sustainedFps": null,
+  "saveReload": "not-tested",
+  "status": "frames-observed-scene-unverified",
+  "bootSeconds": 35,
+  "screenCaptures": [
+    {
+      "file": "canvas-4030ms.png",
+      "requestedMs": 4030,
+      "capturedMs": 4133
+    },
+    {
+      "file": "canvas-14283ms.png",
+      "requestedMs": 14283,
+      "capturedMs": 14380
+    },
+    {
+      "file": "canvas-24415ms.png",
+      "requestedMs": 24415,
+      "capturedMs": 24516
+    },
+    {
+      "file": "canvas-34549ms.png",
+      "requestedMs": 34549,
+      "capturedMs": 34653
+    }
+  ],
+  "vulkanDriver": "intel_icd.json",
+  "browser": "157.0.4341.57",
+  "gameCaptures": [
+    {
+      "frame": 1,
+      "time": 1795345070169.02,
+      "file": "game-000001.png"
+    },
+    {
+      "frame": 42,
+      "time": 1795345070884.965,
+      "file": "game-000042.png"
+    },
+    {
+      "frame": 85,
+      "time": 1795345071601.35,
+      "file": "game-000085.png"
+    },
+    {
+      "frame": 128,
+      "time": 1795345072317.855,
+      "file": "game-000128.png"
+    },
+    {
+      "frame": 171,
+      "time": 1795345073034.665,
+      "file": "game-000171.png"
+    },
+    {
+      "frame": 195,
+      "time": 1795345073783.1602,
+      "file": "game-000195.png"
+    },
+    {
+      "frame": 231,
+      "time": 1795345074499.065,
+      "file": "game-000231.png"
+    },
+    {
+      "frame": 274,
+      "time": 1795345075215.44,
+      "file": "game-000274.png"
+    },
+    {
+      "frame": 317,
+      "time": 1795345075932.02,
+      "file": "game-000317.png"
+    },
+    {
+      "frame": 359,
+      "time": 1795345076632.04,
+      "file": "game-000359.png"
+    },
+    {
+      "frame": 401,
+      "time": 1795345077332.435,
+      "file": "game-000401.png"
+    },
+    {
+      "frame": 443,
+      "time": 1795345078041.105,
+      "file": "game-000443.png"
+    },
+    {
+      "frame": 485,
+      "time": 1795345078742.495,
+      "file": "game-000485.png"
+    },
+    {
+      "frame": 528,
+      "time": 1795345079458.885,
+      "file": "game-000528.png"
+    },
+    {
+      "frame": 571,
+      "time": 1795345080174.555,
+      "file": "game-000571.png"
+    },
+    {
+      "frame": 613,
+      "time": 1795345080876.945,
+      "file": "game-000613.png"
+    },
+    {
+      "frame": 655,
+      "time": 1795345081577.075,
+      "file": "game-000655.png"
+    },
+    {
+      "frame": 698,
+      "time": 1795345082291.8801,
+      "file": "game-000698.png"
+    },
+    {
+      "frame": 741,
+      "time": 1795345083007.805,
+      "file": "game-000741.png"
+    },
+    {
+      "frame": 783,
+      "time": 1795345083707.83,
+      "file": "game-000783.png"
+    },
+    {
+      "frame": 825,
+      "time": 1795345084408.095,
+      "file": "game-000825.png"
+    },
+    {
+      "frame": 868,
+      "time": 1795345085124.5151,
+      "file": "game-000868.png"
+    },
+    {
+      "frame": 910,
+      "time": 1795345085824.915,
+      "file": "game-000910.png"
+    },
+    {
+      "frame": 952,
+      "time": 1795345086526.56,
+      "file": "game-000952.png"
+    },
+    {
+      "frame": 994,
+      "time": 1795345087240.7651,
+      "file": "game-000994.png"
+    },
+    {
+      "frame": 1036,
+      "time": 1795345087940.915,
+      "file": "game-001036.png"
+    },
+    {
+      "frame": 1078,
+      "time": 1795345088641.1,
+      "file": "game-001078.png"
+    },
+    {
+      "frame": 1120,
+      "time": 1795345089357.7,
+      "file": "game-001120.png"
+    },
+    {
+      "frame": 1163,
+      "time": 1795345090074.225,
+      "file": "game-001163.png"
+    },
+    {
+      "frame": 1205,
+      "time": 1795345090774.2952,
+      "file": "game-001205.png"
+    },
+    {
+      "frame": 1247,
+      "time": 1795345091479.565,
+      "file": "game-001247.png"
+    },
+    {
+      "frame": 1290,
+      "time": 1795345092190.965,
+      "file": "game-001290.png"
+    },
+    {
+      "frame": 1333,
+      "time": 1795345092907.8801,
+      "file": "game-001333.png"
+    },
+    {
+      "frame": 1374,
+      "time": 1795345093624.31,
+      "file": "game-001374.png"
+    },
+    {
+      "frame": 1416,
+      "time": 1795345094326.8901,
+      "file": "game-001416.png"
+    },
+    {
+      "frame": 1459,
+      "time": 1795345095040.8801,
+      "file": "game-001459.png"
+    },
+    {
+      "frame": 1502,
+      "time": 1795345095757.635,
+      "file": "game-001502.png"
+    },
+    {
+      "frame": 1545,
+      "time": 1795345096475.195,
+      "file": "game-001545.png"
+    }
+  ],
+  "diagnostics": [],
+  "workerReports": {
+    "adapter": "adapter: vendor=intel arch=xe-lpg device=? desc=? featureLevel=(not reported) | wgpu name unavailable | GPU",
+    "status": "frame 1562 (live via WebGPU) | 0 ms, 0 host calls (0 through the non-suspending trap, no timing this frame) | FramesReached(1562)",
+    "fps": "fps: 60 (100% speed)",
+    "diag": "tuned to the console's real value may react differently.\n WARN vitaslop::input: sceSystemGestureCreateTouchRecognizer: a ROTATION recognizer - created, but its              detection is NOT modelled (no source gives its event layout), so it reports no              events. A title that turns things with two fingers will not see the turn.\n WARN vitaslop::at9: NGS buss processing is NOT RUN for sceNgsVoiceDefGetSimpleAtrac9Voice: the mix is a sum of source voices scaled by their routing volumes, so any compression, EQ or delay this definition implies is missing from the sound.\n WARN vitaslop::at9: NGS buss processing is NOT RUN for sceNgsVoiceDefGetMasterBuss: the mix is a sum of source voices scaled by their routing volumes, so any compression, EQ or delay this definition implies is missing from the sound.\n WARN vitaslop::gxm: gxm: this frame's scenes STRADDLE A DISPLAY FLIP - the guest presented 5 different buffers while it was being captured, and 1 of its passes draw into one that is not the last scene's target ([0x8a402200]). Those passes used to be classified as OFFSCREEN and dropped, which shows as a HUD over a black world; they are now composited into the same display image, in scene order. Reported once.\n WARN vitaslop::gxm: gxm textures: base format 0x87 is a block format the GPU could take verbatim, but it is being DECODED to RGBA8 instead because the guest declares no mip chain for it yet asks the hardware to FILTER between levels, and a compressed level 0 on its own is the white-speckle failure a generated chain exists to prevent\n WARN vitaslop::gxm: gxm textures: base format 0x87 is a block format the GPU could take verbatim, but it is being DECODED to RGBA8 instead because it is a BC format that already fits the texture budget as RGBA8: `block_source` decodes it on the GPU exactly, and re-encoding it to ETC2 is a second lossy step that cost the phone's GPU over a second at one screen transition. It will be re-encoded if the budget tightens\n WARN vitaslop::gxm: gxm textures: base format 0x87 asked for a GPU transcode and the transcoder declined it, so it is being decoded and re-encoded on the CPU instead. The picture is the same; the cost is not. The rule that declined it: the scratch this texture needs exceeds the whole budget.\n WARN vitaslop::io: sceAppUtilSaveDataGetQuota has no published prototype; assuming (quotaKiB*, usedKiB*, mountPoint*)\n\n\n"
+  },
+  "wasmSha256": {
+    "pkg/vitaslop_web_bg.wasm": "5515785898613fb84bfb74587c50996bc6e7ea5c301a33b28f4d1fd27527433c",
+    "pkg-threads/vitaslop_web_bg.wasm": "8e9a469821a09d6eaa821e4ffb0c4046de5aa5d020542770aa972ed272818f8f"
+  },
+  "capabilities": {
+    "ua": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36 Edg/157.0.0.0",
+    "gpu": {
+      "vendor": "intel",
+      "architecture": "xe-lpg",
+      "isFallbackAdapter": false
+    },
+    "jspi": true,
+    "isolated": true,
+    "opfs": true,
+    "wasmMemory64": true
+  },
+  "initialOpfsEntries": [
+    ".probe"
+  ],
+  "overlaySha256": "76ee9f3bb4f821588e611e2647674a211a7ef7b57d009ad821bbc41c418e3719",
+  "overlayDescription": "vitaslop-sas.zip\n1 files · 1 over the game, 0 over add-ons · 100 KB · replaces sce_module/libsas.suprx · added 2026/11/22 18:57:40\nOn\nRemove",
+  "effectiveKnobs": {
+    "VITASLOP_FRAME_TOPUP": "0",
+    "VITASLOP_GXP_LIVE": "1",
+    "VITASLOP_SMP": "1"
+  },
+  "visibleText": "🔊\n☰\nPVSSPW 对测",
+  "probe": {
+    "engine": "vitaslop",
+    "revision": "a6bd7788c9205ab9208f1970bc2de8e49e3ccd2e+8fa6cd62f5e0e79ab07cdb95fad0761b91f450ef87ccef1e9b0486074bd322c8",
+    "sampleSha256": "e99a19869e9c83a5fce6862286a3541a997ec6e5fecd336aa7ecc5d8b1d4fd88",
+    "titleId": "PCSG00214",
+    "documentId": "cea63727-c567-4499-9eab-d65424238f1f",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36 Edg/157.0.0.0",
+    "isolated": true,
+    "started": 1795345060972.43,
+    "firstFrameMs": 9196,
+    "events": 1554,
+    "pictureConfirmed": false,
+    "pictureConfirmedMs": null,
+    "fpsWindow": null,
+    "save": null,
+    "fault": null,
+    "coreNotes": []
+  },
+  "errors": [],
+  "httpErrors": [
+    [
+      404,
+      "/system-font.ttf"
+    ]
+  ]
+}

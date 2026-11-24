@@ -1,0 +1,402 @@
+{
+  "titleId": "PCSG00214",
+  "version": "01.00",
+  "sampleSha256": "e99a19869e9c83a5fce6862286a3541a997ec6e5fecd336aa7ecc5d8b1d4fd88",
+  "deviceClass": "desktop",
+  "channel": "msedge",
+  "headless": true,
+  "browser": "Microsoft Edge 157.0.4341.57",
+  "adapter": "Linux 桌面 Intel Xe-LPG 硬件 WebGPU",
+  "scene": "PCSG00214-first-battle-idle-v1",
+  "normalSpeed": true,
+  "viewport": [
+    1280,
+    720
+  ],
+  "outputCeiling": [
+    960,
+    544
+  ],
+  "method": "All successive game-surface textures seen by the Vitaslop present probe are compared on GPU in RGB8. Count a changed result once; repeat the comparison within the central half-width, half-height rectangle. First texture is the uncounted baseline. Both rates use the entire 600 s, including gaps.",
+  "controls": "Same Japanese prologue / floor 1, full HUD. Dismiss tutorial, demonstrate a jump without moving the stick, wait for landing at spawn, then 600 s without input. Exclusive sequential test instances.",
+  "verification": {
+    "sample": "Locked Japanese archive, 62 files; same local firmware overlay for both arms.",
+    "counterControl": {
+      "submissionsAfterBaseline": 6,
+      "differentRgbFrames": 3,
+      "centralChanges": 2,
+      "duplicatesIncludingAlphaOnly": 3,
+      "test": "tests/picture-rate.mjs"
+    },
+    "probeSha256": {
+      "bench/worker-probe.js": "0449ab080fa055ccd2ff0f7073f814e6185a49b3860734fdad5899b99906df32",
+      "bench/picture-surface.js": "f5714ad85c31e9d6391c3ce1ac3d2972ee51862a1b0768e48afb92447242feed",
+      "bench/picture-rate.js": "c94f121a1aa917dce7a789b7269adf7c645c4b2162b9345097860ddeaabc3920"
+    },
+    "transpilerUnitTestsPassed": 66,
+    "signalRegressionPassed": true,
+    "runtimeSuite": {
+      "passed": 703,
+      "ignored": 13,
+      "failed": [
+        "knobs::tests::index_is_current (the earlier playback patch added VITASLOP_FAST_BOOT_IO without regenerating KNOBS.md)"
+      ]
+    }
+  },
+  "baselineEvidence": "runs/edge-pentagram-battle-baseline.json",
+  "opEvidence": "runs/edge-pentagram-playback.json",
+  "revision": "a6bd7788c9205ab9208f1970bc2de8e49e3ccd2e+8fa6cd62f5e0e79ab07cdb95fad0761b91f450ef87ccef1e9b0486074bd322c8+d1aab43f4be0a16a7c2c6ebc04ceac22817c3f7f1b507613867dd07bbb604eb8+00f61b90b2b15e9ee43ca9103df167c6a39cd140be2a4070d1c3b6db91b919ee",
+  "androidPhysical": "untested",
+  "touchEmulation": "not used in these two trials",
+  "arms": {
+    "single": {
+      "smp": 0,
+      "worker": "http://127.0.0.1:18751/worker.js?uiGpu=high-performance&uiMode=core",
+      "gpu": "adapter: vendor=intel arch=xe-lpg device=? desc=? featureLevel=(not reported) | wgpu name unavailable | GPU",
+      "surface": "surface: format Rgba8Unorm, rendered through Rgba8Unorm, alpha Opaque, present Fifo | offered formats [Rgba8Unorm, Bgra8Unorm, Rgba16Float], alpha modes [Opaque]",
+      "browserVersion": "157.0.4341.57",
+      "revision": "a6bd7788c9205ab9208f1970bc2de8e49e3ccd2e+8fa6cd62f5e0e79ab07cdb95fad0761b91f450ef87ccef1e9b0486074bd322c8+d1aab43f4be0a16a7c2c6ebc04ceac22817c3f7f1b507613867dd07bbb604eb8+00f61b90b2b15e9ee43ca9103df167c6a39cd140be2a4070d1c3b6db91b919ee",
+      "overlaySha256": "76ee9f3bb4f821588e611e2647674a211a7ef7b57d009ad821bbc41c418e3719",
+      "sampleSha256": "e99a19869e9c83a5fce6862286a3541a997ec6e5fecd336aa7ecc5d8b1d4fd88",
+      "wasmSha256": "1fdc52f7d32dc7e4e8364a9c6aa0a5ea3972c7caae2336e987498ee75c1da216",
+      "measurement": {
+        "status": "complete",
+        "seconds": 600,
+        "startEpochMs": 1795352423327.935,
+        "width": 960,
+        "height": 544,
+        "format": "rgba8unorm",
+        "submissions": 12467,
+        "changed": 12467,
+        "centerChanged": 12467,
+        "duplicates": 0,
+        "pictureFps": 20.778333333333332,
+        "centerFps": 20.778333333333332,
+        "submissionRate": 20.778333333333332,
+        "p50ChangeGapMs": 34.47000000067055,
+        "p95ChangeGapMs": 103.91500000096858,
+        "longestGapIncludingTailMs": 1567.214999999851,
+        "minutes": [
+          {
+            "submissions": 1502,
+            "changed": 1502,
+            "centerChanged": 1502
+          },
+          {
+            "submissions": 1271,
+            "changed": 1271,
+            "centerChanged": 1271
+          },
+          {
+            "submissions": 1144,
+            "changed": 1144,
+            "centerChanged": 1144
+          },
+          {
+            "submissions": 1127,
+            "changed": 1127,
+            "centerChanged": 1127
+          },
+          {
+            "submissions": 1115,
+            "changed": 1115,
+            "centerChanged": 1115
+          },
+          {
+            "submissions": 1277,
+            "changed": 1277,
+            "centerChanged": 1277
+          },
+          {
+            "submissions": 1285,
+            "changed": 1285,
+            "centerChanged": 1285
+          },
+          {
+            "submissions": 1243,
+            "changed": 1243,
+            "centerChanged": 1243
+          },
+          {
+            "submissions": 1239,
+            "changed": 1239,
+            "centerChanged": 1239
+          },
+          {
+            "submissions": 1264,
+            "changed": 1264,
+            "centerChanged": 1264
+          }
+        ]
+      },
+      "evidence": "frames/pentagram-battle/single-battle.jpg",
+      "evidenceSha256": "098ae7e72f089424fb3eb098b83c14862e9b1d65ddd6b71f04eb43f9ab137b2d",
+      "screenshots": [
+        {
+          "label": "field",
+          "screenshotSecondsFromStart": -68.101,
+          "originalSha256": "bb512a011f87585e7d8e0eeb481a14cef223e67e4f620aa1a3f20d51168503e5"
+        },
+        {
+          "label": "jump-proof",
+          "screenshotSecondsFromStart": -11.924,
+          "originalSha256": "ebbc9b4d861fd8cdb8f9435276bdb2991f340652417b9903c49bc211072bc040"
+        },
+        {
+          "label": "landed",
+          "screenshotSecondsFromStart": -6.949,
+          "originalSha256": "7d000148adcdbf5cb8599fe58128dfe0d18b0a408f9797c74fbbf750e0c2ee84"
+        },
+        {
+          "label": "battle-start",
+          "screenshotSecondsFromStart": 0.551,
+          "originalSha256": "fe80e5d070c04f635889306a9d8237d01a63043a339e4337682cc7795035a0a3"
+        },
+        {
+          "label": "window-0",
+          "screenshotSecondsFromStart": 2.724,
+          "originalSha256": "8054b420d5640ca4bcd2287a229ba7caeea0e94a9a3fd2f2774f38ccec72ba5d"
+        },
+        {
+          "label": "window-1",
+          "screenshotSecondsFromStart": 63.583,
+          "originalSha256": "5faef2b0eabf629aa5662f8b092b4f10d27388f633328618367417d943fecd27"
+        },
+        {
+          "label": "window-2",
+          "screenshotSecondsFromStart": 125.499,
+          "originalSha256": "d453ea86d4d7bceea371ef0bc66a40ed6a22a705dd6f79eea880108e6527d566"
+        },
+        {
+          "label": "window-3",
+          "screenshotSecondsFromStart": 181.406,
+          "originalSha256": "16c392c9f255a3f33fd4f1d4672f650ae8756ad0dfb96c025651c3d262d72e68"
+        },
+        {
+          "label": "window-4",
+          "screenshotSecondsFromStart": 243.13,
+          "originalSha256": "039a742b849d355d1a1c79221fa46e9a759ab1bdfacd3b672a2553789c834974"
+        },
+        {
+          "label": "window-5",
+          "screenshotSecondsFromStart": 304.494,
+          "originalSha256": "7940c2a701be24e450dc38995b06fc6b13c4af46fffaad4ad575ead977444966"
+        },
+        {
+          "label": "window-6",
+          "screenshotSecondsFromStart": 360.475,
+          "originalSha256": "417f97a2d8bfee5e7303a4d43f7f3857d514378bccf5ed1390a6d3a30e9b4da5"
+        },
+        {
+          "label": "window-7",
+          "screenshotSecondsFromStart": 421.879,
+          "originalSha256": "1b9d63ca8621f53bfd17ed3ca2b23f385406ae6e4518518ba3e6faaba740669f"
+        },
+        {
+          "label": "window-8",
+          "screenshotSecondsFromStart": 482.771,
+          "originalSha256": "6a86026ba85f9acbdf184dc02ae927f54eac75c92e425032105fa98e55c20e90"
+        },
+        {
+          "label": "window-9",
+          "screenshotSecondsFromStart": 545.002,
+          "originalSha256": "d715ee694141a8e9b70d4c46dd1de6615c1a1b0c66e1428b37958ec1ae5b3215"
+        },
+        {
+          "label": "window-end",
+          "screenshotSecondsFromStart": 605.383,
+          "originalSha256": "9a58d366b1f9cd833b512fb405e9781fa2a2636e2d4639ff739f28692127421d"
+        }
+      ],
+      "controlVerified": true,
+      "sceneReviewed": true
+    },
+    "multi": {
+      "smp": 1,
+      "worker": "http://127.0.0.1:18751/worker.js?smp=1&uiGpu=high-performance&uiMode=core",
+      "gpu": "adapter: vendor=intel arch=xe-lpg device=? desc=? featureLevel=(not reported) | wgpu name unavailable | GPU",
+      "surface": "surface: format Rgba8Unorm, rendered through Rgba8Unorm, alpha Opaque, present Fifo | offered formats [Rgba8Unorm, Bgra8Unorm, Rgba16Float], alpha modes [Opaque]",
+      "browserVersion": "157.0.4341.57",
+      "revision": "a6bd7788c9205ab9208f1970bc2de8e49e3ccd2e+8fa6cd62f5e0e79ab07cdb95fad0761b91f450ef87ccef1e9b0486074bd322c8+d1aab43f4be0a16a7c2c6ebc04ceac22817c3f7f1b507613867dd07bbb604eb8+00f61b90b2b15e9ee43ca9103df167c6a39cd140be2a4070d1c3b6db91b919ee",
+      "overlaySha256": "76ee9f3bb4f821588e611e2647674a211a7ef7b57d009ad821bbc41c418e3719",
+      "sampleSha256": "e99a19869e9c83a5fce6862286a3541a997ec6e5fecd336aa7ecc5d8b1d4fd88",
+      "wasmSha256": "1f72f62a759cc154671d16481a5672ac3a7fae28485325703a3f6c092b3e4957",
+      "measurement": {
+        "status": "complete",
+        "seconds": 600,
+        "startEpochMs": 1795353485347.2852,
+        "width": 960,
+        "height": 544,
+        "format": "rgba8unorm",
+        "submissions": 13193,
+        "changed": 13193,
+        "centerChanged": 13193,
+        "duplicates": 0,
+        "pictureFps": 21.988333333333333,
+        "centerFps": 21.988333333333333,
+        "submissionRate": 21.988333333333333,
+        "p50ChangeGapMs": 33.96000000089407,
+        "p95ChangeGapMs": 101.4850000012666,
+        "longestGapIncludingTailMs": 460.26500000059605,
+        "minutes": [
+          {
+            "submissions": 1416,
+            "changed": 1416,
+            "centerChanged": 1416
+          },
+          {
+            "submissions": 1459,
+            "changed": 1459,
+            "centerChanged": 1459
+          },
+          {
+            "submissions": 1339,
+            "changed": 1339,
+            "centerChanged": 1339
+          },
+          {
+            "submissions": 1130,
+            "changed": 1130,
+            "centerChanged": 1130
+          },
+          {
+            "submissions": 1296,
+            "changed": 1296,
+            "centerChanged": 1296
+          },
+          {
+            "submissions": 1329,
+            "changed": 1329,
+            "centerChanged": 1329
+          },
+          {
+            "submissions": 1333,
+            "changed": 1333,
+            "centerChanged": 1333
+          },
+          {
+            "submissions": 1248,
+            "changed": 1248,
+            "centerChanged": 1248
+          },
+          {
+            "submissions": 1366,
+            "changed": 1366,
+            "centerChanged": 1366
+          },
+          {
+            "submissions": 1277,
+            "changed": 1277,
+            "centerChanged": 1277
+          }
+        ]
+      },
+      "evidence": "frames/pentagram-battle/multi-battle.jpg",
+      "evidenceSha256": "976a04da4bcbb8577ab12bbee43a1086307c066911ec802eae054935a6829d36",
+      "screenshots": [
+        {
+          "label": "field",
+          "screenshotSecondsFromStart": -46.232,
+          "originalSha256": "65dfe0fca4052e0985da9456e8a4c03f0c6763e2b62b18ed8e7f401b773697c5"
+        },
+        {
+          "label": "jump-proof",
+          "screenshotSecondsFromStart": -17.72,
+          "originalSha256": "58f8aafb026a064269dfad1818c7a51c5e4a358e16dd248fe55d1f7feb0fbb6c"
+        },
+        {
+          "label": "landed",
+          "screenshotSecondsFromStart": -13.255,
+          "originalSha256": "d38b0d2bcdcda599828f7f5a83baf72cf4844f34577235e96e83540179a862dc"
+        },
+        {
+          "label": "battle-start",
+          "screenshotSecondsFromStart": 0.687,
+          "originalSha256": "6737445366a13fba7522e0551b60783d793a1687ed5e297eff79c2a55bfdf04a"
+        },
+        {
+          "label": "window-0",
+          "screenshotSecondsFromStart": 5.0,
+          "originalSha256": "66c4a3699d2f0df946199bf5fcd1645e59b831a2b565fa5b65f6a8c10fb4d705"
+        },
+        {
+          "label": "window-1",
+          "screenshotSecondsFromStart": 60.605,
+          "originalSha256": "9cfce652939fba88d632af33584262ed7f69d4fad85d511a7f122a8cb9cd4fa6"
+        },
+        {
+          "label": "window-2",
+          "screenshotSecondsFromStart": 121.755,
+          "originalSha256": "65865a6ef8481af82632f89c24045da54674b38b8505c1a812e3f54673e84b4a"
+        },
+        {
+          "label": "window-3",
+          "screenshotSecondsFromStart": 182.668,
+          "originalSha256": "66ddd272a69bd32ed91216b6f4f4b344560f9b9d459e2e91b653315e75ce5165"
+        },
+        {
+          "label": "window-4",
+          "screenshotSecondsFromStart": 243.814,
+          "originalSha256": "ac63a310887a0ee8467a08a2dbca875cec64398b2fbbdaf91e7507d26026875e"
+        },
+        {
+          "label": "window-5",
+          "screenshotSecondsFromStart": 304.783,
+          "originalSha256": "79dbf255b3f03be38c16977aae530a326796e4de058f6399cdc70ccfb5a297ee"
+        },
+        {
+          "label": "window-6",
+          "screenshotSecondsFromStart": 361.018,
+          "originalSha256": "cc86cf3915087f1b2d64ae920e854d48802101f995e7434176a04e69284b9261"
+        },
+        {
+          "label": "window-7",
+          "screenshotSecondsFromStart": 421.976,
+          "originalSha256": "e3963a81fa858ea57fac764d79f846bec1d9cd7a866d680d6160a283a4112461"
+        },
+        {
+          "label": "window-8",
+          "screenshotSecondsFromStart": 482.929,
+          "originalSha256": "8a9c469224f1d51eab10ef89a12aa7ae6b45d2b05fdfe4edadae128daeccc40e"
+        },
+        {
+          "label": "window-9",
+          "screenshotSecondsFromStart": 543.503,
+          "originalSha256": "07076611af869f43171d428b83c2518faf2320ca7110fddfad7234cb52bdf876"
+        },
+        {
+          "label": "window-end",
+          "screenshotSecondsFromStart": 604.58,
+          "originalSha256": "42057b889ef9f15ab17d9d7568dc4937ed88117f573fb68fae8fcaac0e45917e"
+        }
+      ],
+      "controlVerified": true,
+      "sceneReviewed": true
+    }
+  },
+  "assessment": "这台桌面上的日版《战斗的五芒星》建议默认用多线程。10 个一分钟窗口中有 9 个的实际画面 FPS 高于单线程，10 分钟均值高 1.21 FPS（5.8%）。实测单次最长画面更新间隔由 1.57 秒降到 0.46 秒。若更看重尽快进入 OP，单线程在此前 4 次中均在 5.2 秒内出画，多线程 2 次中有 1 次等了 16.4 秒。战斗每种模式各有 1 次完整试次。另一次多线程试跑约 91 秒时，Playwright 报告页面、上下文或浏览器已关闭，原因未确定，该次作废。技能密集场面和 Android 真机仍待验证。",
+  "interruptedTrials": [
+    {
+      "mode": "multi",
+      "run": "first controlled attempt",
+      "elapsedWallSecondsApprox": 91,
+      "lastMinuteScreenshot": 1,
+      "reason": "Playwright reported Target page, context or browser has been closed before the 600-s readback.",
+      "cause": "undetermined",
+      "includedInAverages": false
+    }
+  ],
+  "diagnosis": {
+    "single": {
+      "tableFixOnly": "frame 4197 in progress: 5628096 scheduler rounds in 82806 ms (67967 rounds/s)",
+      "lastScene": "NOW LOADING",
+      "gameplayVerified": false
+    },
+    "multi": {
+      "tableFixOnly": "frame 5451 in progress: 5042880 scheduler rounds in 104326 ms (48338 rounds/s)",
+      "lastScene": "NOW LOADING",
+      "gameplayVerified": false
+    },
+    "waitState": "Single-worker stall snapshot: main waited for sceKernelWaitSignal; three UltRuntime fiber contexts also waited. Signals for a logical kernel thread must wake the actual running fiber context. Both changes are included in the measured build."
+  }
+}

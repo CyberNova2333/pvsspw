@@ -1,0 +1,189 @@
+#top,
+#view,
+#pv-bench {
+  display: none !important;
+}
+#player {
+  --panel: #0d1117;
+  --panel-2: #161b22;
+  --edge: #30363d;
+  --ink: #f0f6fc;
+  --accent: #2f81f7;
+}
+#player .tp {
+  font-family: system-ui, sans-serif;
+}
+#softwareScreen {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  max-width: 100%;
+  max-height: 100%;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+}
+#player.pixelated #softwareScreen { image-rendering: pixelated; width: auto; height: auto; }
+#player.stretch #softwareScreen { object-fit: fill; }
+#player.paused:not(:has(#menu:not([hidden]))) #stage::after { content: '已暂停'; }
+#player .ime-bar input { background: var(--sheet); color: var(--ink); border-color: var(--line); }
+
+/* Use PPSSPW's keycap treatment on the Vita player's two-stick hit targets. */
+#pad .tp-btn {
+  position: relative;
+  isolation: isolate;
+  border: 0;
+  background: transparent;
+  color: #f0f6fc;
+}
+#pad .tp-btn::before {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  z-index: -1;
+  border-radius: inherit;
+  border: 1px solid rgba(139, 148, 158, 0.65);
+  background: linear-gradient(180deg, rgba(33, 38, 45, 0.9), rgba(13, 17, 23, 0.88));
+  box-shadow:
+    inset 0 1px rgba(240, 246, 252, 0.12),
+    0 2px 6px rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+}
+#pad .tp-btn.held::before {
+  transform: scale(0.94);
+  border-color: #58a6ff;
+  background: linear-gradient(#388bfd, #1f6feb);
+}
+#pad .tp-stick {
+  background: radial-gradient(circle, #30363d, #161b22);
+}
+#pad .tp-knob {
+  background: #484f58;
+  border-color: #8b949e;
+}
+
+#player.overlay #fpsbadge {
+  left: max(70px, calc(env(safe-area-inset-left) + 70px));
+  pointer-events: none;
+}
+#player {
+  --sheet: #161b22;
+  --ink: #e6edf3;
+  --line: #30363d;
+  --quiet: #8b949e;
+  --blue: #1f6feb;
+}
+html[data-theme='light'] #player {
+  --sheet: #fff;
+  --ink: #1f2328;
+  --line: #d0d7de;
+  --quiet: #59636e;
+}
+#menu,
+#fatal,
+#loading {
+  padding: 12px;
+  box-sizing: border-box;
+  background: rgba(12, 17, 23, 0.7);
+  font:
+    14px/1.5 system-ui,
+    sans-serif;
+  color: var(--ink);
+}
+#menu .work-card,
+#fatal .work-card,
+#loading .work-card {
+  box-sizing: border-box;
+  width: min(100%, 520px);
+  max-height: 100%;
+  overflow: auto;
+  color: var(--ink);
+  background: var(--sheet);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 18px 20px;
+  text-align: left;
+}
+.work-card header,
+.work-card .menu-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.work-card header img {
+  width: 25px;
+}
+.work-card h2 {
+  font-size: 19px;
+  margin: 14px 0;
+}
+.work-card h3 {
+  font-size: 14px;
+  margin: 0;
+  grid-column: 1/-1;
+}
+.work-card .menu-row {
+  margin: 12px 0;
+}
+.work-card button,
+.work-card a,
+.work-card select {
+  font: inherit;
+  color: var(--ink);
+  padding: 7px 12px;
+  background: var(--sheet);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  text-decoration: none;
+  cursor: pointer;
+}
+.work-card .primary {
+  background: var(--blue);
+  color: #fff;
+}
+.menu-controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 14px 0;
+  border-block: 1px solid var(--line);
+}
+.menu-controls label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.menu-controls .wide {
+  grid-column: 1/-1;
+  justify-content: space-between;
+}
+.work-card progress {
+  width: 100%;
+  accent-color: var(--blue);
+}
+.work-card pre,
+.work-card #loading-status {
+  color: var(--quiet);
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  font: 12px/1.5 monospace;
+}
+.work-card summary {
+  cursor: pointer;
+}
+.work-card [hidden] {
+  display: none !important;
+}
+#menu .work-card header,
+#loading .work-card header,
+#fatal .work-card header {
+  position: static;
+  min-height: auto;
+  height: auto;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  color: var(--quiet);
+}

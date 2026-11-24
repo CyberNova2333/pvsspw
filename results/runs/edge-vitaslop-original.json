@@ -1,0 +1,81 @@
+{
+  "time": "2026-11-22T10:53:36.310Z",
+  "engine": "vitaslop",
+  "revision": "a6bd7788c9205ab9208f1970bc2de8e49e3ccd2e",
+  "titleId": "PCSG00214",
+  "sampleSha256": "e99a19869e9c83a5fce6862286a3541a997ec6e5fecd336aa7ecc5d8b1d4fd88",
+  "deviceClass": "desktop",
+  "environment": {
+    "os": "linux",
+    "arch": "x64",
+    "launchArgs": [
+      "--enable-unsafe-webgpu",
+      "--ignore-gpu-blocklist",
+      "--use-angle=gl",
+      "--enable-features=Vulkan"
+    ],
+    "headed": false,
+    "channel": "msedge"
+  },
+  "phases": [
+    {
+      "name": "open",
+      "at": "2026-11-22T10:53:36.855Z"
+    },
+    {
+      "name": "import-game",
+      "at": "2026-11-22T10:53:37.383Z"
+    },
+    {
+      "name": "play",
+      "at": "2026-11-22T10:53:48.622Z"
+    }
+  ],
+  "visual": "unverified",
+  "sustainedFps": null,
+  "saveReload": "not-tested",
+  "status": "blocked",
+  "bootSeconds": 45,
+  "vulkanDriver": "intel_icd.json",
+  "browser": "157.0.4341.57",
+  "capabilities": {
+    "ua": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36 Edg/157.0.0.0",
+    "gpu": {
+      "vendor": "intel",
+      "architecture": "xe-lpg",
+      "isFallbackAdapter": false
+    },
+    "jspi": true,
+    "isolated": true,
+    "opfs": true,
+    "wasmMemory64": true
+  },
+  "initialOpfsEntries": [],
+  "reason": "GUEST FAULT at frame 0 - the run is over.\nthread 0x40: unimplemented NID <unknown> (lib=0xee47ec43 nid=0x180c6824)                  called by thread 0x40; implement it (no silent stub)\n  call: r0=0x817097a4 r1=0x825bbff4 r2=0x0000bb80 r3=0x00000001 lr=0x8168ec4f sp=0xa0efff08\n  stack args (sp+0..12): [0x00000001 0x8141bcac 0x00000000 0x8141828c]\n  *r0 (0x817097a4): [0x00000000 0x74696e69 0x6675625f 0x00726566 0x4a2f3a63 0x696b6e65 0x6a2f736e 0x775f626f]\n  *r1 (0x825bbff4): [0x00000000 0xffffffff",
+  "visibleText": "🔊\n☰\nThe emulator stopped\nRUST PANIC\nGUEST FAULT at frame 0 - the run is over.\nthread 0x40: unimplemented NID <unknown> (lib=0xee47ec43 nid=0x180c6824)                  called by thread 0x40; implement it (no silent stub)\n  call: r0=0x817097a4 r1=0x825bbff4 r2=0x0000bb80 r3=0x00000001 lr=0x8168ec4f sp=0xa0efff08\n  stack args (sp+0..12): [0x00000001 0x8141bcac 0x00000000 0x8141828c]\n  *r0 (0x817097a4): [0x00000000 0x74696e69 0x6675625f 0x00726566 0x4a2f3a63 0x696b6e65 0x6a2f736e 0x775f626f]\n  *r1 (0x825bbff4): [0x00000000 0xffffffff 0x00000001 0x00000000 0x00000000 0x00000000 0x00000000 0x61746164]\n                   return trail: 0x81780ab0 <- 0x81355820 <- 0x81355704\n  the title imports 21 other function(s) with no handler (lib:nid), any of which stops the run the same way if called:\n    b01598d9:214485d6 ee47ec43:007e63e6 ee47ec43:0be8204d ee47ec43:18a5efa2 ee47ec43:296a9910 ee47ec43:2b75f9bc ee47ec43:2c48a08c ee47ec43:55eddbfa ee47ec43:59c7a9df ee47ec43:5e42adab ee47ec43:7a4672b2 ee47ec43:820d5f82 ee47ec43:b0444e69 ee47ec43:bad546a0 ee47ec43:bb7d6790 ee47ec43:bd496983 ee47ec43:c838db6f ee47ec43:cdf2ddd5 ee47ec43:ecce0db8 ee47ec43:f1c63cb9 ee47ec43:fd1a0cbf\nCopy diagnostics\nDownload diagnostics\nBack to library\nPVSSPW 对测",
+  "probe": {
+    "engine": "vitaslop",
+    "revision": "a6bd7788c9205ab9208f1970bc2de8e49e3ccd2e",
+    "sampleSha256": "e99a19869e9c83a5fce6862286a3541a997ec6e5fecd336aa7ecc5d8b1d4fd88",
+    "titleId": "PCSG00214",
+    "documentId": "99b5e3ad-5161-48cf-93d4-28728642de85",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36 Edg/157.0.0.0",
+    "isolated": true,
+    "started": 1795344828666.6548,
+    "firstFrameMs": null,
+    "events": 0,
+    "pictureConfirmed": false,
+    "pictureConfirmedMs": null,
+    "fpsWindow": null,
+    "save": null,
+    "fault": "GUEST FAULT at frame 0 - the run is over.\nthread 0x40: unimplemented NID <unknown> (lib=0xee47ec43 nid=0x180c6824)                  called by thread 0x40; implement it (no silent stub)\n  call: r0=0x817097a4 r1=0x825bbff4 r2=0x0000bb80 r3=0x00000001 lr=0x8168ec4f sp=0xa0efff08\n  stack args (sp+0..12): [0x00000001 0x8141bcac 0x00000000 0x8141828c]\n  *r0 (0x817097a4): [0x00000000 0x74696e69 0x6675625f 0x00726566 0x4a2f3a63 0x696b6e65 0x6a2f736e 0x775f626f]\n  *r1 (0x825bbff4): [0x00000000 0xffffffff",
+    "coreNotes": []
+  },
+  "errors": [],
+  "httpErrors": [
+    [
+      404,
+      "/system-font.ttf"
+    ]
+  ]
+}

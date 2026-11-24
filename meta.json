@@ -1,0 +1,10 @@
+{
+  "name": "PVSSPW",
+  "visibility": "upcoming",
+  "status": "experimental",
+  "summary": {
+    "zh": "在手机与桌面浏览器上对测 Vitaslop 和 Vita3K Web 的本地实验环境。",
+    "en": "Local comparison of Vitaslop and Vita3K Web on mobile and desktop browsers."
+  },
+  "techStack": ["WebAssembly", "WebGPU", "Python", "JavaScript", "Playwright", "WebDriver"]
+}

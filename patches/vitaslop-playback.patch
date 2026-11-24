@@ -1,0 +1,235 @@
+diff --git a/projects/vitaslop-platform/src/knobs.rs b/projects/vitaslop-platform/src/knobs.rs
+index 0d8448d..ff06877 100644
+--- a/projects/vitaslop-platform/src/knobs.rs
++++ b/projects/vitaslop-platform/src/knobs.rs
+@@ -577,6 +577,7 @@ pub const OVERRIDABLE: &[&str] = &[
+     "VITASLOP_IO_JOURNAL_FULL",
+     "VITASLOP_IO_PARK_THRESHOLD_US",
+     "VITASLOP_IO_REQUEST_US",
++    "VITASLOP_FAST_BOOT_IO",
+     // `0`: the wall-clock floor no longer advances the storage clock (host/state_clock.rs `wall_floor_tick`).
+     "VITASLOP_IO_WALL_FLOOR",
+     // `<start frame>:<duration ms>`: JS Self-Profiling sample of each SMP guest worker (smp-worker.js).
+diff --git a/projects/vitaslop-runtime/src/vita/avplayer.rs b/projects/vitaslop-runtime/src/vita/avplayer.rs
+index e95df35..91a12f1 100644
+--- a/projects/vitaslop-runtime/src/vita/avplayer.rs
++++ b/projects/vitaslop-runtime/src/vita/avplayer.rs
+@@ -178,6 +178,8 @@ pub struct Player {
+ /// Every player alive.
+ #[derive(Default)]
+ pub struct Players {
++    /// Stays set across player teardown, so returning to a menu cannot restart boot pacing.
++    pub(super) opened_first_source: bool,
+     list: Vec<Player>,
+     next_handle: i32,
+ }
+@@ -422,6 +424,7 @@ fn do_add_source(st: &mut VitaState, handle: i32, path: &str) -> i32 {
+         p.state = State::Ready;
+         p.ready_sent = false;
+         p.stop_sent = false;
++        st.avplayers.opened_first_source = true;
+     } else if p.source.as_ref().is_some_and(|s| s.path != path) {
+         // One source per player.
+         return ERROR_OPERATION_FAILED;
+diff --git a/projects/vitaslop-runtime/src/vita/ctrl.rs b/projects/vitaslop-runtime/src/vita/ctrl.rs
+index ef6153f..7f4cb27 100644
+--- a/projects/vitaslop-runtime/src/vita/ctrl.rs
++++ b/projects/vitaslop-runtime/src/vita/ctrl.rs
+@@ -253,6 +253,7 @@ fn fill_ctrl(
+         // monotone: a run one frame old has one real sample, and the slots below it are the
+         // pad as it was before anything was pressed.
+         let oldest = st.ctrl.history.sample(port, depth.saturating_sub(1));
++        let taps = st.world.take_ctrl_taps(port);
+         for i in 0..n {
+             // Oldest first: slot i is (n - 1 - i) samples before now, and the last one
+             // written is the current sample.
+@@ -269,11 +270,8 @@ fn fill_ctrl(
+                     )
+                 }
+             };
+-            let buttons = if v2 {
+-                shoulders_as_l1_r1(pad.buttons)
+-            } else {
+-                pad.buttons
+-            };
++            let buttons = if age == 0 { pad.buttons | taps } else { pad.buttons };
++            let buttons = if v2 { shoulders_as_l1_r1(buttons) } else { buttons };
+             let bits = if negative { !buttons } else { buttons };
+             let mut buf = [0u8; CTRL_DATA_PREFIX];
+             buf[0..8].copy_from_slice(&s_ts.to_le_bytes());
+diff --git a/projects/vitaslop-runtime/src/vita/iofilemgr.rs b/projects/vitaslop-runtime/src/vita/iofilemgr.rs
+index 1f3a151..bbc511c 100644
+--- a/projects/vitaslop-runtime/src/vita/iofilemgr.rs
++++ b/projects/vitaslop-runtime/src/vita/iofilemgr.rs
+@@ -160,6 +160,17 @@ pub(super) fn charge_read(st: &mut VitaState, bytes: usize) -> SvcOutcome {
+ /// there turned a few-instruction guest race into a reliable `memory access out of bounds` -
+ /// see `vita::video::mp4_get_next_unit_data`.
+ pub(super) fn accrue_read(st: &mut VitaState, bytes: usize) {
++    // Optional PCSG00214 boot benchmark. Omit artificial storage parks during
++    // the intro to measure their contribution to the wait. Real file
++    // reads have already completed here. Resume the normal model at the first
++    // movie, or after one minute of guest frames if the user skips the intro.
++    static FAST_BOOT: std::sync::OnceLock<bool> = std::sync::OnceLock::new();
++    if !st.avplayers.opened_first_source
++        && st.cur_frame() < 3_600
++        && *FAST_BOOT.get_or_init(|| env_u64("VITASLOP_FAST_BOOT_IO", 0) == 1)
++    {
++        return;
++    }
+     let Some(us) = read_latency_us(bytes) else {
+         return;
+     };
+diff --git a/projects/vitaslop-runtime/src/world.rs b/projects/vitaslop-runtime/src/world.rs
+index 11ecb7c..31d8cdb 100644
+--- a/projects/vitaslop-runtime/src/world.rs
++++ b/projects/vitaslop-runtime/src/world.rs
+@@ -270,6 +270,13 @@ pub trait World {
+     /// Controller state for `port` this poll.
+     fn poll_ctrl(&mut self, port: u32) -> CtrlFrame;
+ 
++    /// Instantaneous controller actions requested by a host accessibility control.
++    /// These belong only to the newest sample returned by this read. A historical
++    /// sample must never turn the same tap into another action.
++    fn take_ctrl_taps(&mut self, _port: u32) -> u32 {
++        0
++    }
++
+     /// Touch-panel state for `port` this poll (port 0 = front, 1 = back). The
+     /// default is no finger down, so a time-free or pad-only world needs no touch
+     /// source; worlds that script or capture touch override this.
+diff --git a/projects/vitaslop-web/src/input.rs b/projects/vitaslop-web/src/input.rs
+index 9fa4c87..fadfc9c 100644
+--- a/projects/vitaslop-web/src/input.rs
++++ b/projects/vitaslop-web/src/input.rs
+@@ -32,6 +32,9 @@ const PANEL_SCALE: f64 = 2.0;
+ pub struct InputState {
+     /// Currently-held controller buttons (`SceCtrlButtons` bitmask).
+     pub buttons: u32,
++    // Screen d-pad taps must reach one guest input sample regardless of finger dwell
++    // or how long the worker takes to dequeue DOM events.
++    direction_steps: [DirectionStep; 4],
+     /// The live front-panel touch, if a pointer is pressed.
+     pub touch: Option<TouchFrame>,
+     /// The live REAR-panel touch: only the opt-in rear-touch setting ever sets it
+@@ -49,6 +52,35 @@ pub struct InputState {
+     pub right_stick: Option<(u8, u8)>,
+ }
+ 
++#[derive(Clone, Copy, Default)]
++struct DirectionStep {
++    pending: u8,
++    release: bool,
++    next_repeat_us: Option<u64>,
++}
++
++impl DirectionStep {
++    fn take(&mut self, now_us: u64) -> bool {
++        if self.release {
++            self.release = false;
++            return false;
++        }
++        if self.pending > 0 {
++            self.pending -= 1;
++        } else if self.next_repeat_us.is_some_and(|due| now_us >= due) {
++            // Schedule from this poll so a slow frame cannot build a backlog.
++            self.next_repeat_us = Some(now_us.saturating_add(160_000));
++        } else {
++            return false;
++        }
++        self.release = true;
++        true
++    }
++}
++
++// SceCtrl direction bits in clockwise order: up, right, down, left.
++const DIRECTION_BITS: [u32; 4] = [0x10, 0x20, 0x40, 0x80];
++
+ /// A shared, thread-safe handle to the live input state.
+ pub type SharedInput = Arc<Mutex<InputState>>;
+ 
+@@ -121,6 +153,19 @@ impl World for BrowserWorld {
+     fn wall_us(&mut self) -> u64 {
+         self.wall_us
+     }
++    fn take_ctrl_taps(&mut self, port: u32) -> u32 {
++        if port > 1 || crate::playbook::input(port).is_some() {
++            return 0;
++        }
++        let mut live = self.live.lock().unwrap();
++        let mut taps = 0;
++        for (step, bit) in live.direction_steps.iter_mut().zip(DIRECTION_BITS) {
++            if step.take(self.monotonic_us) {
++                taps |= bit;
++            }
++        }
++        taps
++    }
+     fn poll_ctrl(&mut self, port: u32) -> CtrlFrame {
+         // A playbook run owns the pad outright.
+         if let Some((ctrl, _)) = crate::playbook::input(port) {
+@@ -367,6 +412,28 @@ pub fn worker_input_key(code: &str, pressed: bool) {
+     }
+ }
+ 
++/// Queue a touch d-pad tap until the title polls its pad. Keep a neutral poll
++/// between consecutive taps in the same direction.
++#[wasm_bindgen]
++pub fn worker_step_direction(direction: usize) {
++    with_worker_input(|state| {
++        if let Some(step) = state.direction_steps.get_mut(direction) {
++            step.pending = step.pending.saturating_add(1);
++        }
++    });
++}
++
++/// Repeat menu steps while the finger remains down. The next pad poll applies
++/// the repeat, and releasing the control cancels it before the next poll.
++#[wasm_bindgen]
++pub fn worker_set_direction_repeat(direction: usize, pressed: bool) {
++    with_worker_input(|state| {
++        if let Some(step) = state.direction_steps.get_mut(direction) {
++            step.next_repeat_us = pressed.then_some(0);
++        }
++    });
++}
++
+ /// Worker input entry point: one analog stick moved, or stopped being driven.
+ ///
+ /// `stick` is 0 for the left stick and 1 for the right. `(x, y)` are the guest's own 0..255
+diff --git a/projects/vitaslop-web/web/worker.js b/projects/vitaslop-web/web/worker.js
+index 9b5f049..e285c84 100644
+--- a/projects/vitaslop-web/web/worker.js
++++ b/projects/vitaslop-web/web/worker.js
+@@ -19,6 +19,8 @@ let run_game_worker,
+   set_knob,
+   set_system_font,
+   worker_input_key,
++  worker_step_direction,
++  worker_set_direction_repeat,
+   worker_input_text,
+   worker_input_pointer,
+   worker_input_back_pointer,
+@@ -218,6 +220,8 @@ const bundle = (module) =>
+       set_knob,
+       set_system_font,
+       worker_input_key,
++      worker_step_direction,
++      worker_set_direction_repeat,
+       worker_input_text,
+       worker_input_pointer,
+       worker_input_back_pointer,
+@@ -269,6 +273,14 @@ self.onmessage = async (e) => {
+   const d = e.data;
+   // Live input forwarded from the page (keyboard/pointer). These arrive after the run
+   // has started; the wasm has its shared input cell registered by then.
++  if (d.type === "pv-direction-step" || d.type === "pv-direction-repeat") {
++    if (readyP) {
++      await readyP;
++      if (d.type === "pv-direction-step") worker_step_direction(d.direction);
++      else worker_set_direction_repeat(d.direction, !!d.pressed);
++    }
++    return;
++  }
+   if (d.type === "key") {
+     worker_input_key(d.code, d.pressed);
+     return;

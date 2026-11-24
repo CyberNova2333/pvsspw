@@ -1,0 +1,14 @@
+{
+  "titleId": "PCSG00214",
+  "archiveSha256": "c4b90c0e2f4daec8c177bd637d920124075ac8bfa6becbe20719dcddd30bcf11",
+  "PCSG00214.zip": {
+    "sha256": "e99a19869e9c83a5fce6862286a3541a997ec6e5fecd336aa7ecc5d8b1d4fd88",
+    "bytes": 931914843,
+    "files": 62
+  },
+  "firmware.zip": {
+    "sha256": "b7c6a2c737f92d4c7bda4109c9ddddd273aaec32d248047b2e08f2edb9bf5ecc",
+    "bytes": 269891726,
+    "files": 1720
+  }
+}

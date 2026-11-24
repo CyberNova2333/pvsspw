@@ -1,0 +1,64 @@
+{
+  "time": "2026-11-22T10:18:44.330293+00:00",
+  "engine": "vita3k",
+  "titleId": "PCSG00214",
+  "revision": "4c8ead371ef4e6a1f2cef2504ef12a441bcb4ee2",
+  "sampleSha256": "e99a19869e9c83a5fce6862286a3541a997ec6e5fecd336aa7ecc5d8b1d4fd88",
+  "deviceClass": "android-emulator",
+  "environment": {
+    "model": "sdk_gphone64_x86_64",
+    "android": "14",
+    "abi": "x86_64",
+    "qemu": true
+  },
+  "visual": "unverified",
+  "sustainedFps": null,
+  "saveReload": "not-tested",
+  "phases": [
+    {
+      "name": "open",
+      "at": "2026-11-22T10:18:44.357699+00:00"
+    },
+    {
+      "name": "import-firmware",
+      "at": "2026-11-22T10:18:48.360214+00:00"
+    },
+    {
+      "name": "import-game",
+      "at": "2026-11-22T10:20:30.544366+00:00"
+    },
+    {
+      "name": "play",
+      "at": "2026-11-22T10:20:54.838489+00:00"
+    }
+  ],
+  "bootSeconds": 180,
+  "browser": "Firefox 160.0.1",
+  "capabilities": {
+    "gpu": null,
+    "isolated": true,
+    "jspi": true,
+    "opfs": true,
+    "ua": "Mozilla/5.0 (Android 14; Mobile; rv:160.0) Gecko/160.0 Firefox/160.0",
+    "wasmMemory64": true
+  },
+  "probe": {
+    "coreNotes": [],
+    "documentId": "9e9baca5-9de6-449a-8913-a377e72b958e",
+    "engine": "vita3k",
+    "events": 0,
+    "fault": null,
+    "firstFrameMs": null,
+    "fpsWindow": null,
+    "isolated": true,
+    "pictureConfirmed": false,
+    "revision": "4c8ead371ef4e6a1f2cef2504ef12a441bcb4ee2",
+    "sampleSha256": "e99a19869e9c83a5fce6862286a3541a997ec6e5fecd336aa7ecc5d8b1d4fd88",
+    "save": null,
+    "started": 1795342854809.98,
+    "titleId": "PCSG00214",
+    "userAgent": "Mozilla/5.0 (Android 14; Mobile; rv:160.0) Gecko/160.0 Firefox/160.0"
+  },
+  "status": "no-frame-before-timeout",
+  "visibleText": "劇場版 魔法少女まどか☆マギカ The Battle Pentagram\nPCSG00214 · error\nThe game could not start\n\nnavigator.gpu is missing: this browser does not expose WebGPU (Chrome: --enable-unsafe-webgpu or chrome://flags; Firefox: dom.webgpu.enabled).\n\nLibrary\nTry again\nPVSSPW 对测"
+}

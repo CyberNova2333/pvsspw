@@ -1,0 +1,628 @@
+{
+  "time": "2026-11-22T10:52:24.590Z",
+  "engine": "vitaslop",
+  "revision": "a6bd7788c9205ab9208f1970bc2de8e49e3ccd2e+f313f6a15ae9b10884b1ab0cb268ed812b1d3160d67082672ff02a9bc48dfe83",
+  "titleId": "PCSG00214",
+  "sampleSha256": "e99a19869e9c83a5fce6862286a3541a997ec6e5fecd336aa7ecc5d8b1d4fd88",
+  "deviceClass": "desktop",
+  "environment": {
+    "os": "linux",
+    "arch": "x64",
+    "launchArgs": [
+      "--enable-unsafe-webgpu",
+      "--ignore-gpu-blocklist",
+      "--use-angle=gl",
+      "--enable-features=Vulkan"
+    ],
+    "headed": false,
+    "channel": "msedge"
+  },
+  "phases": [
+    {
+      "name": "open",
+      "at": "2026-11-22T10:52:24.881Z"
+    },
+    {
+      "name": "import-game",
+      "at": "2026-11-22T10:52:25.029Z"
+    },
+    {
+      "name": "import-firmware-overlay",
+      "at": "2026-11-22T10:52:32.585Z"
+    },
+    {
+      "name": "play",
+      "at": "2026-11-22T10:52:32.808Z"
+    }
+  ],
+  "visual": "unverified",
+  "sustainedFps": null,
+  "saveReload": "not-tested",
+  "status": "frames-observed-scene-unverified",
+  "bootSeconds": 85,
+  "vulkanDriver": "intel_icd.json",
+  "browser": "157.0.4341.57",
+  "gameCaptures": [
+    {
+      "frame": 1,
+      "time": 1795344763860.2651,
+      "file": "game-000001.png"
+    },
+    {
+      "frame": 17,
+      "time": 1795344764567.085,
+      "file": "game-000017.png"
+    },
+    {
+      "frame": 50,
+      "time": 1795344765272.6,
+      "file": "game-000050.png"
+    },
+    {
+      "frame": 93,
+      "time": 1795344765985.725,
+      "file": "game-000093.png"
+    },
+    {
+      "frame": 135,
+      "time": 1795344766686.21,
+      "file": "game-000135.png"
+    },
+    {
+      "frame": 177,
+      "time": 1795344767425.465,
+      "file": "game-000177.png"
+    },
+    {
+      "frame": 194,
+      "time": 1795344768138.415,
+      "file": "game-000194.png"
+    },
+    {
+      "frame": 235,
+      "time": 1795344768850.8,
+      "file": "game-000235.png"
+    },
+    {
+      "frame": 278,
+      "time": 1795344769565.805,
+      "file": "game-000278.png"
+    },
+    {
+      "frame": 321,
+      "time": 1795344770289.54,
+      "file": "game-000321.png"
+    },
+    {
+      "frame": 364,
+      "time": 1795344771000.215,
+      "file": "game-000364.png"
+    },
+    {
+      "frame": 407,
+      "time": 1795344771716.125,
+      "file": "game-000407.png"
+    },
+    {
+      "frame": 450,
+      "time": 1795344772430.17,
+      "file": "game-000450.png"
+    },
+    {
+      "frame": 493,
+      "time": 1795344773146.065,
+      "file": "game-000493.png"
+    },
+    {
+      "frame": 535,
+      "time": 1795344773847.12,
+      "file": "game-000535.png"
+    },
+    {
+      "frame": 577,
+      "time": 1795344774551.5051,
+      "file": "game-000577.png"
+    },
+    {
+      "frame": 620,
+      "time": 1795344775267.6,
+      "file": "game-000620.png"
+    },
+    {
+      "frame": 663,
+      "time": 1795344775982.475,
+      "file": "game-000663.png"
+    },
+    {
+      "frame": 706,
+      "time": 1795344776698.285,
+      "file": "game-000706.png"
+    },
+    {
+      "frame": 748,
+      "time": 1795344777400.29,
+      "file": "game-000748.png"
+    },
+    {
+      "frame": 791,
+      "time": 1795344778114.815,
+      "file": "game-000791.png"
+    },
+    {
+      "frame": 833,
+      "time": 1795344778814.83,
+      "file": "game-000833.png"
+    },
+    {
+      "frame": 874,
+      "time": 1795344779518.945,
+      "file": "game-000874.png"
+    },
+    {
+      "frame": 917,
+      "time": 1795344780232.355,
+      "file": "game-000917.png"
+    },
+    {
+      "frame": 958,
+      "time": 1795344780933.395,
+      "file": "game-000958.png"
+    },
+    {
+      "frame": 1000,
+      "time": 1795344781634.87,
+      "file": "game-001000.png"
+    },
+    {
+      "frame": 1043,
+      "time": 1795344782348.87,
+      "file": "game-001043.png"
+    },
+    {
+      "frame": 1086,
+      "time": 1795344783066.48,
+      "file": "game-001086.png"
+    },
+    {
+      "frame": 1129,
+      "time": 1795344783782.53,
+      "file": "game-001129.png"
+    },
+    {
+      "frame": 1171,
+      "time": 1795344784498.08,
+      "file": "game-001171.png"
+    },
+    {
+      "frame": 1214,
+      "time": 1795344785199.26,
+      "file": "game-001214.png"
+    },
+    {
+      "frame": 1256,
+      "time": 1795344785902.51,
+      "file": "game-001256.png"
+    },
+    {
+      "frame": 1299,
+      "time": 1795344786615.37,
+      "file": "game-001299.png"
+    },
+    {
+      "frame": 1341,
+      "time": 1795344787316.095,
+      "file": "game-001341.png"
+    },
+    {
+      "frame": 1381,
+      "time": 1795344788032.42,
+      "file": "game-001381.png"
+    },
+    {
+      "frame": 1423,
+      "time": 1795344788732.615,
+      "file": "game-001423.png"
+    },
+    {
+      "frame": 1452,
+      "time": 1795344789442.105,
+      "file": "game-001452.png"
+    },
+    {
+      "frame": 1496,
+      "time": 1795344790158.03,
+      "file": "game-001496.png"
+    },
+    {
+      "frame": 1538,
+      "time": 1795344790858.41,
+      "file": "game-001538.png"
+    },
+    {
+      "frame": 1580,
+      "time": 1795344791559.465,
+      "file": "game-001580.png"
+    },
+    {
+      "frame": 1622,
+      "time": 1795344792259.525,
+      "file": "game-001622.png"
+    },
+    {
+      "frame": 1665,
+      "time": 1795344792976.65,
+      "file": "game-001665.png"
+    },
+    {
+      "frame": 1707,
+      "time": 1795344793677.04,
+      "file": "game-001707.png"
+    },
+    {
+      "frame": 1750,
+      "time": 1795344794393.03,
+      "file": "game-001750.png"
+    },
+    {
+      "frame": 1792,
+      "time": 1795344795095.3,
+      "file": "game-001792.png"
+    },
+    {
+      "frame": 1834,
+      "time": 1795344795797.915,
+      "file": "game-001834.png"
+    },
+    {
+      "frame": 1877,
+      "time": 1795344796516.915,
+      "file": "game-001877.png"
+    },
+    {
+      "frame": 1920,
+      "time": 1795344797231.26,
+      "file": "game-001920.png"
+    },
+    {
+      "frame": 1962,
+      "time": 1795344797931.455,
+      "file": "game-001962.png"
+    },
+    {
+      "frame": 2005,
+      "time": 1795344798648.21,
+      "file": "game-002005.png"
+    },
+    {
+      "frame": 2048,
+      "time": 1795344799365.4,
+      "file": "game-002048.png"
+    },
+    {
+      "frame": 2090,
+      "time": 1795344800065.665,
+      "file": "game-002090.png"
+    },
+    {
+      "frame": 2133,
+      "time": 1795344800781.785,
+      "file": "game-002133.png"
+    },
+    {
+      "frame": 2175,
+      "time": 1795344801482.735,
+      "file": "game-002175.png"
+    },
+    {
+      "frame": 2218,
+      "time": 1795344802197.44,
+      "file": "game-002218.png"
+    },
+    {
+      "frame": 2260,
+      "time": 1795344802901.095,
+      "file": "game-002260.png"
+    },
+    {
+      "frame": 2302,
+      "time": 1795344803613.42,
+      "file": "game-002302.png"
+    },
+    {
+      "frame": 2345,
+      "time": 1795344804328.96,
+      "file": "game-002345.png"
+    },
+    {
+      "frame": 2387,
+      "time": 1795344805028.985,
+      "file": "game-002387.png"
+    },
+    {
+      "frame": 2429,
+      "time": 1795344805729.275,
+      "file": "game-002429.png"
+    },
+    {
+      "frame": 2472,
+      "time": 1795344806445.42,
+      "file": "game-002472.png"
+    },
+    {
+      "frame": 2514,
+      "time": 1795344807146.04,
+      "file": "game-002514.png"
+    },
+    {
+      "frame": 2556,
+      "time": 1795344807847.605,
+      "file": "game-002556.png"
+    },
+    {
+      "frame": 2598,
+      "time": 1795344808549.17,
+      "file": "game-002598.png"
+    },
+    {
+      "frame": 2641,
+      "time": 1795344809260.335,
+      "file": "game-002641.png"
+    },
+    {
+      "frame": 2683,
+      "time": 1795344809966,
+      "file": "game-002683.png"
+    },
+    {
+      "frame": 2726,
+      "time": 1795344810678.5,
+      "file": "game-002726.png"
+    },
+    {
+      "frame": 2768,
+      "time": 1795344811380.2651,
+      "file": "game-002768.png"
+    },
+    {
+      "frame": 2810,
+      "time": 1795344812081.125,
+      "file": "game-002810.png"
+    },
+    {
+      "frame": 2852,
+      "time": 1795344812783.875,
+      "file": "game-002852.png"
+    },
+    {
+      "frame": 2894,
+      "time": 1795344813496.05,
+      "file": "game-002894.png"
+    },
+    {
+      "frame": 2937,
+      "time": 1795344814213.2651,
+      "file": "game-002937.png"
+    },
+    {
+      "frame": 2979,
+      "time": 1795344814915.37,
+      "file": "game-002979.png"
+    },
+    {
+      "frame": 3022,
+      "time": 1795344815629.86,
+      "file": "game-003022.png"
+    },
+    {
+      "frame": 3064,
+      "time": 1795344816332.12,
+      "file": "game-003064.png"
+    },
+    {
+      "frame": 3105,
+      "time": 1795344817043.995,
+      "file": "game-003105.png"
+    },
+    {
+      "frame": 3146,
+      "time": 1795344817746.4,
+      "file": "game-003146.png"
+    },
+    {
+      "frame": 3188,
+      "time": 1795344818448.435,
+      "file": "game-003188.png"
+    },
+    {
+      "frame": 3230,
+      "time": 1795344819150.52,
+      "file": "game-003230.png"
+    },
+    {
+      "frame": 3273,
+      "time": 1795344819866.805,
+      "file": "game-003273.png"
+    },
+    {
+      "frame": 3316,
+      "time": 1795344820580.295,
+      "file": "game-003316.png"
+    },
+    {
+      "frame": 3358,
+      "time": 1795344821285.06,
+      "file": "game-003358.png"
+    },
+    {
+      "frame": 3401,
+      "time": 1795344822001.43,
+      "file": "game-003401.png"
+    },
+    {
+      "frame": 3443,
+      "time": 1795344822702.17,
+      "file": "game-003443.png"
+    },
+    {
+      "frame": 3486,
+      "time": 1795344823422.9,
+      "file": "game-003486.png"
+    },
+    {
+      "frame": 3529,
+      "time": 1795344824130.245,
+      "file": "game-003529.png"
+    },
+    {
+      "frame": 3570,
+      "time": 1795344824843.44,
+      "file": "game-003570.png"
+    },
+    {
+      "frame": 3613,
+      "time": 1795344825556.87,
+      "file": "game-003613.png"
+    },
+    {
+      "frame": 3654,
+      "time": 1795344826258.3801,
+      "file": "game-003654.png"
+    },
+    {
+      "frame": 3696,
+      "time": 1795344826963.705,
+      "file": "game-003696.png"
+    },
+    {
+      "frame": 3739,
+      "time": 1795344827674.415,
+      "file": "game-003739.png"
+    },
+    {
+      "frame": 3782,
+      "time": 1795344828391.225,
+      "file": "game-003782.png"
+    },
+    {
+      "frame": 3824,
+      "time": 1795344829092.565,
+      "file": "game-003824.png"
+    },
+    {
+      "frame": 3866,
+      "time": 1795344829793.58,
+      "file": "game-003866.png"
+    },
+    {
+      "frame": 3908,
+      "time": 1795344830494.58,
+      "file": "game-003908.png"
+    },
+    {
+      "frame": 3950,
+      "time": 1795344831198.6,
+      "file": "game-003950.png"
+    },
+    {
+      "frame": 3993,
+      "time": 1795344831913.325,
+      "file": "game-003993.png"
+    },
+    {
+      "frame": 4036,
+      "time": 1795344832630.5,
+      "file": "game-004036.png"
+    },
+    {
+      "frame": 4079,
+      "time": 1795344833346.48,
+      "file": "game-004079.png"
+    },
+    {
+      "frame": 4122,
+      "time": 1795344834059.585,
+      "file": "game-004122.png"
+    },
+    {
+      "frame": 4164,
+      "time": 1795344834761.32,
+      "file": "game-004164.png"
+    },
+    {
+      "frame": 4206,
+      "time": 1795344835467.1301,
+      "file": "game-004206.png"
+    },
+    {
+      "frame": 4249,
+      "time": 1795344836181.585,
+      "file": "game-004249.png"
+    },
+    {
+      "frame": 4292,
+      "time": 1795344836893.095,
+      "file": "game-004292.png"
+    },
+    {
+      "frame": 4334,
+      "time": 1795344837599.35,
+      "file": "game-004334.png"
+    }
+  ],
+  "diagnostics": [],
+  "workerReports": {
+    "adapter": "adapter: vendor=intel arch=xe-lpg device=? desc=? featureLevel=(not reported) | wgpu name unavailable | GPU",
+    "status": "frame 4387 (live via WebGPU) | 0 ms, 0 host calls (0 through the non-suspending trap, no timing this frame) | FramesReached(4387)",
+    "fps": "fps: 66 (109% speed)",
+    "diag": "essing is NOT RUN for sceNgsVoiceDefGetMasterBuss: the mix is a sum of source voices scaled by their routing volumes, so any compression, EQ or delay this definition implies is missing from the sound.\n WARN vitaslop::render: render: DROPPED draw 0 - position-only geometry: no texcoord and no vertex colour, so the fixed-function path has no colour source. primitive=0x0c000000, indices=3, tris=1, stride=8, 1 attributes, shaders=none. This draw is MISSING from the frame; the guest asked for it.\n WARN vitaslop::render: render: ALL 1 captured draws were dropped - 0 non-triangle topology, 0 shader-expanded sprite records, 1 position-only (no texcoord, no vertex colour); 0 of them carried the guest's real shaders. This frame renders as a bare clear colour, which is NOT the same as the guest drawing nothing.\n WARN vitaslop::display: display: the guest PRESENTED 0x8a402200, which THIS frame renders into but whose geometry is still PENDING, so it is not in the scene list the renderer is handed now - it is taken at the next boundary. The frame on screen is composed from [0x8a822200(960x544)] without it.\n WARN vitaslop::gxm: gxm: this frame's scenes STRADDLE A DISPLAY FLIP - the guest presented 4 different buffers while it was being captured, and 1 of its passes draw into one that is not the last scene's target ([0x8a402200]). Those passes used to be classified as OFFSCREEN and dropped, which shows as a HUD over a black world; they are now composited into the same display image, in scene order. Reported once.\n WARN vitaslop::gxm: gxm textures: base format 0x87 is a block format the GPU could take verbatim, but it is being DECODED to RGBA8 instead because the guest declares no mip chain for it yet asks the hardware to FILTER between levels, and a compressed level 0 on its own is the white-speckle failure a generated chain exists to prevent\n WARN vitaslop::gxm: gxm textures: base format 0x87 is a block format the GPU could take verbatim, but it is being DECODED to RGBA8 instead because it is a BC format that already fits the texture budget as RGBA8: `block_source` decodes it on the GPU exactly, and re-encoding it to ETC2 is a second lossy step that cost the phone's GPU over a second at one screen transition. It will be re-encoded if the budget tightens\n WARN vitaslop::io: sceAppUtilSaveDataGetQuota has no published prototype; assuming (quotaKiB*, usedKiB*, mountPoint*)\n\n\n"
+  },
+  "diagnosticKnobs": {
+    "VITASLOP_GXP_LIVE": "0",
+    "VITASLOP_GXM_STAGING": "0"
+  },
+  "wasmSha256": {
+    "pkg/vitaslop_web_bg.wasm": "4eaba7b96405f3a60f99707d54cb3e0bbc58255d415714b31b8abaf45efb9e1c",
+    "pkg-threads/vitaslop_web_bg.wasm": "38a33991bb2b1b894374da9eb576be3826025959de61ba3ebb39bb3b141bb45c"
+  },
+  "capabilities": {
+    "ua": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36 Edg/157.0.0.0",
+    "gpu": {
+      "vendor": "intel",
+      "architecture": "xe-lpg",
+      "isFallbackAdapter": false
+    },
+    "jspi": true,
+    "isolated": true,
+    "opfs": true,
+    "wasmMemory64": true
+  },
+  "initialOpfsEntries": [],
+  "overlaySha256": "76ee9f3bb4f821588e611e2647674a211a7ef7b57d009ad821bbc41c418e3719",
+  "overlayDescription": "vitaslop-sas.zip\n1 files · 1 over the game, 0 over add-ons · 100 KB · replaces sce_module/libsas.suprx · added 2026/11/22 18:52:32\nOn\nRemove",
+  "visibleText": "🔊\n☰\nPVSSPW 对测",
+  "probe": {
+    "engine": "vitaslop",
+    "revision": "a6bd7788c9205ab9208f1970bc2de8e49e3ccd2e+f313f6a15ae9b10884b1ab0cb268ed812b1d3160d67082672ff02a9bc48dfe83",
+    "sampleSha256": "e99a19869e9c83a5fce6862286a3541a997ec6e5fecd336aa7ecc5d8b1d4fd88",
+    "titleId": "PCSG00214",
+    "documentId": "79b75a12-9d2f-4fc6-b236-3e8979e53208",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36 Edg/157.0.0.0",
+    "isolated": true,
+    "started": 1795344752853.8699,
+    "firstFrameMs": 11006,
+    "events": 4364,
+    "pictureConfirmed": false,
+    "pictureConfirmedMs": null,
+    "fpsWindow": null,
+    "save": null,
+    "fault": null,
+    "coreNotes": []
+  },
+  "errors": [],
+  "httpErrors": [
+    [
+      404,
+      "/system-font.ttf"
+    ]
+  ]
+}

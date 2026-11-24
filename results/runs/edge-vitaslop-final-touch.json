@@ -1,0 +1,125 @@
+{
+  "time": "2026-11-22T11:01:05.231Z",
+  "engine": "vitaslop",
+  "revision": "a6bd7788c9205ab9208f1970bc2de8e49e3ccd2e+8fa6cd62f5e0e79ab07cdb95fad0761b91f450ef87ccef1e9b0486074bd322c8",
+  "titleId": "PCSG00214",
+  "sampleSha256": "e99a19869e9c83a5fce6862286a3541a997ec6e5fecd336aa7ecc5d8b1d4fd88",
+  "deviceClass": "desktop-touch-emulation",
+  "environment": {
+    "os": "linux",
+    "arch": "x64",
+    "launchArgs": [
+      "--enable-unsafe-webgpu",
+      "--ignore-gpu-blocklist",
+      "--use-angle=gl",
+      "--enable-features=Vulkan"
+    ],
+    "headed": false,
+    "channel": "msedge",
+    "display": {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "hasTouch": true,
+      "isMobile": true,
+      "deviceScaleFactor": 2
+    }
+  },
+  "phases": [
+    {
+      "name": "open",
+      "at": "2026-11-22T11:01:05.682Z"
+    },
+    {
+      "name": "import-game",
+      "at": "2026-11-22T11:01:06.022Z"
+    },
+    {
+      "name": "import-firmware-overlay",
+      "at": "2026-11-22T11:01:13.120Z"
+    },
+    {
+      "name": "play",
+      "at": "2026-11-22T11:01:13.326Z"
+    }
+  ],
+  "visual": "unverified",
+  "sustainedFps": null,
+  "saveReload": "not-tested",
+  "status": "frames-observed-scene-unverified",
+  "bootSeconds": 30,
+  "screenCaptures": [
+    {
+      "file": "canvas-4054ms.png",
+      "requestedMs": 4054,
+      "capturedMs": 4208
+    },
+    {
+      "file": "canvas-14351ms.png",
+      "requestedMs": 14351,
+      "capturedMs": 14485
+    },
+    {
+      "file": "canvas-24535ms.png",
+      "requestedMs": 24535,
+      "capturedMs": 24669
+    }
+  ],
+  "vulkanDriver": "intel_icd.json",
+  "browser": "157.0.4341.57",
+  "wasmSha256": {
+    "pkg/vitaslop_web_bg.wasm": "5515785898613fb84bfb74587c50996bc6e7ea5c301a33b28f4d1fd27527433c",
+    "pkg-threads/vitaslop_web_bg.wasm": "8e9a469821a09d6eaa821e4ffb0c4046de5aa5d020542770aa972ed272818f8f"
+  },
+  "capabilities": {
+    "ua": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36 Edg/157.0.0.0",
+    "gpu": {
+      "vendor": "intel",
+      "architecture": "xe-lpg",
+      "isFallbackAdapter": false
+    },
+    "jspi": true,
+    "isolated": true,
+    "opfs": true,
+    "wasmMemory64": true
+  },
+  "initialOpfsEntries": [],
+  "overlaySha256": "76ee9f3bb4f821588e611e2647674a211a7ef7b57d009ad821bbc41c418e3719",
+  "overlayDescription": "vitaslop-sas.zip\n1 files · 1 over the game, 0 over add-ons · 100 KB · replaces sce_module/libsas.suprx · added 2026/11/22 19:01:13\nOn\nRemove",
+  "firstObservedCapture": {
+    "file": "first-observed.png",
+    "capturedMs": 10335
+  },
+  "effectiveKnobs": {
+    "VITASLOP_FRAME_TOPUP": "0",
+    "VITASLOP_GXP_LIVE": "1",
+    "VITASLOP_SMP": "1"
+  },
+  "visibleText": "🔊\n☰\nL\nR\n▲\n◀\n▶\n▼\n△\n□\n◯\n✕\nSELECT\nSTART\nPVSSPW 对测",
+  "probe": {
+    "engine": "vitaslop",
+    "revision": "a6bd7788c9205ab9208f1970bc2de8e49e3ccd2e+8fa6cd62f5e0e79ab07cdb95fad0761b91f450ef87ccef1e9b0486074bd322c8",
+    "sampleSha256": "e99a19869e9c83a5fce6862286a3541a997ec6e5fecd336aa7ecc5d8b1d4fd88",
+    "titleId": "PCSG00214",
+    "documentId": "b827ff94-283c-413f-aa30-47ee83709b9b",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36 Edg/157.0.0.0",
+    "isolated": true,
+    "started": 1795345273386.7302,
+    "firstFrameMs": 9285,
+    "events": 1261,
+    "pictureConfirmed": false,
+    "pictureConfirmedMs": null,
+    "fpsWindow": null,
+    "save": null,
+    "fault": null,
+    "coreNotes": []
+  },
+  "errors": [],
+  "httpErrors": [
+    [
+      404,
+      "/system-font.ttf"
+    ]
+  ]
+}

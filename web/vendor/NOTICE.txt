@@ -1,0 +1,6 @@
+PVSSPW incorporates the PPSSPW player shell layout and stylesheet, the day/night switch and the manifest downloader from CyberNova2333/ppsspw, revision 124e208514c0040f3e3a5cabc61f845286b9474f.
+The PPSSPW-derived UI and downloader are distributed under AGPL-3.0-only with the accompanying Chinese and English additional terms. PVSSPW adapts labels, font paths and supported download containers for PlayStation Vita. Original project: https://cnb.cool/CyberNova2333/ppsspw
+IBM Plex Sans is distributed under the SIL Open Font License in fonts/LICENSE-IBM-Plex-Sans.txt.
+The Vitaslop emulator is MIT licensed; see /ui/vitaslop-license.txt.
+UI line icons are from Lucide, see LICENSE-lucide.txt.
+Upstream portions inherited by PPSSPW retain their original terms. See LICENSE.TXT and GPL-3.0.txt.

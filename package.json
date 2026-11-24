@@ -1,0 +1,6 @@
+{
+  "name": "pvsspw-bench",
+  "private": true,
+  "type": "module",
+  "dependencies": {"playwright-core": "1.66.0-alpha-2026-11-18"}
+}

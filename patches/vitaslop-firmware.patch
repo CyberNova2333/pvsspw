@@ -1,0 +1,636 @@
+diff --git a/projects/vitaslop-loader/src/lib.rs b/projects/vitaslop-loader/src/lib.rs
+index 6df364e..00849bc 100644
+--- a/projects/vitaslop-loader/src/lib.rs
++++ b/projects/vitaslop-loader/src/lib.rs
+@@ -789,22 +789,6 @@ pub fn load(bytes: &[u8]) -> Result<Module, Error> {
+         cursor = cursor.wrapping_add(step);
+     }
+ 
+-    // Decode every SCE relocation (PT_SCE_RELA, p_type 0x60000000). They stay
+-    // pending until `rebase` places the module and applies them.
+-    let mut relocations = Vec::new();
+-    for i in 0..e_phnum {
+-        let ph = e_phoff + i * PHDR_SIZE;
+-        if r.u32(ph)? != reloc::PT_SCE_RELA {
+-            continue;
+-        }
+-        let p_offset = r.u32(ph + 4)? as usize;
+-        let p_filesz = r.u32(ph + 16)? as usize;
+-        let blob = bytes
+-            .get(p_offset..p_offset + p_filesz)
+-            .ok_or(Error::OutOfBounds("reloc segment"))?;
+-        relocations.extend(reloc::decode(blob)?);
+-    }
+-
+     // Build the public segments (owning their file bytes, bss zero-filled).
+     let mut segments = Vec::new();
+     let mut base = u32::MAX;
+@@ -825,6 +809,22 @@ pub fn load(bytes: &[u8]) -> Result<Module, Error> {
+ 
+     let init_pointers = read_init_pointers(&r, bytes).unwrap_or_default();
+ 
++    // Decode every SCE relocation (PT_SCE_RELA, p_type 0x60000000). They stay
++    // pending until `rebase` places the module and applies them.
++    let mut relocations = Vec::new();
++    for i in 0..e_phnum {
++        let ph = e_phoff + i * PHDR_SIZE;
++        if r.u32(ph)? != reloc::PT_SCE_RELA {
++            continue;
++        }
++        let p_offset = r.u32(ph + 4)? as usize;
++        let p_filesz = r.u32(ph + 16)? as usize;
++        let blob = bytes
++            .get(p_offset..p_offset + p_filesz)
++            .ok_or(Error::OutOfBounds("reloc segment"))?;
++        relocations.extend(reloc::decode_image(blob, &segments)?);
++    }
++
+     // A fixed `ET_SCE_EXEC` image ships no SCE relocations, so the code-pointer
+     // seeds a RELEXEC gets from its `R_ARM_ABS32` fixups (function pointers sitting
+     // in data tables - vtables, callback arrays, jump tables, reached only through
+diff --git a/projects/vitaslop-loader/src/reloc.rs b/projects/vitaslop-loader/src/reloc.rs
+index ff4ad03..b27e99b 100644
+--- a/projects/vitaslop-loader/src/reloc.rs
++++ b/projects/vitaslop-loader/src/reloc.rs
+@@ -69,69 +69,136 @@ pub struct Reloc {
+ /// relocation, leaving zeroed dangling pointers that only fault much later (a
+ /// wrong-answer far from its cause). Fail loudly at the offending entry instead.
+ pub fn decode(blob: &[u8]) -> Result<Vec<Reloc>, crate::Error> {
++    decode_image(blob, &[])
++}
++
++// Linked system modules also encode runs of related fixups. Formats 6..9 refer to
++// the pointer already at the patch site, so decode them against the original image.
++pub(super) fn decode_image(blob: &[u8], segments: &[crate::Segment]) -> Result<Vec<Reloc>, crate::Error> {
++    use crate::Error;
+     let mut out = Vec::new();
+-    let mut o = 0usize;
+-    let rd = |b: &[u8], at: usize| u32::from_le_bytes([b[at], b[at + 1], b[at + 2], b[at + 3]]);
+-    while o + 8 <= blob.len() {
+-        let w0 = rd(blob, o);
+-        let format = w0 & 0xF;
+-        match format {
+-            // Short entry (8 bytes). The second word is a 10-bit offset high part and a
+-            // 22-bit addend - NOT the 20/12 split of the toolchain union this module was
+-            // first written from. Measured on a retail title whose newer-SDK modules use
+-            // short entries throughout: the 10/22 split puts every MOVW/MOVT fixup on a
+-            // MOVW/MOVT instruction and every addend inside its symbol segment (3865 of
+-            // 3865 in one eboot, 3814 of 3814 in a library); no other split does both.
+-            // Older titles emit long entries only, so they never reached this arm.
+-            1 => {
+-                let w1 = rd(blob, o + 4);
+-                let sym_seg = ((w0 >> 4) & 0xF) as u8;
+-                let code = ((w0 >> 8) & 0xFF) as u8;
+-                let data_seg = ((w0 >> 16) & 0xF) as u8;
+-                let offset_lo = (w0 >> 20) & 0xFFF; // 12 bits
+-                let offset_hi = w1 & 0x3FF; // 10 bits
+-                let addend = w1 >> 10; // 22 bits
++    let mut words = blob.chunks_exact(4);
++    if !words.remainder().is_empty() {
++        return Err(Error::OutOfBounds("partial relocation word"));
++    }
++    let mut current = None::<Reloc>;
++    let mut high = code::NONE;
++    let word = |words: &mut std::slice::ChunksExact<'_, u8>| {
++        words
++            .next()
++            .map(|b| u32::from_le_bytes(b.try_into().unwrap()))
++            .ok_or(Error::OutOfBounds("truncated relocation"))
++    };
++    let advance = |base: u32, delta: u32| {
++        base.checked_add(delta)
++            .ok_or(Error::OutOfBounds("relocation offset"))
++    };
++    while words.len() != 0 {
++        let at = blob.len() - words.len() * 4;
++        let w = word(&mut words)?;
++        let kind = w & 15;
++        if kind > 9 {
++            return Err(Error::UnknownRelocFormat(kind as u8, at));
++        }
++        let symbol = ((w >> 4) & 15) as u8;
++        let opcode = ((w >> 8) & 255) as u8;
++        let site = ((w >> 16) & 15) as u8;
++        let mut r = if kind <= 1 {
++            let v = word(&mut words)?;
++            let (offset, addend) = if kind == 0 {
++                (word(&mut words)?, v)
++            } else {
++                ((w >> 20) | ((v & 1023) << 12), v >> 10)
++            };
++            Reloc {
++                code: opcode,
++                sym_seg: symbol,
++                data_seg: site,
++                offset,
++                addend,
++            }
++        } else {
++            current.ok_or(Error::OutOfBounds("relocation continuation without base"))?
++        };
++        let mut emit_pair = |r: Reloc, high: u8, distance: u32| -> Result<(), Error> {
++            out.push(r);
++            if high != code::NONE {
+                 out.push(Reloc {
+-                    code,
+-                    sym_seg,
+-                    data_seg,
+-                    offset: offset_lo | (offset_hi << 12),
+-                    addend,
++                    code: high,
++                    offset: advance(r.offset, distance)?,
++                    ..r
+                 });
+-                o += 8;
+             }
+-            // Long entry (12 bytes): full 32-bit offset and addend, and an
+-            // optional second fixup (`code2` at `offset + dist2 * 2`) that shares
+-            // the same symbol segment and addend - the MOVW/MOVT pairing.
++            Ok(())
++        };
++        match kind {
+             0 => {
+-                if o + 12 > blob.len() {
+-                    break;
++                high = ((w >> 20) & 255) as u8;
++                emit_pair(r, high, (w >> 28) * 2)?;
++            }
++            1 | 2 => {
++                high = code::NONE;
++                if kind == 2 {
++                    r.offset = advance(r.offset, w >> 16)?;
++                    r.code = opcode;
++                    r.sym_seg = symbol;
++                    r.addend = word(&mut words)?;
+                 }
+-                let w1 = rd(blob, o + 4);
+-                let w2 = rd(blob, o + 8);
+-                let sym_seg = ((w0 >> 4) & 0xF) as u8;
+-                let code = ((w0 >> 8) & 0xFF) as u8;
+-                let data_seg = ((w0 >> 16) & 0xF) as u8;
+-                let code2 = ((w0 >> 20) & 0xFF) as u8;
+-                let dist2 = (w0 >> 28) & 0xF;
+-                let addend = w1;
+-                let offset = w2;
+-                out.push(Reloc { code, sym_seg, data_seg, offset, addend });
+-                if code2 != code::NONE {
+-                    out.push(Reloc {
+-                        code: code2,
+-                        sym_seg,
+-                        data_seg,
+-                        offset: offset.wrapping_add(dist2 * 2),
+-                        addend,
+-                    });
++                out.push(r);
++            }
++            3 => {
++                (r.code, high) = if w & 256 != 0 {
++                    (code::THM_MOVW_ABS_NC, code::THM_MOVT_ABS)
++                } else {
++                    (code::MOVW_ABS_NC, code::MOVT_ABS)
++                };
++                r.offset = advance(r.offset, (w >> 9) & 0x3ffff)?;
++                r.sym_seg = symbol;
++                r.addend = word(&mut words)? & 0x3fffff;
++                emit_pair(r, high, w >> 27)?;
++            }
++            4 => {
++                r.offset = advance(r.offset, (w >> 4) & 0x7fffff)?;
++                emit_pair(r, high, w >> 27)?;
++            }
++            5 => {
++                r.offset = advance(r.offset, (w >> 4) & 511)?;
++                emit_pair(r, high, (w >> 13) & 31)?;
++                r.offset = advance(r.offset, (w >> 18) & 511)?;
++                emit_pair(r, high, w >> 27)?;
++            }
++            6..=9 => {
++                high = code::NONE;
++                let bits = [28, 7, 4, 2][(kind - 6) as usize];
++                let mut packed = w >> 4;
++                loop {
++                    let delta = packed & ((1 << bits) - 1);
++                    r.offset = advance(r.offset, if kind == 6 { delta } else { 4 * delta })?;
++                    let pos = r.offset as usize;
++                    let data = segments
++                        .get(r.data_seg as usize)
++                        .and_then(|seg| seg.data.get(pos..pos.checked_add(4)?))
++                        .ok_or(Error::OutOfBounds("implicit relocation site"))?;
++                    let pointer = u32::from_le_bytes(data.try_into().unwrap());
++                    let (index, seg) = segments
++                        .iter()
++                        .enumerate()
++                        .find(|(_, seg)| pointer.wrapping_sub(seg.vaddr) < seg.mem_size)
++                        .ok_or(Error::OutOfBounds("implicit relocation target"))?;
++                    r.sym_seg =
++                        u8::try_from(index).map_err(|_| Error::OutOfBounds("relocation segment index"))?;
++                    r.code = code::ABS32;
++                    r.addend = pointer - seg.vaddr;
++                    out.push(r);
++                    packed >>= bits;
++                    if packed == 0 {
++                        break;
++                    }
+                 }
+-                o += 12;
+             }
+-            // Any other tag is a format we do not model. Fail loudly - dropping the
+-            // rest of the blob would corrupt the image with dangling pointers.
+-            _ => return Err(crate::Error::UnknownRelocFormat(format as u8, o)),
++            _ => return Err(Error::UnknownRelocFormat(kind as u8, at)),
+         }
++        current = Some(r);
+     }
+     Ok(out)
+ }
+@@ -140,6 +207,43 @@ pub fn decode(blob: &[u8]) -> Result<Vec<Reloc>, crate::Error> {
+ mod tests {
+     use super::*;
+ 
++    #[test]
++    fn packed_mov_pairs_and_original_image_pointers() {
++        let mut data = vec![0; 64];
++        data[36..40].copy_from_slice(&0x1004u32.to_le_bytes());
++        data[40..44].copy_from_slice(&0x1008u32.to_le_bytes());
++        let segments = [crate::Segment {
++            vaddr: 0x1000,
++            mem_size: 64,
++            data,
++            executable: true,
++            writable: false,
++        }];
++        let words: &[u32] = &[
++            (code::ABS32 as u32) << 8,
++            0,
++            0,
++            3 | (1 << 8) | (4 << 9) | (4 << 27),
++            12,
++            4 | (8 << 4) | (4 << 27),
++            5 | (8 << 4) | (4 << 13) | (8 << 18) | (4 << 27),
++            6 | (8 << 4),
++            9 | (1 << 4),
++        ];
++        let blob: Vec<u8> = words.iter().flat_map(|word| word.to_le_bytes()).collect();
++        let fixups = decode_image(&blob, &segments).unwrap();
++        assert_eq!(
++            fixups.iter().map(|r| r.offset).collect::<Vec<_>>(),
++            [0, 4, 8, 12, 16, 20, 24, 28, 32, 36, 40]
++        );
++        assert_eq!(
++            (fixups[1].code, fixups[2].code),
++            (code::THM_MOVW_ABS_NC, code::THM_MOVT_ABS)
++        );
++        assert_eq!((fixups[9].addend, fixups[10].addend), (4, 8));
++        assert!(decode_image(&blob[..blob.len() - 1], &segments).is_err());
++    }
++
+     #[test]
+     fn a_short_entry_splits_its_second_word_ten_and_twenty_two() {
+         // MOVW at data seg 0 offset 0x7dac against seg 1 + 0x35000: offset_lo 0xdac in w0,
+@@ -151,7 +255,13 @@ mod tests {
+         let r = decode(&blob).unwrap();
+         assert_eq!(
+             r,
+-            vec![Reloc { code: code::THM_MOVW_ABS_NC, sym_seg: 1, data_seg: 0, offset: 0x7dac, addend: 0x35000 }]
++            vec![Reloc {
++                code: code::THM_MOVW_ABS_NC,
++                sym_seg: 1,
++                data_seg: 0,
++                offset: 0x7dac,
++                addend: 0x35000
++            }]
+         );
+     }
+ }
+diff --git a/projects/vitaslop-platform/src/texenc.rs b/projects/vitaslop-platform/src/texenc.rs
+index 22c054e..5b69505 100644
+--- a/projects/vitaslop-platform/src/texenc.rs
++++ b/projects/vitaslop-platform/src/texenc.rs
+@@ -102,8 +102,9 @@ pub struct Transcoder {
+     /// compiled by the GPU process AHEAD of everything the title asks for next. MEASURED (a fighting title,
+     /// desktop Chrome, 30c): the run's first four render pipelines settled at ~1.45 s each -
+     /// 14-51 ms each compiled alone - and the boot logos froze 2.8 s; the phone compiles the
+-    /// encoder in ~10 s cold. `encode_chain` is built eagerly only where it will certainly run
+-    /// (an adapter with ETC2, which has no other way to take PVRTC); `encode_etc2` (one level per
++    /// encoder in ~10 s cold. Warm `encode_chain` on ETC2-only devices. On devices exposing
++    /// both BC and ETC2 the renderer selects BC, so keep the ETC2 encoder lazy. Compiling it
++    /// at startup can stall even the first display submission. `encode_etc2` (one level per
+     /// dispatch) only serves the parity tests' readback helper and is never built by a run.
+     encode_etc2: std::cell::OnceCell<wgpu::ComputePipeline>,
+     /// Every level of a chain in one dispatch - see `encode_etc2_chain` in the shader.
+@@ -756,7 +757,10 @@ impl Transcoder {
+             encode_etc2: std::cell::OnceCell::new(),
+             encode_chain: {
+                 let cell = std::cell::OnceCell::new();
+-                if device.features().contains(wgpu::Features::TEXTURE_COMPRESSION_ETC2) {
++                let features = device.features();
++                if features.contains(wgpu::Features::TEXTURE_COMPRESSION_ETC2)
++                    && !features.contains(wgpu::Features::TEXTURE_COMPRESSION_BC)
++                {
+                     let _ = cell.set(make("encode_etc2_chain"));
+                 }
+                 cell
+diff --git a/projects/vitaslop-runtime/src/nid.rs b/projects/vitaslop-runtime/src/nid.rs
+index 96ab853..2d71308 100644
+--- a/projects/vitaslop-runtime/src/nid.rs
++++ b/projects/vitaslop-runtime/src/nid.rs
+@@ -450,6 +450,8 @@ pub mod libkernel {
+     pub const CLIB_MEMSET: u32 = 0x6329_80D7;
+     pub const CLIB_MEMCMP: u32 = 0x9CC2_BFDF;
+     pub const CLIB_STRNLEN: u32 = 0xAC59_5E68;
++    pub const CLIB_STRLCPY: u32 = 0x2CDF_CD1C;
++    pub const CLIB_STRLCAT: u32 = 0x70CB_C2D5;
+     pub const CLIB_STRNCPY: u32 = 0xC458_D60A;
+     pub const CLIB_STRNCMP: u32 = 0x660D_1F6D;
+     pub const CLIB_STRCMP: u32 = 0xA2FB_4D9D;
+@@ -2015,6 +2017,7 @@ pub mod ngs {
+     pub const VOICE_DEF_GET_SAS_EMU_VOICE: u32 = 0x1F51_C2BA;
+     /// The envelope buss (vita-headers SceNgsUser 3.60). First imported by a 2012 open-world
+     /// title.
++    pub const VOICE_DEF_GET_PAUSER_BUSS: u32 = 0x2144_85D6;
+     pub const VOICE_DEF_GET_ENVELOPE_BUSS: u32 = 0xF6B6_8C31;
+     /// `SceInt32 sceNgsSystemSetParamErrorCallback(SceNgsHSynSystem, SceNgsParamsErrorCallbackFunc)`
+     /// (vita-headers `ngs_internal.h`, SceNgsUser 3.60): the callback a parameter block that
+@@ -2371,6 +2374,8 @@ pub fn name(func_nid: u32) -> &'static str {
+         lk::CLIB_MEMSET => "sceClibMemset",
+         lk::CLIB_MEMCMP => "sceClibMemcmp",
+         lk::CLIB_STRNLEN => "sceClibStrnlen",
++        lk::CLIB_STRLCPY => "sceClibStrlcpy",
++        lk::CLIB_STRLCAT => "sceClibStrlcat",
+         lk::CLIB_STRNCPY => "sceClibStrncpy",
+         lk::CLIB_STRNCMP => "sceClibStrncmp",
+         lk::CLIB_STRCMP => "sceClibStrcmp",
+@@ -3074,6 +3079,7 @@ pub fn name(func_nid: u32) -> &'static str {
+         ng::VOICE_DEF_GET_TEMPLATE1 => "sceNgsVoiceDefGetTemplate1",
+         ng::VOICE_DEF_GET_ATRAC9_VOICE => "sceNgsVoiceDefGetAtrac9Voice",
+         ng::VOICE_DEF_GET_SAS_EMU_VOICE => "sceNgsVoiceDefGetSasEmuVoice",
++        ng::VOICE_DEF_GET_PAUSER_BUSS => "sceNgsVoiceDefGetPauserBuss",
+         ng::VOICE_DEF_GET_ENVELOPE_BUSS => "sceNgsVoiceDefGetEnvelopeBuss",
+         ng::SYSTEM_SET_PARAM_ERROR_CALLBACK => "sceNgsSystemSetParamErrorCallback",
+         ng::VOICE_SET_PARAMS_BLOCK => "sceNgsVoiceSetParamsBlock",
+diff --git a/projects/vitaslop-runtime/src/vita/libkernel.rs b/projects/vitaslop-runtime/src/vita/libkernel.rs
+index 009c581..3d40adf 100644
+--- a/projects/vitaslop-runtime/src/vita/libkernel.rs
++++ b/projects/vitaslop-runtime/src/vita/libkernel.rs
+@@ -1030,6 +1030,47 @@ pub(super) fn clib_strnlen(ctx: &mut GuestCtx, s: Ptr, maxlen: u32) -> u32 {
+     bytes.iter().position(|&b| b == 0).unwrap_or(bytes.len()) as u32
+ }
+ 
++// strlcpy/strlcat return the full attempted length, even for a zero-sized or
++// truncated destination. Scan in chunks so long strings need no large allocation.
++fn string_length(ctx: &GuestCtx, addr: u32, limit: u32) -> u32 {
++    let mut offset = 0;
++    while offset < limit {
++        let count = (limit - offset).min(256);
++        let bytes = ctx.read_bytes(addr.wrapping_add(offset), count as usize);
++        let len = bytes.iter().position(|&b| b == 0).unwrap_or(bytes.len()) as u32;
++        offset += len;
++        if len < count { break; }
++    }
++    offset
++}
++
++fn copy_string(ctx: &mut GuestCtx, dst: u32, src: u32, capacity: u32) -> u32 {
++    let len = string_length(ctx, src, u32::MAX);
++    if capacity > 0 {
++        let count = len.min(capacity - 1);
++        let mut offset = 0;
++        while offset < count {
++            let n = (count - offset).min(256);
++            let bytes = ctx.read_bytes(src.wrapping_add(offset), n as usize);
++            ctx.write_bytes(dst.wrapping_add(offset), &bytes);
++            offset += n;
++        }
++        ctx.write_bytes(dst.wrapping_add(count), &[0]);
++    }
++    len
++}
++
++#[hostcall]
++pub(super) fn clib_strlcpy(ctx: &mut GuestCtx, dst: Ptr, src: Ptr, size: u32) -> u32 {
++    copy_string(ctx, dst.addr(), src.addr(), size)
++}
++
++#[hostcall]
++pub(super) fn clib_strlcat(ctx: &mut GuestCtx, dst: Ptr, src: Ptr, size: u32) -> u32 {
++    let used = string_length(ctx, dst.addr(), size);
++    used.wrapping_add(copy_string(ctx, dst.addr().wrapping_add(used), src.addr(), size - used))
++}
++
+ /// char *sceClibStrncpy(char *dst, const char *src, SceSize len)
+ /// Copies up to len bytes, zero-filling the remainder if src is shorter.
+ #[hostcall]
+@@ -1307,6 +1348,35 @@ pub(super) fn stack_chk_fail(ctx: &mut GuestCtx, st: &mut VitaState) -> SvcOutco
+     ))
+ }
+ 
++#[cfg(test)]
++mod bounded_string_tests {
++    use super::*;
++    use crate::{SliceMemory, VFP_ARG_COUNT, world::DeterministicWorld};
++    use vitaslop_transpiler::abi::REG_COUNT;
++
++    #[test]
++    fn copy_and_concat_report_full_length_and_respect_capacity() {
++        let mut st = VitaState::new(0, 0x4000, Box::new(DeterministicWorld::default()));
++        let mut bytes = vec![0u8; 8192];
++        bytes[512..5512].fill(b'x');
++        bytes[16..22].copy_from_slice(b"ab\0!!!");
++        let mut run = |f: fn(&mut GuestCtx, &mut VitaState), size: u32| {
++            let mut regs = [0; REG_COUNT];
++            regs[..3].copy_from_slice(&[16, 512, size]);
++            let mut vfp = [0; VFP_ARG_COUNT];
++            let mut memory = SliceMemory(&mut bytes);
++            let mut ctx = GuestCtx::new(&mut regs, &mut vfp, &mut memory, 0);
++            f(&mut ctx, &mut st);
++            (ctx.regs[0], ctx.read_bytes(16, 6))
++        };
++        assert_eq!(run(clib_strlcat, 2), (5002, b"ab\0!!!".to_vec()));
++        assert_eq!(run(clib_strlcat, 5), (5002, b"abxx\0!".to_vec()));
++        assert_eq!(run(clib_strlcpy, 0), (5000, b"abxx\0!".to_vec()));
++        assert_eq!(run(clib_strlcpy, 3), (5000, b"xx\0x\0!".to_vec()));
++        assert_eq!(run(clib_strlcpy, 1), (5000, b"\0x\0x\0!".to_vec()));
++    }
++}
++
+ #[cfg(test)]
+ mod atomic_tests {
+     //! `sceKernelAtomic*` against guest memory: the value each form returns (new vs old,
+diff --git a/projects/vitaslop-runtime/src/vita/mod.rs b/projects/vitaslop-runtime/src/vita/mod.rs
+index 835a465..9a10ed2 100644
+--- a/projects/vitaslop-runtime/src/vita/mod.rs
++++ b/projects/vitaslop-runtime/src/vita/mod.rs
+@@ -1682,6 +1682,8 @@ fn dispatch_inner(
+         lk_nid::CLIB_MEMSET => cont!(libkernel::clib_memset(ctx, st)),
+         lk_nid::CLIB_MEMCMP => cont!(libkernel::clib_memcmp(ctx, st)),
+         lk_nid::CLIB_STRNLEN => cont!(libkernel::clib_strnlen(ctx, st)),
++        lk_nid::CLIB_STRLCPY => cont!(libkernel::clib_strlcpy(ctx, st)),
++        lk_nid::CLIB_STRLCAT => cont!(libkernel::clib_strlcat(ctx, st)),
+         lk_nid::CLIB_STRNCPY => cont!(libkernel::clib_strncpy(ctx, st)),
+         lk_nid::CLIB_STRNCMP => cont!(libkernel::clib_strncmp(ctx, st)),
+         lk_nid::CLIB_STRCMP => cont!(libkernel::clib_strcmp(ctx, st)),
+@@ -2685,6 +2687,7 @@ fn dispatch_inner(
+         | ngs_nid::VOICE_DEF_GET_TEMPLATE1
+         | ngs_nid::VOICE_DEF_GET_ATRAC9_VOICE
+         | ngs_nid::VOICE_DEF_GET_SAS_EMU_VOICE
++        | ngs_nid::VOICE_DEF_GET_PAUSER_BUSS
+         | ngs_nid::VOICE_DEF_GET_ENVELOPE_BUSS => {
+             // One blob per definition, keyed by the NID this call arrived on - the pointer
+             // is the only thing a rack description says about what it is made of.
+diff --git a/projects/vitaslop-transpiler/src/emit.rs b/projects/vitaslop-transpiler/src/emit.rs
+index 96ffbe8..caae87f 100644
+--- a/projects/vitaslop-transpiler/src/emit.rs
++++ b/projects/vitaslop-transpiler/src/emit.rs
+@@ -5943,15 +5943,23 @@ fn emit_vfp(f: &mut Body, op: &crate::ir::VfpOp) {
+             }
+             f.instruction(&W::GlobalSet(abi::reg_global(*rt as usize)));
+         }
+-        CvtToInt { rd, rm, signed } => {
++        CvtToInt { rd, rm, signed, frac } => {
+             // Round toward zero, saturating (matches ARM vcvt.{s,u}32.f32).
+             get_s_f32(f, *rm);
++            if *frac != 0 {
++                f.instruction(&W::F32Const(exp2f(i32::from(*frac)).into()));
++                f.instruction(&W::F32Mul);
++            }
+             f.instruction(if *signed { &W::I32TruncSatF32S } else { &W::I32TruncSatF32U });
+             f.instruction(&W::GlobalSet(abi::vfp_s_global(*rd)));
+         }
+-        CvtFromInt { rd, rm, signed } => {
++        CvtFromInt { rd, rm, signed, frac } => {
+             f.instruction(&W::GlobalGet(abi::vfp_s_global(*rm)));
+             f.instruction(if *signed { &W::F32ConvertI32S } else { &W::F32ConvertI32U });
++            if *frac != 0 {
++                f.instruction(&W::F32Const(exp2f(-i32::from(*frac)).into()));
++                f.instruction(&W::F32Mul);
++            }
+             set_s_f32(f, *rd);
+         }
+ 
+diff --git a/projects/vitaslop-transpiler/src/ir.rs b/projects/vitaslop-transpiler/src/ir.rs
+index 295f5cc..a359120 100644
+--- a/projects/vitaslop-transpiler/src/ir.rs
++++ b/projects/vitaslop-transpiler/src/ir.rs
+@@ -490,9 +490,9 @@ pub enum VfpOp {
+     MrsFpscr { rt: u8 },
+     /// Convert f32 in `rm` to a 32-bit integer in `rd` (round toward zero,
+     /// saturating), signed or unsigned (vcvt.s32/u32.f32).
+-    CvtToInt { rd: u8, rm: u8, signed: bool },
++    CvtToInt { rd: u8, rm: u8, signed: bool, frac: u8 },
+     /// Convert a 32-bit integer in `rm` to f32 in `rd` (vcvt.f32.s32/u32).
+-    CvtFromInt { rd: u8, rm: u8, signed: bool },
++    CvtFromInt { rd: u8, rm: u8, signed: bool, frac: u8 },
+ 
+     // --- Double precision (f64). Operands name D-register numbers. ---
+     /// `rd = rn <op> rm` (vadd/vsub/vmul/vdiv, f64).
+diff --git a/projects/vitaslop-transpiler/src/lower.rs b/projects/vitaslop-transpiler/src/lower.rs
+index c7d564e..2d802a1 100644
+--- a/projects/vitaslop-transpiler/src/lower.rs
++++ b/projects/vitaslop-transpiler/src/lower.rs
+@@ -159,6 +159,29 @@ const MAX_FUNC_INSNS: usize = (MAX_FUNC_SPAN / 2) as usize;
+ /// the end of `discover`.
+ const MAX_FUNC_SPAN: u32 = 0x2_0000;
+ 
++// VFP scalar, in-place conversion between f32 and a 32-bit fixed-point S register.
++// ARM and Thumb-2 share this encoding after exchanging the Thumb halfwords.
++// Decode the ordinary scalar conversion for its condition, size and registers,
++// then carry the immediate fractional-bit count into lowering.
++fn scalar_fixed_vcvt(decoder: &InstDecoder, bytes: &[u8], thumb: bool) -> Option<Instruction> {
++    let raw = u32::from_le_bytes(bytes.get(..4)?.try_into().ok()?);
++    let word = if thumb { raw.rotate_left(16) } else { raw };
++    if word & 0x0fba_0fd0 != 0x0eba_0ac0 || word >> 28 == 15 || (thumb && word >> 28 != 14) {
++        return None;
++    }
++    let to_fixed = (word & (1 << 18)) != 0;
++    let signed = (word & (1 << 16)) == 0;
++    let opc = if to_fixed { 12 + u32::from(signed) } else { 8 };
++    let same_register = ((word >> 12) & 15) | (((word >> 22) & 1) << 5);
++    let equivalent = (word & 0xf040_f000) | 0x0eb0_0a40 | (opc << 16)
++        | (u32::from(to_fixed || signed) << 7) | same_register;
++    let encoded = if thumb { equivalent.rotate_left(16) } else { equivalent };
++    let mut instruction = decoder.decode(&mut U8Reader::new(&encoded.to_le_bytes())).ok()?;
++    let imm5 = ((word & 15) << 1) | ((word >> 5) & 1);
++    instruction.operands[2] = Operand::Imm(32 - imm5);
++    Some(instruction)
++}
++
+ /// Decode one instruction at guest `addr`, returning it and its byte length.
+ fn decode_at(
+     decoder: &InstDecoder,
+@@ -173,10 +196,13 @@ fn decode_at(
+         return Err(Error::Decode { addr });
+     }
+     let mut reader = U8Reader::new(&code[off..]);
+-    let mut inst = match decoder.decode(&mut reader) {
++    let mut inst = match scalar_fixed_vcvt(decoder, &code[off..], thumb) {
++        Some(inst) => inst,
++        None => match decoder.decode(&mut reader) {
+         Ok(inst) => inst,
+         Err(_) if !thumb => arm_decoder_refusal(decoder, &code[off..off + 4]).ok_or(Error::Decode { addr })?,
+         Err(_) => return Err(Error::Decode { addr }),
++        },
+     };
+     // >>> THE ARM DECODER NAMES BOTH `add rd, pc, #imm` AND `sub rd, pc, #imm` `adr`, and the
+     // operands it gives (`rd, pc, #imm`) carry no sign - so the subtracting form was lowered
+@@ -4275,23 +4301,24 @@ fn lower_effects(inst: &Instruction, addr: u32, in_it: bool) -> Result<Vec<Stmt>
+         VMSR => {}
+         VCVT { to, from, .. } => {
+             use VfpType::{F32, F64, S32, U32};
++            let frac = if let Operand::Imm(bits) = ops[2] { bits as u8 } else { 0 };
+             match (to, from) {
+                 // Single precision: f32 <-> 32-bit integer (S registers).
+                 (S32, F32) => {
+                     let (rd, rm) = (s_num(&ops[0]).ok_or_else(err)?, s_num(&ops[1]).ok_or_else(err)?);
+-                    out.push(Stmt::Vfp(VfpOp::CvtToInt { rd, rm, signed: true }));
++                    out.push(Stmt::Vfp(VfpOp::CvtToInt { rd, rm, frac, signed: true }));
+                 }
+                 (U32, F32) => {
+                     let (rd, rm) = (s_num(&ops[0]).ok_or_else(err)?, s_num(&ops[1]).ok_or_else(err)?);
+-                    out.push(Stmt::Vfp(VfpOp::CvtToInt { rd, rm, signed: false }));
++                    out.push(Stmt::Vfp(VfpOp::CvtToInt { rd, rm, frac, signed: false }));
+                 }
+                 (F32, S32) => {
+                     let (rd, rm) = (s_num(&ops[0]).ok_or_else(err)?, s_num(&ops[1]).ok_or_else(err)?);
+-                    out.push(Stmt::Vfp(VfpOp::CvtFromInt { rd, rm, signed: true }));
++                    out.push(Stmt::Vfp(VfpOp::CvtFromInt { rd, rm, frac, signed: true }));
+                 }
+                 (F32, U32) => {
+                     let (rd, rm) = (s_num(&ops[0]).ok_or_else(err)?, s_num(&ops[1]).ok_or_else(err)?);
+-                    out.push(Stmt::Vfp(VfpOp::CvtFromInt { rd, rm, signed: false }));
++                    out.push(Stmt::Vfp(VfpOp::CvtFromInt { rd, rm, frac, signed: false }));
+                 }
+                 // Double precision: f64 (D) <-> 32-bit integer (S).
+                 (F64, S32) | (F64, U32) => {
+@@ -5471,6 +5498,32 @@ fn vfp_multi(
+ #[allow(dead_code)]
+ fn _reg_marker(_: Reg) {}
+ 
++#[cfg(test)]
++mod scalar_fixed_tests {
++    use super::*;
++
++    #[test]
++    fn scalar_fixed_in_place_on_arm_and_thumb() {
++        for (word, register, bits, to, from) in [
++            (0xeefe_7ac1u32, 15, 30, VfpType::S32, VfpType::F32),
++            (0xeebf_0aef, 0, 1, VfpType::U32, VfpType::F32),
++            (0xeeba_fac0, 30, 32, VfpType::F32, VfpType::S32),
++            (0xeebb_2aca, 4, 12, VfpType::F32, VfpType::U32),
++        ] {
++            for thumb in [false, true] {
++                let decoder = InstDecoder::default().with_thumb_mode(thumb);
++                let encoded = if thumb {word.rotate_left(16)} else {word};
++                let (ins, len) = decode_at(&decoder, &encoded.to_le_bytes(), 0, 0, thumb).unwrap();
++                assert_eq!(len, 4);
++                assert!(matches!(ins.opcode, Opcode::VCVT{to:t,from:f,..} if t==to && f==from));
++                assert_eq!(s_num(&ins.operands[0]), Some(register));
++                assert_eq!(s_num(&ins.operands[1]), Some(register));
++                assert_eq!(ins.operands[2], Operand::Imm(bits));
++            }
++        }
++    }
++}
++
+ #[cfg(test)]
+ mod block_transfer_tests {
+     use super::*;

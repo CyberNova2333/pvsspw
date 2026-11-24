@@ -1,0 +1,41 @@
+{
+  "titleId": "PCSG00214",
+  "version": "01.00",
+  "sampleSha256": "e99a19869e9c83a5fce6862286a3541a997ec6e5fecd336aa7ecc5d8b1d4fd88",
+  "revision": "a6bd7788c9205ab9208f1970bc2de8e49e3ccd2e+8fa6cd62f5e0e79ab07cdb95fad0761b91f450ef87ccef1e9b0486074bd322c8+d1aab43f4be0a16a7c2c6ebc04ceac22817c3f7f1b507613867dd07bbb604eb8",
+  "threadedWasmSha256": "5f9f0efd01f7c49d89541ed319491e833e169aafa36a7727f45c81d29ac4f51c",
+  "singleWasmSha256": "d59fd2acaaba41f173513170f7d26a16aac5fd949c4f5418746475c4c6733bee",
+  "browser": "Microsoft Edge 157.0.4341.57",
+  "channel": "msedge",
+  "headless": true,
+  "graphics": "Intel Xe-LPG hardware WebGPU / Vulkan",
+  "deviceClass": "desktop",
+  "previousOpEvidence": "runs/edge-pentagram-playback.json",
+  "battleScene": "PCSG00214-first-battle-idle-v1",
+  "arms": {
+    "single": {
+      "requestedSmp": "0",
+      "onScreen": "NOW LOADING / GUEST FAULT",
+      "fault": "GUEST FAULT at frame 9672 - the run is over.\nthread 0x26eb: JsValue(RuntimeError: unreachable\nRuntimeError: unreachable\n    at wasm://wasm/120e8216:wasm-function[23755=0x8144ac8c]:0x249dd9d\n    at wasm://wasm/120e8216:wasm-function[23770=0x8144b4b0]:0x24a7729\n    at wasm://wasm/120e8216:wasm-function[23196=0x81437eb4]:0x238dccc\n    at wasm://wasm/120e8216:wasm-function[23209=0x8143918c]:0x23969df\n    at wasm://wasm/120e8216:wasm-function[22958=0x8142ef40]:0x234711c\n    at wasm://wasm/120e8216:wa",
+      "status": "frame 9672 ENDED (live via WebGPU)",
+      "surface": "surface: format Rgba8Unorm, rendered through Rgba8Unorm, alpha Opaque, present Fifo | offered formats [Rgba8Unorm, Bgra8Unorm, Rgba16Float], alpha modes [Opaque]",
+      "gameplayVerified": false,
+      "battleSeconds": 0,
+      "pictureFps": null,
+      "image": "frames/pentagram-battle/original-single.jpg",
+      "imageSha256": "8ff8307698bf8d4cc9b09c7c5034df68fd953c8cc79734d35c5869e9ab61a50a"
+    },
+    "multi": {
+      "requestedSmp": "1",
+      "onScreen": "NOW LOADING / GUEST FAULT",
+      "fault": "GUEST FAULT at frame 6500 - the run is over.\nthread 0x1a91: JsValue(RuntimeError: unreachable\nRuntimeError: unreachable\n    at wasm://wasm/14eee8e6:wasm-function[23755=0x8144ac8c]:0x2b5dba4\n    at wasm://wasm/14eee8e6:wasm-function[23770=0x8144b4b0]:0x2b68c96\n    at wasm://wasm/14eee8e6:wasm-function[23196=0x81437eb4]:0x2a33b77\n    at wasm://wasm/14eee8e6:wasm-function[23209=0x8143918c]:0x2a3d4c0\n    at wasm://wasm/14eee8e6:wasm-function[22958=0x8142ef40]:0x29e6201\n    at wasm://wasm/14eee8e6:wa",
+      "status": "frame 6500 ENDED (live via WebGPU)",
+      "surface": "surface: format Rgba8Unorm, rendered through Rgba8Unorm, alpha Opaque, present Fifo | offered formats [Rgba8Unorm, Bgra8Unorm, Rgba16Float], alpha modes [Opaque]",
+      "gameplayVerified": false,
+      "battleSeconds": 0,
+      "pictureFps": null,
+      "image": "frames/pentagram-battle/original-multi.jpg",
+      "imageSha256": "6b08c409d7d537d3059a9e1d792c37f532e28da47e325db21a6f6cd1feb1f6a1"
+    }
+  }
+}

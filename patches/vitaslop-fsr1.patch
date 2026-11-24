@@ -1,0 +1,280 @@
+diff --git a/projects/vitaslop-web/src/fsr1.rs b/projects/vitaslop-web/src/fsr1.rs
+new file mode 100644
+index 0000000..4070df0
+--- /dev/null
++++ b/projects/vitaslop-web/src/fsr1.rs
+@@ -0,0 +1,68 @@
++//! Two GPU passes over the final Vita display texture. The scratch image follows
++//! the output dimensions; neither pass changes guest render targets or scheduling.
++pub struct Fsr1 {
++    easu: wgpu::RenderPipeline,
++    rcas: wgpu::RenderPipeline,
++    source: wgpu::BindGroup,
++    scratch: Option<(wgpu::Texture, wgpu::TextureView, wgpu::BindGroup)>,
++}
++
++fn bind(device: &wgpu::Device, pipeline: &wgpu::RenderPipeline, view: &wgpu::TextureView) -> wgpu::BindGroup {
++    device.create_bind_group(&wgpu::BindGroupDescriptor {
++        label: Some("fsr1-input"),
++        layout: &pipeline.get_bind_group_layout(0),
++        entries: &[wgpu::BindGroupEntry { binding: 0, resource: wgpu::BindingResource::TextureView(view) }],
++    })
++}
++
++impl Fsr1 {
++    pub fn new(device: &wgpu::Device, format: wgpu::TextureFormat, source: &wgpu::TextureView) -> Self {
++        let module = device.create_shader_module(wgpu::ShaderModuleDescriptor {
++            label: Some("FSR 1"), source: wgpu::ShaderSource::Wgsl(include_str!("fsr1.wgsl").into()),
++        });
++        let pipeline = |entry, format| device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
++            label: Some(entry), layout: None,
++            vertex: wgpu::VertexState { module: &module, entry_point: Some("fullscreen"), buffers: &[], compilation_options: Default::default() },
++            fragment: Some(wgpu::FragmentState {
++                module: &module, entry_point: Some(entry), compilation_options: Default::default(),
++                targets: &[Some(wgpu::ColorTargetState { format, blend: None, write_mask: wgpu::ColorWrites::ALL })],
++            }),
++            primitive: Default::default(), depth_stencil: None, multisample: Default::default(), multiview_mask: None, cache: None,
++        });
++        let easu = pipeline("easu", wgpu::TextureFormat::Rgba8Unorm);
++        let source = bind(device, &easu, source);
++        Self { easu, rcas: pipeline("rcas", format), source, scratch: None }
++    }
++
++    pub fn encode(&mut self, device: &wgpu::Device, encoder: &mut wgpu::CommandEncoder, target: &wgpu::TextureView, width: u32, height: u32) {
++        if self.scratch.as_ref().is_none_or(|(t, _, _)| (t.width(), t.height()) != (width, height)) {
++            let tex = device.create_texture(&wgpu::TextureDescriptor {
++                label: Some("fsr1-scratch"),
++                size: wgpu::Extent3d { width, height, depth_or_array_layers: 1 },
++                dimension: wgpu::TextureDimension::D2, format: wgpu::TextureFormat::Rgba8Unorm,
++                mip_level_count: 1, sample_count: 1, view_formats: &[],
++                usage: wgpu::TextureUsages::TEXTURE_BINDING | wgpu::TextureUsages::RENDER_ATTACHMENT,
++            });
++            let view = tex.create_view(&Default::default());
++            let input = bind(device, &self.rcas, &view);
++            self.scratch = Some((tex, view, input));
++        }
++        let (_, intermediate, sharp_input) = self.scratch.as_ref().unwrap();
++        for (label, pipeline, input, dst) in [
++            ("fsr1-easu", &self.easu, &self.source, intermediate),
++            ("fsr1-rcas", &self.rcas, sharp_input, target),
++        ] {
++            let mut pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
++                label: Some(label),
++                color_attachments: &[Some(wgpu::RenderPassColorAttachment {
++                    view: dst, resolve_target: None, depth_slice: None,
++                    ops: wgpu::Operations { load: wgpu::LoadOp::Clear(wgpu::Color::BLACK), store: wgpu::StoreOp::Store },
++                })],
++                depth_stencil_attachment: None, timestamp_writes: None, occlusion_query_set: None, multiview_mask: None,
++            });
++            pass.set_pipeline(pipeline);
++            pass.set_bind_group(0, input, &[]);
++            pass.draw(0..3, 0..1);
++        }
++    }
++}
+diff --git a/projects/vitaslop-web/src/fsr1.wgsl b/projects/vitaslop-web/src/fsr1.wgsl
+new file mode 100644
+index 0000000..756e6f3
+--- /dev/null
++++ b/projects/vitaslop-web/src/fsr1.wgsl
+@@ -0,0 +1,103 @@
++// MIT License
++//
++// Copyright (c) 2021 Advanced Micro Devices, Inc. All rights reserved.
++//
++// Permission is hereby granted, free of charge, to any person obtaining a copy
++// of this software and associated documentation files (the "Software"), to deal
++// in the Software without restriction, including without limitation the rights
++// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
++// copies of the Software, and to permit persons to whom the Software is
++// furnished to do so, subject to the following conditions:
++//
++// The above copyright notice and this permission notice shall be included in all
++// copies or substantial portions of the Software.
++//
++// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
++// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
++// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
++// SOFTWARE.
++
++// FSR 1.0, FP32. Integer texel loads keep the twelve EASU taps distinct.
++// The source is the gamma-encoded SDR display stage, before host UI.
++@group(0) @binding(0) var source: texture_2d<f32>;
++
++struct Vertex { @builtin(position) pos: vec4f, @location(0) uv: vec2f };
++@vertex fn fullscreen(@builtin(vertex_index) vertex: u32) -> Vertex {
++    let uv = vec2f(f32((vertex << 1u) & 2u), f32(vertex & 2u));
++    return Vertex(vec4f(uv * vec2f(2, -2) + vec2f(-1, 1), 0, 1), uv);
++}
++fn rgb(p: vec2i) -> vec3f {
++    let last = vec2i(textureDimensions(source)) - vec2i(1);
++    return textureLoad(source, clamp(p, vec2i(0), last), 0).rgb;
++}
++fn luma(c: vec3f) -> f32 { return c.g + 0.5 * (c.r + c.b); }
++
++// Weighted direction and edge strength at one of the four nearest texels.
++fn gradient(w: f32, a: f32, b: f32, c: f32, d: f32, e: f32) -> vec3f {
++    let direction = vec2f(d - b, e - a);
++    let peak = max(abs(vec2f(d, e) - c), abs(vec2f(b, a) - c));
++    let ratio = min(abs(direction) / max(peak, vec2f(1e-8)), vec2f(1));
++    return w * vec3f(direction, dot(ratio, ratio));
++}
++
++const offsets = array<vec2i, 12>(
++    vec2i(0,-1), vec2i(1,-1),
++    vec2i(-1,0), vec2i(0,0), vec2i(1,0), vec2i(2,0),
++    vec2i(-1,1), vec2i(0,1), vec2i(1,1), vec2i(2,1),
++    vec2i(0,2), vec2i(1,2));
++
++@fragment fn easu(in: Vertex) -> @location(0) vec4f {
++    let samplePos = in.uv * vec2f(textureDimensions(source)) - 0.5;
++    let origin = vec2i(floor(samplePos));
++    let f = fract(samplePos);
++    var colors: array<vec3f, 12>;
++    var y: array<f32, 12>;
++    for (var i = 0u; i < 12u; i++) {
++        colors[i] = rgb(origin + offsets[i]);
++        y[i] = luma(colors[i]);
++    }
++    let edge = gradient((1-f.x)*(1-f.y), y[0], y[2], y[3], y[4], y[7])
++             + gradient(f.x*(1-f.y), y[1], y[3], y[4], y[5], y[8])
++             + gradient((1-f.x)*f.y, y[3], y[6], y[7], y[8], y[10])
++             + gradient(f.x*f.y, y[4], y[7], y[8], y[9], y[11]);
++    let magnitude2 = dot(edge.xy, edge.xy);
++    var dir = vec2f(1,0);
++    if (magnitude2 >= 1.0/32768.0) { dir = edge.xy * inverseSqrt(magnitude2); }
++    let strength = 0.25 * edge.z * edge.z;
++    let stretch = dot(dir, dir) / max(abs(dir.x), abs(dir.y));
++    let axes = vec2f(1 + (stretch-1)*strength, 1 - 0.5*strength);
++    let lobe = 0.5 - 0.29*strength;
++    var sum = vec3f(0);
++    var weight = 0.0;
++    for (var i = 0u; i < 12u; i++) {
++        let offset = vec2f(offsets[i]) - f;
++        let rotated = vec2f(dot(offset, dir), dot(offset, vec2f(-dir.y, dir.x))) * axes;
++        let d2 = min(dot(rotated, rotated), 1/lobe);
++        let a = lobe*d2 - 1;
++        let b = 0.4*d2 - 1;
++        let w = (1.5625*b*b - 0.5625)*a*a;
++        sum += w*colors[i];
++        weight += w;
++    }
++    let lo = min(min(colors[3],colors[4]), min(colors[7],colors[8]));
++    let hi = max(max(colors[3],colors[4]), max(colors[7],colors[8]));
++    return vec4f(clamp(sum / max(weight, 1e-8), lo, hi), 1);
++}
++
++@fragment fn rcas(in: Vertex) -> @location(0) vec4f {
++    let p = vec2i(in.pos.xy);
++    let c = rgb(p);
++    let n = rgb(p+vec2i(0,-1)); let s = rgb(p+vec2i(0,1));
++    let e = rgb(p+vec2i(1,0)); let w = rgb(p+vec2i(-1,0));
++    let lo = min(min(n,s), min(e,w));
++    let hi = max(max(n,s), max(e,w));
++    let hitMin = min(lo,c) / max(4*hi, vec3f(1e-8));
++    let hitMax = (1-max(hi,c)) / min(4*lo-4, vec3f(-1e-8));
++    let channel = max(-hitMin, hitMax);
++    // One stop of RCAS attenuation; the peak negative lobe is 3/16.
++    let lobe = 0.5 * clamp(max(max(channel.r,channel.g),channel.b), -0.1875, 0);
++    return vec4f((c + lobe*(n+s+e+w)) / (1+4*lobe), 1);
++}
+diff --git a/projects/vitaslop-web/src/lib.rs b/projects/vitaslop-web/src/lib.rs
+index bc18918..9e1ba54 100644
+--- a/projects/vitaslop-web/src/lib.rs
++++ b/projects/vitaslop-web/src/lib.rs
+@@ -40,6 +40,7 @@ mod browser_sched;
+ mod conformance;
+ mod frame_replay;
+ mod frontend;
++mod fsr1;
+ mod input;
+ mod location;
+ mod logging;
+@@ -75,6 +76,7 @@ const HEIGHT: u32 = 544;
+ thread_local! {
+     /// The canvas's size in DEVICE pixels, as the page last measured it (`worker_set_output_size`)
+     /// - `(0, 0)` until it says. See `present_scale` for why the canvas is no longer 960x544.
++    static FSR1: std::cell::Cell<bool> = const { std::cell::Cell::new(false) };
+     static OUTPUT_SIZE: std::cell::Cell<(u32, u32)> = const { std::cell::Cell::new((0, 0)) };
+ }
+ 
+@@ -83,7 +85,8 @@ thread_local! {
+ /// canvas to it and scales the console's 960x544 picture into it - see `present_scale`.
+ /// `0x0` (or 960x544) restores the old path: the canvas is the picture and the browser scales it.
+ #[wasm_bindgen]
+-pub fn worker_set_output_size(w: u32, h: u32) {
++pub fn worker_set_output_size(w: u32, h: u32, fsr1: bool) {
++    FSR1.with(|f| f.set(fsr1));
+     // Bounded: a canvas bigger than any screen is a measuring mistake, not a request.
+     OUTPUT_SIZE.with(|c| c.set((w.min(8192), h.min(8192))));
+ }
+@@ -1280,6 +1283,7 @@ struct LivePlayback {
+     offscreen: Option<web_sys::OffscreenCanvas>,
+     /// The 960x544 stage and the pass that scales it to the canvas - see `present_scale`.
+     scaler: present_scale::Scaler,
++    fsr1: Option<fsr1::Fsr1>,
+     /// Consecutive presents that produced no surface texture. A handful is ordinary (a
+     /// reconfigure takes effect on the next frame, a tab is occluded); a run of them is a
+     /// swapchain that is never coming back, and continuing past it is the black screen this
+@@ -3194,6 +3198,7 @@ impl LivePlayback {
+             presents_total: 0,
+             lost,
+             scaler,
++            fsr1: None,
+             surface_config,
+             offscreen,
+             acquire_failures: 0,
+@@ -3791,8 +3796,16 @@ impl LivePlayback {
+             list.extend(self.gxm.rtt_float_targets());
+             self.writeback.capture(&self.device, &mut encoder, &list, all_scenes);
+         }
+-        if scaled {
+-            self.scaler.encode(&self.queue, &mut encoder, &view, out_w, out_h);
++        if scaled && out_w >= WIDTH && out_h >= HEIGHT && FSR1.with(|f| f.get()) {
++            let fsr = self.fsr1.get_or_insert_with(|| {
++                fsr1::Fsr1::new(&self.device, self.render_format, &self.scaler.current().unwrap().view)
++            });
++            fsr.encode(&self.device, &mut encoder, &view, out_w, out_h);
++        } else {
++            self.fsr1 = None;
++            if scaled {
++                self.scaler.encode(&self.queue, &mut encoder, &view, out_w, out_h);
++            }
+         }
+         self.gxm.gpu_burn(&self.device, &mut encoder, self.gpu_burn);
+         self.gxm.ts_finish_chain(&mut encoder);
+diff --git a/projects/vitaslop-web/web/worker.js b/projects/vitaslop-web/web/worker.js
+index e285c84..1f4f490 100644
+--- a/projects/vitaslop-web/web/worker.js
++++ b/projects/vitaslop-web/web/worker.js
+@@ -204,6 +204,7 @@ globalThis.__vitaslopPanic = (text) => {
+ const loadTimes = { t0: performance.now() };
+ const glue = import(SMP_BUNDLE ? "./pkg-threads/vitaslop_web.js" : "./pkg/vitaslop_web.js");
+ let readyP = null;
++let outputReady = false, pendingOutput;
+ // >>> THE PAGE HANDS US THE BUNDLE ALREADY COMPILED, when it can. Each worker used to fetch and
+ // compile the 9 MB bundle itself, and a phone on the dev server's self-signed certificate gets
+ // NO HTTP cache: MEASURED (runner, a baseball title) 8.7 s and the full 9 MB over the wire, per worker, per
+@@ -237,6 +238,9 @@ const bundle = (module) =>
+       reserve_guest_region,
+     } = m);
+     await m.default(module ? { module_or_path: module } : undefined);
++    outputReady = true;
++    if (pendingOutput) worker_set_output_size(pendingOutput.w | 0, pendingOutput.h | 0, !!pendingOutput.fsr1);
++    pendingOutput = undefined;
+     loadTimes.inited = performance.now();
+   }));
+ 
+@@ -315,7 +319,8 @@ self.onmessage = async (e) => {
+   // The canvas's size in DEVICE pixels (see player.js `postOutputSize`): the renderer sizes the
+   // canvas to it and scales the 960x544 picture into it crisply - see present_scale.rs.
+   if (d.type === "output-size") {
+-    if (worker_set_output_size) worker_set_output_size(d.w | 0, d.h | 0);
++    if (outputReady) worker_set_output_size(d.w | 0, d.h | 0, !!d.fsr1);
++    else pendingOutput = d;
+     return;
+   }
+   // The person's keyboard map (see vitaslop-frontend); the on-screen pad and a gamepad

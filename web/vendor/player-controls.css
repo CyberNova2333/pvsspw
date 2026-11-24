@@ -1,0 +1,472 @@
+/* Player controls: hit areas stay still while their keycaps provide feedback. */
+.touch-gamepad {
+  --pad-button-size: clamp(48px, 6vw, 56px);
+  --pad-stick-size: clamp(80px, 14vh, 96px);
+  --pad-ink: #f0f6fc;
+  --pad-rim: rgba(48, 54, 61, 0.9);
+  --pad-key: linear-gradient(180deg, rgba(33, 38, 45, 0.85), rgba(13, 17, 23, 0.88));
+  --pad-depth: inset 0 1px 0 rgba(240, 246, 252, 0.08), 0 2px 6px rgba(1, 4, 9, 0.45);
+}
+.touch-gamepad button { position: relative; }
+.touch-gamepad button,
+.touch-gamepad button:hover,
+.touch-gamepad button:active,
+.touch-gamepad button.is-pressed {
+  isolation: isolate;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--pad-ink);
+  transition: none;
+}
+.touch-gamepad button::before {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  z-index: -1;
+  border: 1px solid var(--pad-rim);
+  border-radius: inherit;
+  background: var(--pad-key);
+  box-shadow: var(--pad-depth);
+  pointer-events: none;
+  transition: transform 60ms ease-out, background 60ms ease-out, box-shadow 60ms ease-out;
+}
+.touch-gamepad button.is-pressed::before {
+  transform: scale(.94);
+  border-color: rgba(56, 139, 253, 0.85);
+  background: linear-gradient(180deg, rgba(56, 139, 253, 0.9), rgba(31, 111, 235, 0.92));
+  box-shadow: inset 0 2px 4px rgba(1, 4, 9, 0.35), 0 0 0 2px rgba(56, 139, 253, 0.2);
+}
+.touch-gamepad button.is-pressed { color: #fff; }
+.touch-gamepad button > svg {
+  width: 47%;
+  height: 47%;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+.touch-gamepad button.is-pressed > svg { transform: translateY(1px); }
+.touch-gamepad button:focus-visible,
+.touch-pad-stick:focus-visible { outline-color: #2f81f7; }
+.touch-pad-dpad {
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(22, 27, 34, .55) 0 28%, rgba(22, 27, 34, .16) 53%, transparent 70%);
+}
+.touch-pad-dpad::after {
+  content: "";
+  position: absolute;
+  left: 44%;
+  top: 44%;
+  width: 12%;
+  height: 12%;
+  border: 1px solid rgba(48, 54, 61, 0.8);
+  border-radius: 50%;
+  box-shadow: inset 0 1px 3px rgba(1, 4, 9, .35);
+  pointer-events: none;
+}
+.touch-pad-dpad button > svg { width: 35%; height: 35%; fill: currentColor; stroke: none; }
+.touch-pad-dpad [data-pad-button="up"] { border-radius: 14px 14px 5px 5px; }
+.touch-pad-dpad [data-pad-button="down"] { border-radius: 5px 5px 14px 14px; }
+.touch-pad-dpad [data-pad-button="left"] { border-radius: 14px 5px 5px 14px; }
+.touch-pad-dpad [data-pad-button="right"] { border-radius: 5px 14px 14px 5px; }
+.touch-pad-actions button > svg { width: 52%; height: 52%; }
+.touch-pad-actions [data-pad-button="cross"] > svg { width: 44%; height: 44%; stroke-width: 2; }
+.touch-gamepad .touch-pad-shoulder {
+  position: absolute;
+  width: 88px;
+  height: 48px;
+  border-radius: 14px 14px 20px 20px;
+  font: 650 16px/1 system-ui, sans-serif;
+  letter-spacing: .06em;
+}
+.touch-pad-stick {
+  border: 1px solid rgba(48, 54, 61, 0.85);
+  background: radial-gradient(circle, rgba(13, 17, 23, .5) 44%, rgba(33, 38, 45, .55) 45%, rgba(13, 17, 23, .6) 69%);
+  box-shadow: inset 0 2px 8px rgba(1, 4, 9, .35), 0 1px 0 rgba(240, 246, 252, .08);
+}
+.touch-pad-stick-cross::before, .touch-pad-stick-cross::after { background: rgba(139, 148, 158, .2); }
+.touch-pad-thumb {
+  border: 1px solid rgba(139, 148, 158, .45);
+  background: repeating-radial-gradient(circle at center, transparent 0 3px, rgba(240, 246, 252, .04) 3px 4px), linear-gradient(160deg, #30363d, #161b22);
+  box-shadow: inset 0 1px 1px rgba(240, 246, 252, .16), 0 3px 6px rgba(1, 4, 9, .45);
+}
+.touch-pad-stick.is-pressed { border-color: rgba(56, 139, 253, .7); }
+.touch-pad-stick.is-pressed .touch-pad-thumb {
+  border-color: #2f81f7;
+  background: repeating-radial-gradient(circle at center, transparent 0 3px, rgba(240, 246, 252, .07) 3px 4px), linear-gradient(160deg, #2f81f7, #1f6feb);
+}
+.touch-gamepad .touch-pad-system button {
+  width: 72px;
+  border-radius: 22px;
+  font: 600 10px/1 system-ui, sans-serif;
+  letter-spacing: .08em;
+}
+.touch-gamepad .touch-pad-system button::before { inset: 8px 2px; }
+/* Keep badges clear of the pad, including the FPS loop's inline visibility. */
+body.touch-gamepad-visible #stageMini,
+body.touch-gamepad-visible #fpsBadge { display: none !important; }
+
+/* Every section has a visible icon and label. Short landscape screens use a rail. */
+#sidePanel {
+  --panel-w: clamp(360px, 30vw, 440px);
+  grid-template-rows: auto auto minmax(0, 1fr);
+}
+.panel-navigation {
+  padding: 12px 16px 14px;
+  border-bottom: 1px solid var(--border2);
+  background: var(--surface2);
+}
+.panel-navigation .panel-section-caption { margin-bottom: 8px; font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+#sidePanel .tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  border: 0;
+  padding: 2px 0;
+}
+#sidePanel .tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  flex: 0 0 auto;
+  min-width: 36px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+  isolation: isolate;
+  transition: width 0.24s cubic-bezier(0.2, 0.9, 0.3, 1),
+              padding 0.24s cubic-bezier(0.2, 0.9, 0.3, 1),
+              color 0.15s ease;
+  transform: none;
+}
+#sidePanel .tab .lucide {
+  width: 16px;
+  height: 16px;
+  stroke-width: 1.8;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 2;
+}
+#sidePanel .tab span {
+  position: relative;
+  z-index: 2;
+  font-size: 12.5px;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+#sidePanel .tab::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 6px;
+  pointer-events: none;
+  z-index: 1;
+  border: 1px solid transparent;
+  background: transparent;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+/* 未选中状态：固定 36px 纯图标，文字折叠 */
+#sidePanel .tab:not(.active) {
+  flex: 0 0 36px;
+  width: 36px;
+  padding: 0;
+  justify-content: center;
+}
+#sidePanel .tab:not(.active) span {
+  max-width: 0;
+  opacity: 0;
+  overflow: hidden;
+  transform: scaleX(0);
+  margin-left: 0;
+  transition: max-width 0.18s cubic-bezier(0.2, 0.9, 0.3, 1),
+              opacity 0.14s ease,
+              transform 0.18s ease;
+}
+#sidePanel .tab:not(.active):hover {
+  color: var(--text);
+}
+#sidePanel .tab:not(.active):hover::before {
+  background: var(--surface3);
+  border-color: var(--border2);
+}
+
+/* 选中状态：由图标（中间）向两侧展开边框、柔光底色与文字 */
+#sidePanel .tab.active {
+  flex: 0 0 auto;
+  width: auto;
+  padding: 0 12px;
+  justify-content: flex-start;
+  gap: 7px;
+  color: var(--accent);
+  font-weight: 600;
+  border-color: transparent;
+  background: transparent;
+}
+#sidePanel .tab.active .lucide {
+  color: var(--accent);
+  animation: tab-icon-glide-left 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+#sidePanel .tab.active span {
+  max-width: 90px;
+  opacity: 1;
+  transform: scaleX(1);
+  animation: tab-text-unfold-right 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
+  transform-origin: left center;
+}
+#sidePanel .tab.active::before {
+  border: 1px solid var(--accent);
+  background: var(--accent-soft, rgba(56, 139, 253, 0.14));
+  box-shadow: 0 1px 2px rgba(1, 4, 9, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  animation: tab-pill-expand-both-sides 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes tab-pill-expand-both-sides {
+  0% {
+    clip-path: inset(0 calc(50% - 18px) 0 calc(50% - 18px) round 6px);
+    opacity: 0.5;
+  }
+  100% {
+    clip-path: inset(0 0% 0 0% round 6px);
+    opacity: 1;
+  }
+}
+@keyframes tab-icon-glide-left {
+  0% {
+    transform: translateX(17px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+@keyframes tab-text-unfold-right {
+  0% {
+    opacity: 0;
+    transform: translateX(-12px) scale(0.9);
+  }
+  45% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@media (orientation: landscape) and (max-width: 450px) and (max-height: 360px) {
+  body.touch-gamepad-visible .touch-pad-left,
+  body.touch-gamepad-visible .touch-pad-right { display: contents; }
+  body.touch-gamepad-visible .touch-pad-shoulder { width: 74px; height: 46px; top: max(4px, env(safe-area-inset-top)); transform: none; }
+  body.touch-gamepad-visible .touch-pad-left .touch-pad-shoulder { left: max(4px, env(safe-area-inset-left)); }
+  body.touch-gamepad-visible .touch-pad-right .touch-pad-shoulder { left: auto; right: max(4px, env(safe-area-inset-right)); }
+  body.touch-gamepad-visible .touch-pad-system {
+    top: max(4px, env(safe-area-inset-top)); bottom: auto;
+    left: calc(max(4px, env(safe-area-inset-left)) + 78px); right: calc(max(4px, env(safe-area-inset-right)) + 78px);
+    justify-content: space-between; transform: none;
+  }
+  body.touch-gamepad-visible .touch-pad-system button { width: 62px; height: 44px; }
+  body.touch-gamepad-visible .touch-pad-dpad, body.touch-gamepad-visible .touch-pad-actions { bottom: max(6px, env(safe-area-inset-bottom)); }
+  body.touch-gamepad-visible .touch-pad-stick { left: 50%; bottom: max(4px, env(safe-area-inset-bottom)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  #sidePanel .tab,
+  #sidePanel .tab span,
+  #sidePanel .tab::before,
+  #sidePanel .tab.active::before,
+  #sidePanel .tab.active .lucide,
+  #sidePanel .tab.active span {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+#sidePanel .tab:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; box-shadow: none; }
+#sidePanel .panel-intro h2 { font-size: 18px; line-height: 1.4; }
+#sidePanel .settings-section h3, #sidePanel .info-group h3 { font-size: 14px; }
+#sidePanel .setting-field, #sidePanel .setting-check { font-size: 13px; }
+#sidePanel .panel-intro p, #sidePanel .setting-hint { font-size: 13px; }
+#sidePanel .settings-section { border: 1px solid var(--border2); border-radius: 6px; }
+#sidePanel .status-bar { align-items: center; background: var(--surface2); border-bottom-color: var(--border2); }
+#sidePanel .status-dot { margin-top: 0; }
+#sidePanel #panelCloseBtn { min-width: 32px; width: 32px; height: 32px; }
+
+@media (orientation: portrait) {
+  body.touch-gamepad-visible {
+    --touch-pad-height: calc(clamp(44px, 12vw, 52px) * 3 + clamp(80px, 14vh, 96px) + 96px + env(safe-area-inset-bottom));
+  }
+  body.touch-gamepad-visible .touch-gamepad {
+    --pad-button-size: clamp(44px, 12vw, 52px);
+    background: linear-gradient(180deg, #232a33, #171d25);
+    border-top-color: rgba(220, 232, 245, .16);
+  }
+}
+@media (orientation: landscape) and (max-height: 560px) {
+  .panel-navigation { padding: 6px 10px 10px; min-width: 0; }
+  .panel-navigation .panel-section-caption { display: none; }
+  #sidePanel .tabs {
+    display: flex;
+    overflow-x: auto;
+    gap: 4px;
+    padding-bottom: 4px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border2) transparent;
+    overscroll-behavior-x: contain;
+    touch-action: pan-x;
+    scroll-padding-inline: 6px;
+  }
+  #sidePanel .tab { flex: 0 0 auto; padding-inline: 10px; }
+  #sidePanel .panel-intro { margin-bottom: 12px; }
+}
+@media (orientation: landscape) and (max-height: 360px) {
+  .touch-gamepad { --pad-button-size: 44px; --pad-stick-size: 76px; }
+  /* Free the shoulder keys from the thumb columns on short displays. */
+  .touch-pad-left, .touch-pad-right { display: contents; }
+  .touch-pad-dpad { left: max(10px, env(safe-area-inset-left)); bottom: max(96px, calc(env(safe-area-inset-bottom) + 88px)); }
+  .touch-pad-actions { right: max(10px, env(safe-area-inset-right)); bottom: max(96px, calc(env(safe-area-inset-bottom) + 88px)); }
+  .touch-pad-stick { left: max(76px, calc(env(safe-area-inset-left) + 66px)); bottom: max(8px, env(safe-area-inset-bottom)); }
+
+}
+@media (orientation: landscape) and (max-height: 290px) {
+  /* An extra-short window cannot fit a stick below the d-pad: put it beside it. */
+  .touch-pad-dpad, .touch-pad-actions { bottom: max(8px, env(safe-area-inset-bottom)); }
+  .touch-pad-stick { left: max(184px, calc(env(safe-area-inset-left) + 174px)); }
+  .touch-pad-system { top: max(58px, calc(env(safe-area-inset-top) + 50px)); bottom: auto; }
+  .touch-gamepad .touch-pad-system button { width: 52px; }
+}
+/* Keep the middle of the landscape view clear for the game and fullscreen menu. */
+@media (orientation: landscape) {
+  .touch-gamepad { opacity: var(--pad-opacity, .7); }
+}
+@media (orientation: landscape) and (min-width: 451px) {
+  body.touch-gamepad-visible .touch-pad-left,
+  body.touch-gamepad-visible .touch-pad-right { display: contents; }
+  .touch-gamepad {
+    --pad-left: max(10px, env(safe-area-inset-left));
+    --pad-right: max(10px, env(safe-area-inset-right));
+    --pad-top: max(6px, env(safe-area-inset-top));
+  }
+  body.touch-gamepad-visible .touch-pad-shoulder {
+    top: var(--pad-top); width: 88px; height: 48px; transform: none;
+  }
+  body.touch-gamepad-visible .touch-pad-left .touch-pad-shoulder { left: var(--pad-left); }
+  body.touch-gamepad-visible .touch-pad-right .touch-pad-shoulder { left: auto; right: var(--pad-right); }
+  body.touch-gamepad-visible .touch-pad-system {
+    top: var(--pad-top); bottom: auto; left: calc(var(--pad-left) + 92px); right: calc(var(--pad-right) + 92px);
+    justify-content: space-between; transform: none;
+  }
+  body.touch-gamepad-visible .touch-pad-system button { width: 72px; height: 44px; }
+  .touch-pad-dpad { left: var(--pad-left); }
+  .touch-pad-actions { right: var(--pad-right); }
+  .touch-pad-stick { left: calc(var(--pad-left) + var(--pad-cluster-size) / 2); }
+}
+@media (orientation: landscape) and (min-width: 451px) and (max-height: 360px) {
+  .touch-pad-dpad, .touch-pad-actions { bottom: max(6px, env(safe-area-inset-bottom)); }
+  .touch-pad-stick { left: calc(var(--pad-left) + var(--pad-cluster-size) + var(--pad-stick-size) / 2 + 4px); }
+}
+@media (max-width: 319px) {
+  body { min-width: 0; }
+  body.touch-gamepad-visible .touch-pad-left { left: max(8px, env(safe-area-inset-left)); }
+  body.touch-gamepad-visible .touch-pad-right { right: max(8px, env(safe-area-inset-right)); }
+  body.touch-gamepad-visible .touch-pad-system { right: max(8px, env(safe-area-inset-right)); }
+}
+@media (max-width: 400px) and (min-height: 300px) and (max-height: 480px) {
+  /* Short folded/split windows need an overlay: a separate deck can consume the whole game view. */
+  body.touch-gamepad-visible .stage { padding: 0 !important; }
+  body.touch-gamepad-visible #canvas {
+    width: min(100%, calc((var(--app-h) - var(--h)) * 16 / 9)) !important;
+    height: auto !important;
+    max-height: calc(var(--app-h) - var(--h)) !important;
+  }
+  body.touch-gamepad-visible.browser-fullscreen #canvas {
+    width: min(100%, calc(var(--app-h) * 16 / 9)) !important;
+    max-height: var(--app-h) !important;
+  }
+  body.touch-gamepad-visible .touch-gamepad {
+    --pad-button-size: 44px;
+    --pad-stick-size: 60px;
+    inset: 0;
+    height: auto;
+    border: 0;
+    background: transparent;
+  }
+  body.touch-gamepad-visible .touch-pad-left,
+  body.touch-gamepad-visible .touch-pad-right { display: contents; }
+  body.touch-gamepad-visible .touch-pad-dpad {
+    left: max(8px, env(safe-area-inset-left));
+    bottom: max(68px, calc(env(safe-area-inset-bottom) + 64px));
+  }
+  body.touch-gamepad-visible .touch-pad-actions {
+    right: max(8px, env(safe-area-inset-right));
+    bottom: max(68px, calc(env(safe-area-inset-bottom) + 64px));
+  }
+  body.touch-gamepad-visible .touch-pad-left .touch-pad-shoulder {
+    left: max(74px, calc(env(safe-area-inset-left) + 66px));
+    top: max(4px, env(safe-area-inset-top));
+  }
+  body.touch-gamepad-visible .touch-pad-right .touch-pad-shoulder {
+    left: auto;
+    right: max(38px, calc(env(safe-area-inset-right) + 30px));
+    top: max(4px, env(safe-area-inset-top));
+    transform: none;
+  }
+  body.touch-gamepad-visible .touch-pad-shoulder { width: 72px; height: 44px; }
+  body.touch-gamepad-visible .touch-pad-stick {
+    left: max(46px, calc(env(safe-area-inset-left) + 38px));
+    bottom: max(4px, env(safe-area-inset-bottom));
+  }
+  body.touch-gamepad-visible .touch-pad-system {
+    left: auto;
+    right: max(8px, env(safe-area-inset-right));
+    top: auto;
+    bottom: max(8px, env(safe-area-inset-bottom));
+    transform: none;
+    gap: 8px;
+  }
+  body.touch-gamepad-visible .touch-pad-system button { width: 62px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .touch-gamepad button::before { transition: none; }
+}
+
+#compactThemeSetting[hidden], #stateSlotPreview[hidden], #stateSlotPreview img[hidden] { display: none; }
+#compactThemeSetting, #stateSlotPreview { display: flex; align-items: center; gap: 12px; }
+#stateSlotPreview { margin-block: 8px; color: var(--muted); }
+#stateSlotPreview img { object-fit: contain; border-radius: 4px; }
+.state-slots select { margin-inline-start: 8px; }
+.state-slots .player-actions { margin-top: 8px; }
+#stateSlotStatus { margin: 8px 0 0; }
+.fullscreen-actions { max-height: calc(var(--app-h, 100dvh) - 56px); overflow-y: auto; }
+
+.idle-actions #idleStartBtn { min-height: 44px; }
+.idle-actions #idleStartBtn > span:not([hidden]) { display: inline-flex; align-items: center; }
+.idle-subtitle { overflow-wrap: anywhere; }
+#libraryPanel #startBtn { width: auto; max-width: none; padding-inline: 10px; }
+.pad-opacity-field { display: flex; align-items: center; gap: 8px; }
+.pad-opacity-field input { width: clamp(72px, 18vw, 128px); accent-color: var(--accent); }
+.pad-opacity-field output { min-width: 4ch; text-align: end; font-variant-numeric: tabular-nums; }
+
+#sidePanel .library-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 168px), 1fr)); }
+.game-card-body { container-type: inline-size; }
+.game-card-actions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.game-card-actions [data-action="play"] { grid-column: 1 / -1; }
+#sidePanel .game-card-actions button { min-height: 44px; }
+#sidePanel .game-card-actions button.icon-only { width: 100%; min-width: 0; }
+@container (min-width: 235px) {
+  .game-card-actions { grid-template-columns: minmax(0, 1fr) repeat(3, 44px); }
+  .game-card-actions [data-action="play"] { grid-column: auto; }
+}

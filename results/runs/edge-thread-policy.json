@@ -1,0 +1,350 @@
+{
+  "titleId": "PCSG00214",
+  "sampleSha256": "e99a19869e9c83a5fce6862286a3541a997ec6e5fecd336aa7ecc5d8b1d4fd88",
+  "scene": "PCSG00214-first-battle-idle-v1",
+  "deviceClass": "desktop",
+  "browser": "Microsoft Edge 157.0.4341.57",
+  "adapter": "Linux 桌面 Intel Xe-LPG 硬件 WebGPU",
+  "method": "Playwright headless msedge on Linux Intel Xe-LPG. Verify run-worker smp URL, actual ready messages of named guest workers, live GPU rendering and unchanged persisted overrides. The four-core case overrides navigator.hardwareConcurrency and deviceMemory on this desktop only.",
+  "algorithm": "Prefer the reviewed game result on the exact tested host and title (3 guest workers). On other configurations, for each launch budget guest workers by reported concurrency and memory. Automatic range 2–6, reserve two logical processors when possible. For budgets above two, test ascending and descending pool sizes for 32 ms each, use the slower of the two results for each count and choose the smallest pool within 10% of the best parallel CPU throughput. A 1200 ms timeout or probe failure falls back to min(3, budget). The game uses that pool for this session.",
+  "sources": {
+    "web/thread-policy.js": "a5b137d37b6eca4bcdc401583e44e341cfba8953cce02d4f6314756f4fc1140e",
+    "web/thread-probe.js": "356f4be9a872056e8046cb14120185478461648042dc09572daf426f805721c7",
+    "bench/worker-probe.js": "0449ab080fa055ccd2ff0f7073f814e6185a49b3860734fdad5899b99906df32",
+    "bench/picture-surface.js": "f5714ad85c31e9d6391c3ce1ac3d2972ee51862a1b0768e48afb92447242feed",
+    "bench/picture-rate.js": "c94f121a1aa917dce7a789b7269adf7c645c4b2162b9345097860ddeaabc3920"
+  },
+  "beforeGameProfile": {
+    "startup": {
+      "name": "desktop-auto",
+      "headless": true,
+      "browser": "157.0.4341.57",
+      "worker": "http://127.0.0.1:18751/worker.js?smp=1&uiGpu=high-performance&uiMode=core",
+      "title": "PCSG00214",
+      "ready": [
+        "vitaslop-core1",
+        "vitaslop-core2",
+        "vitaslop-core3",
+        "vitaslop-core4",
+        "vitaslop-core5"
+      ],
+      "policy": "多线程 · 5 个游戏执行线程（并行测速）",
+      "knobs": {
+        "VITASLOP_FRAME_TOPUP": "0",
+        "VITASLOP_GXP_LIVE": "1",
+        "VITASLOP_SMP": "1",
+        "VITASLOP_SMP_WORKERS": "5"
+      },
+      "status": "frame 65 (live via WebGPU) | 0 ms, 0 host calls (0 through the non-suspending trap, no timing this frame) | FramesReached(65)",
+      "gpu": "adapter: vendor=intel arch=xe-lpg device=? desc=? featureLevel=(not reported) | wgpu name unavailable | GPU",
+      "frameEvents": 70,
+      "fault": null,
+      "logicalCores": 24,
+      "memoryGiB": 32
+    },
+    "battlePolicySources": {
+      "web/thread-policy.js": "8affa4080ca9314dc368364104b15ac1d4a5094d15196e071d13e2c0395c6a5a",
+      "web/thread-probe.js": "356f4be9a872056e8046cb14120185478461648042dc09572daf426f805721c7"
+    }
+  },
+  "starts": [
+    {
+      "name": "desktop-auto",
+      "headless": true,
+      "browser": "157.0.4341.57",
+      "worker": "http://127.0.0.1:18751/worker.js?smp=1&uiGpu=high-performance&uiMode=core",
+      "title": "PCSG00214",
+      "ready": [
+        "vitaslop-core1",
+        "vitaslop-core2",
+        "vitaslop-core3"
+      ],
+      "policy": "多线程 · 3 个游戏执行线程（同游戏与设备实测）",
+      "knobs": {
+        "VITASLOP_FRAME_TOPUP": "0",
+        "VITASLOP_GXP_LIVE": "1",
+        "VITASLOP_SMP": "1",
+        "VITASLOP_SMP_WORKERS": "3"
+      },
+      "status": "frame 67 (live via WebGPU) | 0 ms, 0 host calls (0 through the non-suspending trap, no timing this frame) | FramesReached(67)",
+      "gpu": "adapter: vendor=intel arch=xe-lpg device=? desc=? featureLevel=(not reported) | wgpu name unavailable | GPU",
+      "frameEvents": 71,
+      "fault": null,
+      "logicalCores": 24,
+      "memoryGiB": 32,
+      "platform": "Linux x86_64",
+      "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36 Edg/157.0.0.0"
+    },
+    {
+      "name": "desktop-emulated-4-core",
+      "headless": true,
+      "browser": "157.0.4341.57",
+      "worker": "http://127.0.0.1:18751/worker.js?smp=1&uiGpu=high-performance&uiMode=core",
+      "title": "PCSG00214",
+      "ready": [
+        "vitaslop-core1",
+        "vitaslop-core2"
+      ],
+      "policy": "多线程 · 2 个游戏执行线程（设备预算）",
+      "knobs": {
+        "VITASLOP_FRAME_TOPUP": "0",
+        "VITASLOP_GXP_LIVE": "1",
+        "VITASLOP_SMP": "1",
+        "VITASLOP_SMP_WORKERS": "2"
+      },
+      "status": "frame 68 (live via WebGPU) | 0 ms, 0 host calls (0 through the non-suspending trap, no timing this frame) | FramesReached(68)",
+      "gpu": "adapter: vendor=intel arch=xe-lpg device=? desc=? featureLevel=(not reported) | wgpu name unavailable | GPU",
+      "frameEvents": 70,
+      "fault": null,
+      "logicalCores": 4,
+      "memoryGiB": 4,
+      "platform": "Linux x86_64",
+      "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36 Edg/157.0.0.0"
+    },
+    {
+      "name": "desktop-emulated-8-core",
+      "headless": true,
+      "browser": "157.0.4341.57",
+      "worker": "http://127.0.0.1:18751/worker.js?smp=1&uiGpu=high-performance&uiMode=core",
+      "title": "PCSG00214",
+      "ready": [
+        "vitaslop-core1",
+        "vitaslop-core2",
+        "vitaslop-core3",
+        "vitaslop-core4"
+      ],
+      "policy": "多线程 · 4 个游戏执行线程（并行测速）",
+      "knobs": {
+        "VITASLOP_FRAME_TOPUP": "0",
+        "VITASLOP_GXP_LIVE": "1",
+        "VITASLOP_SMP": "1",
+        "VITASLOP_SMP_WORKERS": "4"
+      },
+      "status": "frame 66 (live via WebGPU) | 0 ms, 0 host calls (0 through the non-suspending trap, no timing this frame) | FramesReached(66)",
+      "gpu": "adapter: vendor=intel arch=xe-lpg device=? desc=? featureLevel=(not reported) | wgpu name unavailable | GPU",
+      "frameEvents": 71,
+      "fault": null,
+      "logicalCores": 8,
+      "memoryGiB": 4,
+      "platform": "Linux x86_64",
+      "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36 Edg/157.0.0.0"
+    },
+    {
+      "name": "manual-four",
+      "headless": true,
+      "browser": "157.0.4341.57",
+      "worker": "http://127.0.0.1:18751/worker.js?smp=1&uiGpu=high-performance&uiMode=core",
+      "title": "PCSG00214",
+      "ready": [
+        "vitaslop-core1",
+        "vitaslop-core2",
+        "vitaslop-core3",
+        "vitaslop-core4"
+      ],
+      "policy": "多线程 · 4 个游戏执行线程（手动）",
+      "knobs": {
+        "VITASLOP_FRAME_TOPUP": "0",
+        "VITASLOP_GXP_LIVE": "1",
+        "VITASLOP_SMP": "1",
+        "VITASLOP_SMP_WORKERS": "4"
+      },
+      "status": "frame 70 (live via WebGPU) | 0 ms, 0 host calls (0 through the non-suspending trap, no timing this frame) | FramesReached(70)",
+      "gpu": "adapter: vendor=intel arch=xe-lpg device=? desc=? featureLevel=(not reported) | wgpu name unavailable | GPU",
+      "frameEvents": 72,
+      "fault": null,
+      "logicalCores": 4,
+      "memoryGiB": 4,
+      "platform": "Linux x86_64",
+      "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36 Edg/157.0.0.0"
+    },
+    {
+      "name": "manual-single",
+      "headless": true,
+      "browser": "157.0.4341.57",
+      "worker": "http://127.0.0.1:18751/worker.js?uiGpu=high-performance&uiMode=core",
+      "title": "PCSG00214",
+      "ready": [],
+      "policy": "单线程（手动）",
+      "knobs": {
+        "VITASLOP_FRAME_TOPUP": "0",
+        "VITASLOP_GXP_LIVE": "1",
+        "VITASLOP_SMP": "0"
+      },
+      "status": "frame 75 (live via WebGPU) | 9 ms, 66 host calls (45 through the non-suspending trap, ~0.0 ms, estimated from 2 timed of them) | FramesReached(75)",
+      "gpu": "adapter: vendor=intel arch=xe-lpg device=? desc=? featureLevel=(not reported) | wgpu name unavailable | GPU",
+      "frameEvents": 74,
+      "fault": null,
+      "logicalCores": 24,
+      "memoryGiB": 32,
+      "platform": "Linux x86_64",
+      "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36 Edg/157.0.0.0"
+    }
+  ],
+  "battle": {
+    "smp": 1,
+    "worker": "http://127.0.0.1:18751/worker.js?smp=1&uiGpu=high-performance&uiMode=core",
+    "gpu": "adapter: vendor=intel arch=xe-lpg device=? desc=? featureLevel=(not reported) | wgpu name unavailable | GPU",
+    "surface": "surface: format Rgba8Unorm, rendered through Rgba8Unorm, alpha Opaque, present Fifo | offered formats [Rgba8Unorm, Bgra8Unorm, Rgba16Float], alpha modes [Opaque]",
+    "browserVersion": "157.0.4341.57",
+    "revision": "a6bd7788c9205ab9208f1970bc2de8e49e3ccd2e+8fa6cd62f5e0e79ab07cdb95fad0761b91f450ef87ccef1e9b0486074bd322c8+d1aab43f4be0a16a7c2c6ebc04ceac22817c3f7f1b507613867dd07bbb604eb8+00f61b90b2b15e9ee43ca9103df167c6a39cd140be2a4070d1c3b6db91b919ee",
+    "overlaySha256": "76ee9f3bb4f821588e611e2647674a211a7ef7b57d009ad821bbc41c418e3719",
+    "sampleSha256": "e99a19869e9c83a5fce6862286a3541a997ec6e5fecd336aa7ecc5d8b1d4fd88",
+    "wasmSha256": "1f72f62a759cc154671d16481a5672ac3a7fae28485325703a3f6c092b3e4957",
+    "guestWorkers": 6,
+    "policy": "多线程 · 6 个游戏执行线程（并行测速）",
+    "measurement": {
+      "status": "complete",
+      "seconds": 600,
+      "startEpochMs": 1795354607506.145,
+      "width": 960,
+      "height": 544,
+      "format": "rgba8unorm",
+      "submissions": 11524,
+      "changed": 11524,
+      "centerChanged": 11524,
+      "duplicates": 0,
+      "pictureFps": 19.206666666666667,
+      "centerFps": 19.206666666666667,
+      "submissionRate": 19.206666666666667,
+      "p50ChangeGapMs": 34.60999999940395,
+      "p95ChangeGapMs": 135.68999999947846,
+      "longestGapIncludingTailMs": 597.8999999985099,
+      "minutes": [
+        {
+          "submissions": 1556,
+          "changed": 1556,
+          "centerChanged": 1556
+        },
+        {
+          "submissions": 1165,
+          "changed": 1165,
+          "centerChanged": 1165
+        },
+        {
+          "submissions": 1011,
+          "changed": 1011,
+          "centerChanged": 1011
+        },
+        {
+          "submissions": 1066,
+          "changed": 1066,
+          "centerChanged": 1066
+        },
+        {
+          "submissions": 1172,
+          "changed": 1172,
+          "centerChanged": 1172
+        },
+        {
+          "submissions": 945,
+          "changed": 945,
+          "centerChanged": 945
+        },
+        {
+          "submissions": 992,
+          "changed": 992,
+          "centerChanged": 992
+        },
+        {
+          "submissions": 1130,
+          "changed": 1130,
+          "centerChanged": 1130
+        },
+        {
+          "submissions": 1248,
+          "changed": 1248,
+          "centerChanged": 1248
+        },
+        {
+          "submissions": 1239,
+          "changed": 1239,
+          "centerChanged": 1239
+        }
+      ]
+    },
+    "evidence": "frames/pentagram-battle/auto-battle.jpg",
+    "evidenceSha256": "a82ef6b4315dd6ff649afdc21d8fbae1a659ed7ebbaaaf9bac64f3a8781a13bd",
+    "screenshots": [
+      {
+        "label": "field",
+        "screenshotSecondsFromStart": -45.677,
+        "originalSha256": "1450a62e01b9c999ac9616466a59deafdb09bfff550988203846c104abe5a542"
+      },
+      {
+        "label": "jump-proof",
+        "screenshotSecondsFromStart": -17.639,
+        "originalSha256": "b22e727616a3ea46a52fa16c476b94cc88e4ebbcf3a3faa37b358989b0607964"
+      },
+      {
+        "label": "landed",
+        "screenshotSecondsFromStart": -13.393,
+        "originalSha256": "d8c0f07f341469365a46446b4638c4299f0e394ac7de71fe48dd942b220817a4"
+      },
+      {
+        "label": "battle-start",
+        "screenshotSecondsFromStart": 0.732,
+        "originalSha256": "0a302cbb1f9597a0989a609f27fa6f5b0fafd09cb77d70495e24c9c238b66c7f"
+      },
+      {
+        "label": "window-0",
+        "screenshotSecondsFromStart": 1.081,
+        "originalSha256": "c0f3c3344e7145da6f3a6ac39a742043506e74cf986316397030b97b0a36af62"
+      },
+      {
+        "label": "window-1",
+        "screenshotSecondsFromStart": 62.033,
+        "originalSha256": "4f7d775a7e04fde98a7e50708cb6753a2da1bd218a7732c13ee25f510a6b867a"
+      },
+      {
+        "label": "window-2",
+        "screenshotSecondsFromStart": 123.588,
+        "originalSha256": "f8297b31b89d3a01bd8b6b8fbf5c03fabf07e546fb73a4808b3b411fe0893d0b"
+      },
+      {
+        "label": "window-3",
+        "screenshotSecondsFromStart": 184.967,
+        "originalSha256": "0d798a6444548cc01a90f1257eb7cfd63778ff25ce646ed8aecdd6888d7d9e33"
+      },
+      {
+        "label": "window-4",
+        "screenshotSecondsFromStart": 241.132,
+        "originalSha256": "a68845731527aee11435a00ed1c44417b99bced6c42a99e6aeb49ebc6d1d3a1f"
+      },
+      {
+        "label": "window-5",
+        "screenshotSecondsFromStart": 302.602,
+        "originalSha256": "d2a5698b20310e97851fde85f87f8e3f1ceffcce2c24f92997de2c9aa5dbdcfc"
+      },
+      {
+        "label": "window-6",
+        "screenshotSecondsFromStart": 363.653,
+        "originalSha256": "a7766f96f59c6477cad8fb1de8df62a18873a628bd9122f932f1c519b5552d1d"
+      },
+      {
+        "label": "window-7",
+        "screenshotSecondsFromStart": 424.735,
+        "originalSha256": "423633f7fee0b1291188e584779a9e2fcc234060c2be6abefdd0c18679c85232"
+      },
+      {
+        "label": "window-8",
+        "screenshotSecondsFromStart": 481.074,
+        "originalSha256": "6a3bd57f11f28a18bf6de12ca1547e0d9c8704598a4986f6c9e90c65ceab1fe7"
+      },
+      {
+        "label": "window-9",
+        "screenshotSecondsFromStart": 541.696,
+        "originalSha256": "43d274d98c8b0d8885fbff45ece0ccfa8e290216a77e3410f8791adefdf10ce4"
+      },
+      {
+        "label": "window-end",
+        "screenshotSecondsFromStart": 602.338,
+        "originalSha256": "f9c33ac29fbf31c5feb8906f99316698635bda43c3bbf9746a90cbffbc6560aa"
+      }
+    ],
+    "sceneReviewed": true,
+    "controlVerified": true
+  },
+  "androidPhysical": "untested",
+  "opTimedOnAuto": false,
+  "assessment": "工作台在手机和桌面均默认多线程。这台 Linux 桌面上，CPU 测速初选 6 个线程，本作的战斗实测为 19.21 FPS，画面更新间隔 P95 为 135.7 毫秒。固定 3 个线程测得 21.99 FPS 和 101.5 毫秒。因此与本作、浏览器和硬件配置匹配时默认采用 3 个，已在更新后的工作台核实实际启动 3 个游戏执行线程。其他设备按自身预算及并行 CPU 测速选取。每种配置各有一次完整采样。历史固定 3 线程组另有一次约 91 秒时浏览器连接中断，原因未确定，已排除。在桌面模拟浏览器分别报告 4、8 个逻辑处理器时，实际就绪的游戏执行线程分别为 2、4 个。Android 真机上的线程选择和持续帧率仍待验证。"
+}

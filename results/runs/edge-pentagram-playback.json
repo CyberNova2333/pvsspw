@@ -1,0 +1,432 @@
+{
+  "titleId": "PCSG00214",
+  "version": "01.00",
+  "sampleSha256": "e99a19869e9c83a5fce6862286a3541a997ec6e5fecd336aa7ecc5d8b1d4fd88",
+  "revision": "a6bd7788c9205ab9208f1970bc2de8e49e3ccd2e+8fa6cd62f5e0e79ab07cdb95fad0761b91f450ef87ccef1e9b0486074bd322c8+d1aab43f4be0a16a7c2c6ebc04ceac22817c3f7f1b507613867dd07bbb604eb8",
+  "threadedWasmSha256": "5f9f0efd01f7c49d89541ed319491e833e169aafa36a7727f45c81d29ac4f51c",
+  "singleWasmSha256": "d59fd2acaaba41f173513170f7d26a16aac5fd949c4f5418746475c4c6733bee",
+  "deviceClass": "desktop-touch-emulation",
+  "browser": "Microsoft Edge 157.0.4341.57",
+  "channel": "msedge",
+  "headless": true,
+  "graphics": "Intel Xe-LPG hardware WebGPU / Vulkan",
+  "physicalAndroid": "untested",
+  "battle600s": "untested",
+  "gameSaveReload": "untested",
+  "movie": {
+    "path": "data/movie/opening.mp4",
+    "width": 960,
+    "height": 544,
+    "sourceRate": "24000/1001",
+    "sourceDurationSeconds": 102.185417,
+    "blackLeaderSeconds": 2.29396,
+    "blackDetect": "ffmpeg blackdetect=d=0.4:pic_th=0.997:pix_th=0.04",
+    "visibleCapture": "frames/workbench-edge/pentagram-op.jpg",
+    "sampleFromSeconds": 39.309,
+    "sampleToSeconds": 53.986,
+    "surfaceSubmissions": 881,
+    "submissionsPerSecond": 60.03,
+    "lastCorePictureReport": {
+      "pictures": 384,
+      "dropped": 0
+    },
+    "measurementRevision": "a6bd7788c9205ab9208f1970bc2de8e49e3ccd2e+8fa6cd62f5e0e79ab07cdb95fad0761b91f450ef87ccef1e9b0486074bd322c8+501522750bd1483f7c625e8877ca3c161c870db9a1e51cf62923b0df5db533e7"
+  },
+  "outputSize": {
+    "scene": "Japanese Options menu",
+    "order": [
+      "native",
+      "display",
+      "native"
+    ],
+    "runs": [
+      {
+        "surface": [
+          960,
+          544
+        ],
+        "seconds": 8.003,
+        "submissions": 480,
+        "fps": 59.98
+      },
+      {
+        "surface": [
+          1440,
+          816
+        ],
+        "seconds": 8.005,
+        "submissions": 480,
+        "fps": 59.96
+      },
+      {
+        "surface": [
+          960,
+          544
+        ],
+        "seconds": 8.004,
+        "submissions": 480,
+        "fps": 59.97
+      }
+    ],
+    "repeatExperimentFps": [
+      59.94,
+      53.77,
+      58.73
+    ],
+    "measurementRevision": "a6bd7788c9205ab9208f1970bc2de8e49e3ccd2e+8fa6cd62f5e0e79ab07cdb95fad0761b91f450ef87ccef1e9b0486074bd322c8+501522750bd1483f7c625e8877ca3c161c870db9a1e51cf62923b0df5db533e7"
+  },
+  "directionTests": {
+    "scene": "Japanese Options menu opened from the prologue",
+    "normalTaps": [
+      {
+        "direction": "down",
+        "ms": 66,
+        "before": 0,
+        "expected": 1,
+        "actual": 1
+      },
+      {
+        "direction": "down",
+        "ms": 84,
+        "before": 1,
+        "expected": 2,
+        "actual": 2
+      },
+      {
+        "direction": "down",
+        "ms": 118,
+        "before": 2,
+        "expected": 3,
+        "actual": 3
+      },
+      {
+        "direction": "down",
+        "ms": 165,
+        "before": 3,
+        "expected": 4,
+        "actual": 4
+      },
+      {
+        "direction": "down",
+        "ms": 235,
+        "before": 4,
+        "expected": 0,
+        "actual": 0
+      },
+      {
+        "direction": "up",
+        "ms": 73,
+        "before": 0,
+        "expected": 4,
+        "actual": 4
+      },
+      {
+        "direction": "up",
+        "ms": 130,
+        "before": 4,
+        "expected": 3,
+        "actual": 3
+      },
+      {
+        "direction": "up",
+        "ms": 110,
+        "before": 3,
+        "expected": 2,
+        "actual": 2
+      }
+    ],
+    "limitedRenderer": {
+      "method": "Playwright test adds 72 ms per WebGPU surface acquisition in the render worker",
+      "measuredSubmissionsPerSecond": 12.21,
+      "taps": [
+        {
+          "direction": "down",
+          "ms": 180,
+          "before": 2,
+          "expected": 3,
+          "actual": 3
+        },
+        {
+          "direction": "down",
+          "ms": 310,
+          "before": 3,
+          "expected": 4,
+          "actual": 4
+        },
+        {
+          "direction": "down",
+          "ms": 450,
+          "before": 4,
+          "expected": 0,
+          "actual": 0
+        }
+      ],
+      "singleStepHold": {
+        "direction": "up",
+        "ms": 1250,
+        "before": 0,
+        "expected": 4,
+        "actual": 4
+      },
+      "continuousHold": {
+        "requestedMs": 950,
+        "thresholdMs": 600,
+        "events": [
+          "step",
+          "repeat on",
+          "repeat off"
+        ],
+        "repeatIntervalGuestMs": 160,
+        "cursorStableAfterRelease": true,
+        "addedMultipleSteps": true
+      }
+    },
+    "evidence": "frames/workbench-edge/pentagram-menu-low-fps.jpg",
+    "note": "ms is the requested touch dwell between CDP touchStart and touchEnd. Rows are read from the magenta highlight in a screenshot; row 0 is SAVE.",
+    "command": "VK_DRIVER_FILES=/usr/share/vulkan/icd.d/intel_icd.json node tests/workbench.mjs --game --intel --pentagram-menu",
+    "revision": "a6bd7788c9205ab9208f1970bc2de8e49e3ccd2e+8fa6cd62f5e0e79ab07cdb95fad0761b91f450ef87ccef1e9b0486074bd322c8+d1aab43f4be0a16a7c2c6ebc04ceac22817c3f7f1b507613867dd07bbb604eb8",
+    "singleWorkerRepeat": {
+      "measuredSubmissionsPerSecond": 12.95,
+      "testMoves": [
+        {
+          "direction": "down",
+          "ms": 66,
+          "before": 0,
+          "expected": 1,
+          "actual": 1
+        },
+        {
+          "direction": "down",
+          "ms": 84,
+          "before": 1,
+          "expected": 2,
+          "actual": 2
+        },
+        {
+          "direction": "down",
+          "ms": 118,
+          "before": 2,
+          "expected": 3,
+          "actual": 3
+        },
+        {
+          "direction": "down",
+          "ms": 165,
+          "before": 3,
+          "expected": 4,
+          "actual": 4
+        },
+        {
+          "direction": "down",
+          "ms": 235,
+          "before": 4,
+          "expected": 0,
+          "actual": 0
+        },
+        {
+          "direction": "up",
+          "ms": 73,
+          "before": 0,
+          "expected": 4,
+          "actual": 4
+        },
+        {
+          "direction": "up",
+          "ms": 130,
+          "before": 4,
+          "expected": 3,
+          "actual": 3
+        },
+        {
+          "direction": "up",
+          "ms": 110,
+          "before": 3,
+          "expected": 2,
+          "actual": 2
+        },
+        {
+          "direction": "down",
+          "ms": 180,
+          "before": 2,
+          "expected": 3,
+          "actual": 3
+        },
+        {
+          "direction": "down",
+          "ms": 310,
+          "before": 3,
+          "expected": 4,
+          "actual": 4
+        },
+        {
+          "direction": "down",
+          "ms": 450,
+          "before": 4,
+          "expected": 0,
+          "actual": 0
+        },
+        {
+          "direction": "up",
+          "ms": 1250,
+          "before": 0,
+          "expected": 4,
+          "actual": 4
+        }
+      ],
+      "continuousHoldStableAfterRelease": true
+    }
+  },
+  "measurementRevision": "a6bd7788c9205ab9208f1970bc2de8e49e3ccd2e+8fa6cd62f5e0e79ab07cdb95fad0761b91f450ef87ccef1e9b0486074bd322c8+501522750bd1483f7c625e8877ca3c161c870db9a1e51cf62923b0df5db533e7",
+  "bootTiming": {
+    "sampleIntervalSeconds": 1.6,
+    "method": "Times for the system-data panel, last legible STUDIO ARTDINK logo and first colored OP picture are screenshot samples in milliseconds from the Play click. The decoder timestamp is the first WebCodecs output callback. The locked sample was imported into isolated desktop test profiles. Repeat runs reused their translation cache. No input was sent before the OP.",
+    "runs": [
+      {
+        "run": "baseline",
+        "systemPanelMs": 32435,
+        "firstMoviePictureMs": null,
+        "firstVisibleOpSampleMs": 47042,
+        "panelToOpMs": 14607,
+        "arm": "original-firmware-build",
+        "lastLegibleLogoSampleMs": 29161,
+        "decoderInstrumented": false
+      },
+      {
+        "run": "firstdefault",
+        "systemPanelMs": 25733,
+        "firstMoviePictureMs": null,
+        "firstVisibleOpSampleMs": null,
+        "panelToOpMs": null,
+        "arm": "original-firmware-build",
+        "lastLegibleLogoSampleMs": 24109,
+        "observationEndMs": 55000
+      },
+      {
+        "run": "control",
+        "systemPanelMs": 35491,
+        "firstMoviePictureMs": 36136,
+        "firstVisibleOpSampleMs": 38685,
+        "panelToOpMs": 3194,
+        "arm": "fixed-build-boot-tuning-disabled",
+        "lastLegibleLogoSampleMs": 32247,
+        "revision": "a6bd7788c9205ab9208f1970bc2de8e49e3ccd2e+8fa6cd62f5e0e79ab07cdb95fad0761b91f450ef87ccef1e9b0486074bd322c8+501522750bd1483f7c625e8877ca3c161c870db9a1e51cf62923b0df5db533e7"
+      },
+      {
+        "run": "paired-off",
+        "systemPanelMs": 25966,
+        "firstMoviePictureMs": 39592,
+        "firstVisibleOpSampleMs": 42414,
+        "panelToOpMs": 16448,
+        "arm": "fixed-build-boot-tuning-disabled",
+        "lastLegibleLogoSampleMs": 22664,
+        "revision": "a6bd7788c9205ab9208f1970bc2de8e49e3ccd2e+8fa6cd62f5e0e79ab07cdb95fad0761b91f450ef87ccef1e9b0486074bd322c8+501522750bd1483f7c625e8877ca3c161c870db9a1e51cf62923b0df5db533e7"
+      },
+      {
+        "run": "final",
+        "systemPanelMs": 34025,
+        "firstMoviePictureMs": 36491,
+        "firstVisibleOpSampleMs": 38888,
+        "panelToOpMs": 4863,
+        "arm": "io-only",
+        "lastLegibleLogoSampleMs": 30782,
+        "revision": "a6bd7788c9205ab9208f1970bc2de8e49e3ccd2e+8fa6cd62f5e0e79ab07cdb95fad0761b91f450ef87ccef1e9b0486074bd322c8+501522750bd1483f7c625e8877ca3c161c870db9a1e51cf62923b0df5db533e7",
+        "opSubmissionsPerSecond": 59.96
+      },
+      {
+        "run": "paired-on",
+        "systemPanelMs": 24427,
+        "firstMoviePictureMs": 30257,
+        "firstVisibleOpSampleMs": 32583,
+        "panelToOpMs": 8156,
+        "arm": "io-only",
+        "lastLegibleLogoSampleMs": 22805,
+        "revision": "a6bd7788c9205ab9208f1970bc2de8e49e3ccd2e+8fa6cd62f5e0e79ab07cdb95fad0761b91f450ef87ccef1e9b0486074bd322c8+501522750bd1483f7c625e8877ca3c161c870db9a1e51cf62923b0df5db533e7"
+      },
+      {
+        "run": "repeat-on",
+        "systemPanelMs": 24809,
+        "firstMoviePictureMs": 40621,
+        "firstVisibleOpSampleMs": 44424,
+        "panelToOpMs": 19615,
+        "arm": "io-only",
+        "lastLegibleLogoSampleMs": 23128,
+        "revision": "a6bd7788c9205ab9208f1970bc2de8e49e3ccd2e+8fa6cd62f5e0e79ab07cdb95fad0761b91f450ef87ccef1e9b0486074bd322c8+501522750bd1483f7c625e8877ca3c161c870db9a1e51cf62923b0df5db533e7"
+      },
+      {
+        "run": "paced1",
+        "systemPanelMs": 34250,
+        "firstMoviePictureMs": 35984,
+        "firstVisibleOpSampleMs": 39176,
+        "panelToOpMs": 4926,
+        "arm": "paced-system-data-check",
+        "revision": "a6bd7788c9205ab9208f1970bc2de8e49e3ccd2e+8fa6cd62f5e0e79ab07cdb95fad0761b91f450ef87ccef1e9b0486074bd322c8+58bb5a0b7d4acf063f5e48632a370c287119aa87ae6fdc82f8ac7760705f1860",
+        "opSubmissionsPerSecond": 59.97
+      },
+      {
+        "run": "paced2",
+        "systemPanelMs": 25934,
+        "firstMoviePictureMs": 46796,
+        "firstVisibleOpSampleMs": 50234,
+        "panelToOpMs": 24300,
+        "arm": "paced-system-data-check",
+        "revision": "a6bd7788c9205ab9208f1970bc2de8e49e3ccd2e+8fa6cd62f5e0e79ab07cdb95fad0761b91f450ef87ccef1e9b0486074bd322c8+58bb5a0b7d4acf063f5e48632a370c287119aa87ae6fdc82f8ac7760705f1860",
+        "opSubmissionsPerSecond": 60.1
+      },
+      {
+        "run": "paced3",
+        "systemPanelMs": 25965,
+        "firstMoviePictureMs": 44281,
+        "firstVisibleOpSampleMs": 47223,
+        "panelToOpMs": 21258,
+        "arm": "paced-system-data-check",
+        "revision": "a6bd7788c9205ab9208f1970bc2de8e49e3ccd2e+8fa6cd62f5e0e79ab07cdb95fad0761b91f450ef87ccef1e9b0486074bd322c8+58bb5a0b7d4acf063f5e48632a370c287119aa87ae6fdc82f8ac7760705f1860",
+        "opSubmissionsPerSecond": 38.83
+      }
+    ],
+    "default": "Normal guest clock and modeled read latency. Both experimental modes showed long waits on repeat launches.",
+    "timingReference": "STUDIO ARTDINK is the last vendor logo. The system-data panel follows it before the black transition. Screenshot intervals include the 2.294 s black leader of opening.mp4.",
+    "ioArm": "Only during launch, omit modeled read sleeps until the first movie or 3600 guest frames. Opt-in using VITASLOP_FAST_BOOT_IO=1.",
+    "pacingArm": "Experiment only. Also accelerate guest time while waiting after the system-data check. Rejected after two trials exceeded 20 seconds; not present in the released core.",
+    "concurrentLoadNote": "The final paced experiment overlapped with the start of a single-worker diagnostic. All primary menu resolution measurements and the paired IO runs were sampled sequentially within their respective series.",
+    "singleWorkerRuns": [
+      {
+        "run": "single-core",
+        "systemPanelMs": 35926,
+        "firstMoviePictureMs": 37983,
+        "firstVisibleOpSampleMs": 41108,
+        "panelToOpMs": 5182,
+        "arm": "SMP disabled, normal guest clock and storage latency",
+        "revision": "a6bd7788c9205ab9208f1970bc2de8e49e3ccd2e+8fa6cd62f5e0e79ab07cdb95fad0761b91f450ef87ccef1e9b0486074bd322c8+58bb5a0b7d4acf063f5e48632a370c287119aa87ae6fdc82f8ac7760705f1860"
+      },
+      {
+        "run": "single-repeat",
+        "systemPanelMs": 31382,
+        "firstMoviePictureMs": 32254,
+        "firstVisibleOpSampleMs": 34765,
+        "panelToOpMs": 3383,
+        "arm": "SMP disabled, normal guest clock and storage latency",
+        "revision": "a6bd7788c9205ab9208f1970bc2de8e49e3ccd2e+8fa6cd62f5e0e79ab07cdb95fad0761b91f450ef87ccef1e9b0486074bd322c8+58bb5a0b7d4acf063f5e48632a370c287119aa87ae6fdc82f8ac7760705f1860"
+      },
+      {
+        "run": "single-repeat2",
+        "systemPanelMs": 25854,
+        "firstMoviePictureMs": 27525,
+        "firstVisibleOpSampleMs": 30787,
+        "panelToOpMs": 4933,
+        "arm": "SMP disabled, normal guest clock and storage latency",
+        "revision": "a6bd7788c9205ab9208f1970bc2de8e49e3ccd2e+8fa6cd62f5e0e79ab07cdb95fad0761b91f450ef87ccef1e9b0486074bd322c8+58bb5a0b7d4acf063f5e48632a370c287119aa87ae6fdc82f8ac7760705f1860"
+      },
+      {
+        "run": "single-shipped",
+        "systemPanelMs": 32092,
+        "firstMoviePictureMs": 33041,
+        "firstVisibleOpSampleMs": 35333,
+        "panelToOpMs": 3241,
+        "arm": "SMP disabled, normal clock and storage, released workbench",
+        "revision": "a6bd7788c9205ab9208f1970bc2de8e49e3ccd2e+8fa6cd62f5e0e79ab07cdb95fad0761b91f450ef87ccef1e9b0486074bd322c8+d1aab43f4be0a16a7c2c6ebc04ceac22817c3f7f1b507613867dd07bbb604eb8"
+      }
+    ],
+    "singleWorkerNote": "Four desktop runs, including a repeat on the released build. Times are system-data-panel screenshot to first colored OP screenshot. No battle FPS measurement.",
+    "comparisonImage": "frames/workbench-edge/pentagram-boot-timing.jpg"
+  }
+}

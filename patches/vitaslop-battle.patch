@@ -1,0 +1,130 @@
+--- a/projects/vitaslop-transpiler/src/lower.rs
++++ b/projects/vitaslop-transpiler/src/lower.rs
+@@ -1416,7 +1416,7 @@
+     // Pick the range check closest to the table branch whose in-range side is an
+     // upper bound on the switch variable. A `cmp switch, bound` paired with the next
+     // conditional branch; the branch's taken target tells us which side is in-range.
+-    let mut best: Option<(u32, u32, Option<u32>)> = None; // (cmp_addr, count, default)
++    let mut best: Option<((bool, u32), u32, Option<u32>)> = None;
+     // A guard whose BOUND cannot be trusted may still name the out-of-range block: the
+     // default is a property of the branch, not of the arithmetic. Kept separately so a
+     // rejected guard costs only the count.
+@@ -1503,8 +1503,20 @@
+             }
+             continue;
+         }
+-        // Closest compare to the table branch wins (the innermost cluster's guard).
+-        if best.is_none_or(|(a, _, _)| *cmp_addr > a) {
++        // A sibling comparison can reach this table on a later loop iteration,
++        // after the switch variable has changed. Prefer a guard whose in-range
++        // successor falls straight through to the table in this iteration.
++        let mut pc = if in_range_taken { gt } else { fall };
++        while pc < tb_addr {
++            let Some((ins, len, _, _)) = decoded.get(&pc) else { break };
++            if !matches!(ins.opcode, Opcode::MOV | Opcode::ADD | Opcode::SUB | Opcode::LSL | Opcode::NOP)
++                || regnum(&ins.operands[0]) == Some(15) {
++                break;
++            }
++            pc += len;
++        }
++        let rank = (pc == tb_addr, *cmp_addr);
++        if best.is_none_or(|(previous, _, _)| rank > previous) {
+             if switch_why(tb_addr) {
+                 eprintln!(
+                     "  guard @{cmp_addr:#x}: cmp r{switch_reg}, {bound:#x}  br @{br_addr:#x} \
+@@ -1513,7 +1525,7 @@
+                     br.condition
+                 );
+             }
+-            best = Some((*cmp_addr, count, Some(default)));
++            best = Some((rank, count, Some(default)));
+         }
+     }
+     match best {
+@@ -5684,6 +5696,32 @@
+         decoded
+     }
+ 
++    #[test]
++    fn a_sibling_guard_that_loops_back_does_not_size_an_arm_table() {
++        let base = 0x1000;
++        let mut code = vec![0; 0x78];
++        for (offset, word) in [
++            (0x00, 0xe354_002eu32), // cmp r4, #46
++            (0x04, 0xda00_0004), // ble base+0x1c (the table)
++            (0x08, 0xe354_003b), // cmp r4, #59
++            (0x0c, 0xda00_0017), // ble base+0x70 (next iteration)
++            (0x10, 0xea00_0017), // b base+0x74 (exit)
++            (0x1c, 0xe244_0022), // sub r0, r4, #34
++            (0x20, 0xe79f_f100), // ldr pc, [pc, r0, lsl #2]
++            (0x70, 0xeaff_ffe2), // b base
++            (0x74, 0xe12f_ff1e), // bx lr
++        ] {
++            code[offset..offset+4].copy_from_slice(&word.to_le_bytes());
++        }
++        let mut decoded = BTreeMap::new();
++        for offset in [0, 4, 8, 12, 16, 0x1c, 0x20, 0x70, 0x74] {
++            let addr = base + offset;
++            let (inst, len) = decode_at(&InstDecoder::default(), &code, base, addr, false).unwrap();
++            decoded.insert(addr, (inst, len, inst.condition, false));
++        }
++        assert_eq!(recover_switch_bound(&decoded, base+0x20, 0), (Some(13), Some(base+8)));
++    }
++
+     /// A RANGE CHECK AND A TABLE INDEX OFF TWO SEPARATE RELOADS OF THE SAME SPILLED
+     /// VARIABLE. The compare is already on the rebased value, so folding the table
+     /// branch's own `subs #2` into it a second time under-counts the table by exactly
+--- a/projects/vitaslop-runtime/src/host/state_threads.rs
++++ b/projects/vitaslop-runtime/src/host/state_threads.rs
+@@ -671,16 +671,21 @@
+             return Err(SCE_KERNEL_ERROR_ALREADY_SENT);
+         }
+         *slot = 1;
+-        if self.preemptive && self.signal_waiters.contains(&thid) {
+-            self.signal_waiters.retain(|w| *w != thid);
+-            self.take_signal(thid);
+-            push_wake!(self, thid);
++        // Signals belong to the kernel thread. A fiber running on it parks its
++        // own scheduler context, while the sender sees only the runner's ID.
++        if self.preemptive {
++            if let Some(i) = self.signal_waiters.iter().position(|&w| self.logical_thread(w) == thid) {
++                let waiting_context = self.signal_waiters.swap_remove(i);
++                self.take_signal(thid);
++                push_wake!(self, waiting_context);
++            }
+         }
+         Ok(())
+     }
+ 
+     /// Consume the pending signal of a thread, if it has one.
+     pub fn take_signal(&mut self, thid: i32) -> bool {
++        let thid = self.logical_thread(thid);
+         let slot: Option<&mut u32> = if thid == MAIN_THID {
+             Some(&mut self.main_signals)
+         } else {
+--- a/projects/vitaslop-runtime/src/host/fiber_tests.rs
++++ b/projects/vitaslop-runtime/src/host/fiber_tests.rs
+@@ -165,3 +165,23 @@
+     assert!(tp2 != 0 && tp2 != tp, "a plain thread has its own block");
+     assert_eq!(len2, 0x18);
+ }
++
++#[test]
++fn kernel_signals_follow_the_thread_while_a_fiber_is_running() {
++    let mut st = state();
++    st.set_preemptive(true);
++    let runner = st.current;
++    let fiber = 0x8300_0000;
++    assert_eq!(st.fiber_initialize(fiber, "wait".into(), ENTRY, 0, 0, 0), 0);
++    assert_eq!(st.fiber_run(fiber, 0, 0, 0x8100_1234), Ok(()));
++    let context = st.fibers.thid(0);
++    st.set_current(context);
++    st.take_wakes();
++    st.send_signal(runner).unwrap();
++    assert!(st.take_signal(context));
++    assert!(!st.take_signal(context));
++    st.signal_block();
++    st.send_signal(runner).unwrap();
++    assert_eq!(st.take_wakes(), vec![context]);
++    assert!(!st.take_signal(runner));
++}

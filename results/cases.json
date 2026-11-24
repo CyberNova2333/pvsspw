@@ -1,0 +1,219 @@
+[
+  {
+    "class": "desktop",
+    "battleComparison": "runs/edge-pentagram-battle.json",
+    "threadPolicy": "runs/edge-thread-policy.json",
+    "fsrComparison": "runs/edge-pentagram-fsr1.json"
+  },
+  {
+    "device": "桌面 Edge 157 无头 · Intel Xe-LPG · 触摸模拟 · 游戏内方向键",
+    "class": "desktop-touch-emulation",
+    "cores": {
+      "vitaslop": {
+        "workbench": {
+          "evidence": "runs/edge-pentagram-playback.json",
+          "first": "已提交，触控试次未计时",
+          "picture": "[已确认日文选项菜单及高亮行](frames/workbench-edge/pentagram-menu-low-fps.jpg)",
+          "battle": "未采样",
+          "save": "未验证",
+          "observation": "常速 8 次点按均逐项移动。人为限速至 12.21 次提交/秒后，180、310、450 毫秒各移动一项；「只单步」按住 1.25 秒也只走一项。默认模式按住 950 毫秒逐项连发，松手后停止。"
+        }
+      }
+    }
+  },
+  {
+    "device": "Linux 桌面实机 · Edge 157 无头 · Intel Xe-LPG · 片头与输出分辨率",
+    "class": "desktop",
+    "cores": {
+      "vitaslop": {
+        "workbench": {
+          "evidence": "runs/edge-pentagram-playback.json",
+          "first": "本轮按阶段取样",
+          "picture": "[已确认 OP 彩色画面](frames/workbench-edge/pentagram-op.jpg)",
+          "battle": "未采样",
+          "save": "未验证",
+          "observation": "系统数据提示至 OP 出画，多线程两次为 3.2、16.4 秒；单线程四次为 5.2、3.4、4.9、3.2 秒（最后一次为发布版）。默认多线程仍有长等待。OP 源片 23.976 FPS，14.7 秒播放段测得 60.03 次画布提交/秒。 [过场取样](frames/workbench-edge/pentagram-boot-timing.jpg)"
+        }
+      }
+    }
+  },
+  {
+    "device": "Linux 桌面 · Edge 157 无头 · 默认参数",
+    "class": "desktop",
+    "cores": {
+      "vitaslop": {
+        "workbench": {
+          "evidence": "frames/workbench-edge/edge-no-gpu.png",
+          "first": "无可用设备",
+          "picture": "无",
+          "battle": "未进入采样场景",
+          "save": "未验证",
+          "observation": "标准、兼容和软件回退共 7 次请求均未取得适配器。已导入游戏的按钮可打开诊断并重试。"
+        }
+      }
+    }
+  },
+  {
+    "device": "Linux 桌面实机 · Edge 独立游玩窗口 · Intel Xe-LPG",
+    "class": "desktop",
+    "cores": {
+      "vitaslop": {
+        "workbench": {
+          "evidence": "frames/workbench-edge/local-window.png",
+          "first": "未计时",
+          "picture": "已确认 BANDAI NAMCO Games 片头",
+          "battle": "未采样",
+          "save": "未验证",
+          "observation": "从无 WebGPU 的默认 Edge 点诊断页按钮，打开同机独立窗口。在浏览器等待声音授权时也能进入游戏，截图取自桌面上的游玩窗口。"
+        }
+      }
+    }
+  },
+  {
+    "device": "Linux 桌面实机 · Edge 157 无头 · Intel Xe-LPG",
+    "class": "desktop",
+    "cores": {
+      "vitaslop": {
+        "workbench": {
+          "evidence": "frames/workbench-edge/game.png",
+          "first": "已提交，未计时",
+          "picture": "已确认日文「ご注意」",
+          "battle": "未采样",
+          "save": "未验证",
+          "observation": "从工作台导入同一份日版游戏及 rePatch，并经新详情、按键设置、暂停菜单和截图流程复测。"
+        }
+      }
+    }
+  },
+  {
+    "device": "Linux 桌面 · Edge 157 无头 · SwiftShader 软件 WebGPU",
+    "class": "desktop",
+    "cores": {
+      "vitaslop": {
+        "workbench": {
+          "evidence": "frames/workbench-edge/software-game.png",
+          "first": "已提交，未计时",
+          "picture": "已确认日文「ご注意」",
+          "battle": "未采样",
+          "save": "未验证",
+          "observation": "独立测试配置显式开放软件设备，经用户确认启动。已核对页面合成画面和导出的游戏截图。"
+        }
+      }
+    }
+  },
+  {
+    "device": "Linux 桌面实机 · Edge 157 无头 · Intel Xe-LPG · 修复版 A",
+    "class": "desktop",
+    "cores": {
+      "vitaslop": {
+        "file": "edge-vitaslop-final-first.json",
+        "patchSha256": "8fa6cd62f5e0e79ab07cdb95fad0761b91f450ef87ccef1e9b0486074bd322c8",
+        "review": {
+          "image": "frames/edge-final-first/game-000042.png",
+          "sha256": "c348158801b76042d87c777c73209005a1a50873fe536272e42845b191305f0f",
+          "scene": "日文注意事项"
+        },
+        "observation": "35 秒冷启动取样。默认 GXP 着色器和 SMP 开启，第 1 次提交接近全黑，第 42 次提交的游戏纹理已能读到完整提示。"
+      }
+    }
+  },
+  {
+    "device": "Linux 桌面实机 · Edge 157 无头 · Intel Xe-LPG · 修复版 B",
+    "class": "desktop",
+    "cores": {
+      "vitaslop": {
+        "file": "edge-vitaslop-final-intro.json",
+        "patchSha256": "8fa6cd62f5e0e79ab07cdb95fad0761b91f450ef87ccef1e9b0486074bd322c8",
+        "review": {
+          "image": "frames/edge-final-intro/first-observed.png",
+          "sha256": "caa161aea7f3fb898fd0fc2c1e8f4a9ae84d0f69410791b55886ac603167512f",
+          "scene": "日文注意事项"
+        },
+        "observation": "155 秒复测。完整播放片头，140.597 秒已捕获带 PRESS START BUTTON 的[标题界面](frames/edge-final-intro/canvas-140340ms.png)。"
+      }
+    }
+  },
+  {
+    "device": "Linux 桌面实机 · Edge 157 无头 · Intel Xe-LPG · 原版",
+    "class": "desktop",
+    "cores": {
+      "vitaslop": {
+        "file": "edge-vitaslop-original.json",
+        "observation": "点 Play 后在第 0 帧复现 SceSas 的 0x180c6824。"
+      },
+      "vita3k": {
+        "file": "edge-vita3k-original.json",
+        "observation": "90 秒仅收到一次呈现信号，首张和最终截图相同，游戏区域为黑色。日志记录了信号量断言和不支持的 Dynarmic IR。[截图](frames/edge-vita3k/final.png)"
+      }
+    }
+  },
+  {
+    "device": "Android 实体手机 · Edge · 修复版",
+    "class": "android-physical",
+    "pending": "2026-11-22 确认当前无实体手机，真机试次未开始。日版 PCSG00214、固件覆盖包和修复版 Wasm 指纹已与桌面实测记录核对。",
+    "cores": {
+      "vitaslop": null
+    }
+  },
+  {
+    "device": "桌面 Edge 157 · 横屏触摸模拟",
+    "class": "desktop-touch-emulation",
+    "cores": {
+      "vitaslop": {
+        "file": "edge-vitaslop-final-touch.json",
+        "patchSha256": "8fa6cd62f5e0e79ab07cdb95fad0761b91f450ef87ccef1e9b0486074bd322c8",
+        "review": {
+          "image": "frames/edge-final-touch/first-observed.png",
+          "sha256": "c6328aa3501607e503af2db51f9d30bea58c87092a8908bf157cd84cc8528b97",
+          "scene": "日文提示和虚拟手柄"
+        },
+        "observation": "844×390、DPR 2，在桌面 Edge 中轻触 Play。图形设备仍为主机 Intel GPU。"
+      }
+    }
+  },
+  {
+    "device": "Android 14 虚拟机 · x86_64 · Firefox 160.0.1 · SwiftShader",
+    "class": "android-emulator",
+    "cores": {
+      "vitaslop": {
+        "file": "android-vitaslop.json",
+        "observation": "已导入并识别 PCSG00214。此浏览器配置未提供 WebGPU，播放器禁用 Play。"
+      },
+      "vita3k": {
+        "file": "android-vita3k.json",
+        "observation": "固件和游戏已导入。点 Play 后播放器报告缺少 navigator.gpu，180 秒观察期内没有提交游戏帧。"
+      }
+    }
+  },
+  {
+    "device": "Linux 桌面 · Chromium 158 · Intel Xe-LPG",
+    "class": "desktop",
+    "cores": {
+      "vitaslop": {
+        "file": "desktop-vitaslop.json",
+        "observation": "游戏已导入。第 0 帧报告未实现的系统函数 NID 0x180c6824，核心停止。"
+      },
+      "vita3k": {
+        "file": "desktop-vita3k.json",
+        "observation": "固件和游戏已导入，AOT 编译用时 11.2 秒。180 秒内无游戏帧，日志记录了信号量断言和 Wasm JIT 不支持的 Dynarmic IR。"
+      }
+    }
+  },
+  {
+    "device": "Android 实体手机 · 待验证",
+    "class": "android-physical",
+    "pending": "本轮没有接入实体 Android 手机。",
+    "cores": {
+      "vita3k": null
+    }
+  },
+  {
+    "device": "iPhone 实机 · Safari · 待验证",
+    "class": "ios-physical",
+    "pending": "本轮没有接入 iPhone。",
+    "cores": {
+      "vitaslop": null,
+      "vita3k": null
+    }
+  }
+]

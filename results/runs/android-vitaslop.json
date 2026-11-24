@@ -1,0 +1,57 @@
+{
+  "time": "2026-11-22T10:15:41.676758+00:00",
+  "engine": "vitaslop",
+  "titleId": "PCSG00214",
+  "revision": "a6bd7788c9205ab9208f1970bc2de8e49e3ccd2e",
+  "sampleSha256": "e99a19869e9c83a5fce6862286a3541a997ec6e5fecd336aa7ecc5d8b1d4fd88",
+  "deviceClass": "android-emulator",
+  "environment": {
+    "model": "sdk_gphone64_x86_64",
+    "android": "14",
+    "abi": "x86_64",
+    "qemu": true
+  },
+  "visual": "unverified",
+  "sustainedFps": null,
+  "saveReload": "not-tested",
+  "phases": [
+    {
+      "name": "open",
+      "at": "2026-11-22T10:15:41.786009+00:00"
+    },
+    {
+      "name": "import-game",
+      "at": "2026-11-22T10:15:48.206746+00:00"
+    }
+  ],
+  "bootSeconds": 180,
+  "browser": "Firefox 160.0.1",
+  "capabilities": {
+    "gpu": null,
+    "isolated": true,
+    "jspi": true,
+    "opfs": true,
+    "ua": "Mozilla/5.0 (Android 14; Mobile; rv:160.0) Gecko/160.0 Firefox/160.0",
+    "wasmMemory64": true
+  },
+  "status": "blocked",
+  "reason": "This browser cannot run titles here\nno WebGPU\nuse a browser with WebGPU: Chrome/Edge 113+, Firefox 141+, Safari 26+.\n\nAll checks",
+  "probe": {
+    "coreNotes": [],
+    "documentId": "42d3c589-ef96-4d9a-8dd4-58548595235d",
+    "engine": "vitaslop",
+    "events": 0,
+    "fault": null,
+    "firstFrameMs": null,
+    "fpsWindow": null,
+    "isolated": true,
+    "pictureConfirmed": false,
+    "revision": "a6bd7788c9205ab9208f1970bc2de8e49e3ccd2e",
+    "sampleSha256": "e99a19869e9c83a5fce6862286a3541a997ec6e5fecd336aa7ecc5d8b1d4fd88",
+    "save": null,
+    "started": null,
+    "titleId": "PCSG00214",
+    "userAgent": "Mozilla/5.0 (Android 14; Mobile; rv:160.0) Gecko/160.0 Firefox/160.0"
+  },
+  "visibleText": "vitaslop\nLibrary\nAdd games\nSettings\nAbout\nLibrary\n/\n劇場版 魔法少女まどか☆マギカ　The Battle Pentagram\n劇場版 魔法少女まどか☆マギカ　The Battle Pentagram\n\nPCSG00214 · v01.00 · 940 MB · added 11/22/2026, 6:18:17 PM · played never\n\nPlay\nSettings for this title\nRemove\nThis browser cannot run titles here\nno WebGPU\nuse a browser with WebGPU: Chrome/Edge 113+, Firefox 141+, Safari 26+.\n\nAll checks\n\nSaved data profile: default\n\nnothing saved yet - it appears here the first time the game saves.\n\nDownload\nUpload\nClear\n\nWhat the game saved - its save files and trophies - and nothing of the game itself. A download is a file you own; upload it on another device to continue there.\n\nAdd-ons\n\nNone installed. Add-ons you own for this game - costumes, tracks, characters - come in the same .pkg + work.bin, folder or zip a game does, and the game finds them the next time it starts.\n\nAdd add-ons\nrePatch overlay\n\nNone. An overlay lays your own modified or decrypted files over this game, as the rePatch plugin does on a Vita: pick a folder or .zip laid out like ux0:rePatch/PCSG00214/ (a reAddcont/PCSG00214/ folder beside it covers add-ons). Executables in it must be decrypted. The game itself is never changed - turn the overlay off or remove it here.\n\nAdd from a folder\nAdd from a .zip\nPVSSPW 对测"
+}
