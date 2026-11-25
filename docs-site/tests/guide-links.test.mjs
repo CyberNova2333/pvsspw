@@ -7,13 +7,13 @@ const routeMap = {
   'README.md': 'docs/architecture',
   'walkthroughs/one-real-run.md': 'docs/walkthrough',
   'code-map.md': 'docs/code-map',
-  'modules/core-patching-and-smp.md': 'docs/patching-smp',
-  'modules/frameflow-and-fsr1-pipeline.md': 'docs/postfx',
-  'modules/benchmark-and-workbench.md': 'docs/benchmarks',
+  'modules/core-patching-and-smp.md': 'docs/contracts',
+  'modules/frameflow-and-fsr1-pipeline.md': 'docs/performance',
+  'modules/benchmark-and-workbench.md': 'docs/performance',
   'glossary.md': 'docs/architecture',
   'references/source-evidence.md': 'docs/architecture',
   'references/quality-review.md': 'docs/architecture',
-  'change-log.md': 'docs/architecture',
+  'change-log.md': 'docs/decisions',
 }
 
 test('guideLinks rewrites repo-docs links and marks repo source paths', async () => {

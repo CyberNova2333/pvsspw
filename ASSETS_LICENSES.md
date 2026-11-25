@@ -40,10 +40,11 @@
 | `C-03`；PPSSPW 派生界面外壳、昼夜切换、分块下载器与上游声明 | 同作者上游仓迁移与本地适配 | `web/vendor/{browser-storage,day-night-switch,download-worker,game-download,online-games}.js`、`web/vendor/{player-controls,ppsspw}.css`、`web/vendor/{LICENSE,LICENSE.TXT,NOTICE.txt,LICENSE-ADDITIONAL_TERMS-*}` | https://github.com/CyberNova2333/ppsspw（修订 `124e208514c0040f3e3a5cabc61f845286b9474f`） | CyberNova（`AGPL-3.0-only` + 附加条款 v1.6.7-r4）及 PPSSPW 声明中保留的上游 `GPL-2.0-or-later` / PSPSDK BSD 声明 | 具体迁移范围与声明见 [`web/vendor/NOTICE.txt`](web/vendor/NOTICE.txt) |
 | `C-04`；FrameFlow（`GameFI` 插帧 + `GameSR` 超分运行时与权重） | 同作者配套子模块静态同步 | `web/vendor/frameflow/`（含 `GameFI-Lite` / `GameFI-Std` / `GameSR-Lite` / `GameSR-Std`） | https://github.com/CyberNova2333/frameflow | CyberNova（`AGPL-3.0-only` + 附加条款 v1.6.7-r4） | 完整许可文本随包位于 [`web/vendor/frameflow/LICENSE`](web/vendor/frameflow/LICENSE) |
 | `C-05`；Lucide Icons 与 Playwright (`playwright-core`) | 静态图标版权声明及开发测试依赖 | `web/vendor/LICENSE-lucide.txt`、`package.json` | Lucide Contributors / Microsoft Playwright | `ISC`（Lucide）、`Apache-2.0`（`playwright-core`） | 仅测试/界面图标所需，与 AGPL-3.0-only 兼容 |
+| `C-06`；Anime.js 4.5.0 | 第三方内嵌脚本（静态复制，仅文档站动效使用） | `docs-site/.vitepress/theme/vendor/animejs/` | https://github.com/juliangarnier/anime（v4.5.0） | Julian Garnier（`MIT`；原文见 `LICENSE.md`） | 仅随独立 `docs-site/` 构建静态分发，未修改上游代码 |
 
 ### 3.2 原始许可与附加条款状态
 
-- `C-01`（MIT）、`C-02`（GPL-2.0-or-later）与 `C-05`（ISC / Apache-2.0）：`[附加条款：不适用（遵循原上游许可证）]`；各自完整原文或说明保留于上述对应文件。
+- `C-01`（MIT）、`C-02`（GPL-2.0-or-later）、`C-05`（ISC / Apache-2.0）与 `C-06`（MIT）：`[附加条款：不适用（遵循原上游许可证）]`；各自完整原文或说明保留于上述对应文件。
 - `C-03`、`C-04` 中的 CyberNova 原创部分：`[附加条款：已明确同意]`（随项目主体 `P-01` 一并保留完整 `AGPL-3.0-only` 与 `v1.6.7-r4` 文本）。
 
 ## 四、独立美术、字体与项目标识资产 (Independent Artwork, Fonts & Project Identifiers)
@@ -51,4 +52,5 @@
 | 资产编号与名称 | 实际文件与来源 | 作者 / 版权持有人 | 有效许可证 | 随包与使用说明 |
 | --- | --- | --- | --- | --- |
 | `A-01`；PVSSPW 标志与名称标识 | `web/brand.svg` 及项目名称 `PVSSPW` | CyberNova（`P-01`） | `AGPL-3.0-only`（适用附加条款第五、八条） | 项目默认视觉符号与文字标识；下游二次分发可依第八条替换或更名 |
-| `A-02`；IBM Plex Sans（网页自托管字体） | `web/vendor/fonts/ibm-plex-sans-latin-*.woff2`、`LICENSE-IBM-Plex-Sans.txt` | IBM Corp.（`Copyright 2019 IBM Corp. All rights reserved.`） | `SIL OFL 1.1`（无保留字体名称 RFN） | 静态随网页字体目录提供，完整 OFL-1.1 原文位于 [`web/vendor/fonts/LICENSE-IBM-Plex-Sans.txt`](web/vendor/fonts/LICENSE-IBM-Plex-Sans.txt) |
+| `A-02`；IBM Plex Sans（网页与文档站自托管字体） | `web/vendor/fonts/ibm-plex-sans-latin-*.woff2`、`LICENSE-IBM-Plex-Sans.txt` 及 `docs-site/.vitepress/theme/fonts/` | IBM Corp.（`Copyright 2019 IBM Corp. All rights reserved.`） | `SIL OFL 1.1`（无保留字体名称 RFN） | 静态随网页及文档站字体目录提供，完整 OFL-1.1 原文保留于对应字体目录 |
+| `A-03`；JetBrains Mono（文档站自托管字体） | `docs-site/.vitepress/theme/fonts/jetbrains-mono-latin-500-normal.woff2`、`LICENSE-jetbrains-mono.txt` | The JetBrains Mono Project Authors | `SIL OFL 1.1`（无保留字体名称 RFN） | 随 `docs-site` 构建静态分发，完整 OFL-1.1 原文位于 `docs-site/.vitepress/theme/fonts/LICENSE-jetbrains-mono.txt` |

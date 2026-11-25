@@ -34,7 +34,7 @@ Read current source, scripts and tests before treating the guide as implementati
 Choose `none`, `answer-only`, `foreground patch`, or `background sync`. Patch the smallest owning page before the final answer when a durable local gap would mislead; use background sync only with a real tracked handoff and no answer-critical gap. Do not rewrite docs for transient debug state.
 Update the walkthrough for input/output or boundary changes and the code map for responsibility changes. Record meaningful guide changes and actual verification in `repo-docs/change-log.md` with `Synced through <sha>`; do not imply unrun tests passed.
 
-文档站统一使用 VitePress 默认主题；样式与动效遵循原生主题，构建输出独立于工作台界面。
+文档站统一复用同作者仓库共享主题（蓝网格、纯享模式、`<DiagramFrame>` 与 `<ApiExplorer>` 组件，构建输出独立于工作台界面）。
 
 ## 项目简介与主页元数据 (`meta.json`)
 

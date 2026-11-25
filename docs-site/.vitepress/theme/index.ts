@@ -1,0 +1,31 @@
+import DefaultTheme from 'vitepress/theme'
+import type { Theme } from 'vitepress'
+import Layout from './Layout.vue'
+import ApiExplorer from './components/ApiExplorer.vue'
+import DiagramFrame from './components/DiagramFrame.vue'
+import {
+  checkAndApplyLanguageRedirect,
+  setupLanguageSwitcherListener,
+} from './i18n';
+import './style.css'
+
+const theme: Theme = {
+  extends: DefaultTheme,
+  Layout,
+  enhanceApp({ app, router, siteData }) {
+    app.component('ApiExplorer', ApiExplorer)
+    app.component('DiagramFrame', DiagramFrame)
+    if (typeof window === 'undefined') return;
+    setupLanguageSwitcherListener();
+    checkAndApplyLanguageRedirect(siteData.value?.base || '/');
+    // 动效加载失败时仍保留完整的阅读与外观切换功能。
+    void import('./toggle')
+      .then(({ setupAppearanceToggle }) => setupAppearanceToggle())
+      .catch(() => undefined)
+    void Promise.all([import('./vendor/animejs/anime.esm.min.js'), import('./motion')])
+      .then(([anime, { setupDocsMotion }]) => setupDocsMotion(router, anime))
+      .catch(() => undefined)
+  },
+}
+
+export default theme

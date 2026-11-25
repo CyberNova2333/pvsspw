@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PVSSPW 架构全景交互图谱</title>
+  <script>
+    (function () {
+      var q = new URLSearchParams(window.location.search);
+      var t = q.get('theme');
+      if (t !== 'light' && t !== 'dark') {
+        t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      }
+      document.documentElement.setAttribute('data-theme', t);
+      if (q.get('stage') === '1') document.documentElement.setAttribute('data-stage', '1');
+    })();
+  </script>
+  <style>
+    :root, html[data-theme="dark"] {
+      --bg: #080d18;
+      --grid: rgba(56, 189, 248, 0.06);
+      --panel: rgba(15, 23, 42, 0.9);
+      --border: rgba(148, 163, 184, 0.24);
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent-soft: rgba(56, 189, 248, 0.14);
+      --edge: rgba(148, 163, 184, 0.52);
+    }
+    html[data-theme="light"] {
+      --bg: #f8fafc;
+      --grid: rgba(12, 92, 171, 0.055);
+      --panel: rgba(255, 255, 255, 0.94);
+      --border: rgba(15, 23, 42, 0.14);
+      --text: #0f172a;
+      --muted: #475569;
+      --accent: #0c5cab;
+      --accent-soft: rgba(12, 92, 171, 0.1);
+      --edge: rgba(71, 85, 105, 0.5);
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: var(--bg);
+      background-image:
+        linear-gradient(to right, var(--grid) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
+      background-size: 28px 28px;
+      color: var(--text);
+      font-family: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      user-select: none;
+    }
+    .canvas-wrap { position: relative; width: 100%; height: 100%; display: flex; flex-direction: column; }
+    .svg-stage { flex: 1 1 auto; min-height: 0; cursor: grab; touch-action: none; }
+    .svg-stage.dragging { cursor: grabbing; }
+    svg { width: 100%; height: 100%; display: block; }
+    .node { cursor: pointer; }
+    .node:hover rect.box, .node:focus-visible rect.box { stroke: var(--accent); stroke-width: 2; }
+    .node.active rect.box { stroke: var(--accent); stroke-width: 2.2; fill: var(--accent-soft); }
+    rect.box { fill: var(--panel); stroke: var(--border); stroke-width: 1.3; rx: 10; }
+    .node-kicker { fill: var(--accent); font-size: 10px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+    .node-title { fill: var(--text); font-size: 13px; font-weight: 700; }
+    .node-sub { fill: var(--muted); font-size: 11px; font-family: "JetBrains Mono", ui-monospace, monospace; }
+    .edge-line { fill: none; stroke: var(--edge); stroke-width: 1.8; marker-end: url(#arrow); }
+    .edge-label { fill: var(--muted); font-size: 10.5px; text-anchor: middle; }
+    .inspector {
+      display: flex; align-items: center; justify-content: space-between; gap: 10px;
+      padding: 8px 14px; border-top: 1px solid var(--border); background: var(--panel);
+      backdrop-filter: blur(8px); font-size: 12px; line-height: 1.4;
+    }
+    .inspector-main { min-width: 0; flex: 1; }
+    .inspector-title { font-weight: 700; color: var(--accent); margin-right: 8px; }
+    .inspector-file { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 11px; padding: 1px 6px; border-radius: 5px; background: var(--accent-soft); color: var(--text); }
+    .inspector-desc { display: block; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
+    .controls { display: flex; gap: 4px; flex-shrink: 0; }
+    .ctrl-btn { border: 1px solid var(--border); background: transparent; color: var(--text); border-radius: 6px; padding: 3px 8px; font-size: 12px; cursor: pointer; }
+    .ctrl-btn:hover { border-color: var(--accent); color: var(--accent); }
+  </style>
+</head>
+<body>
+  <div class="canvas-wrap">
+    <div id="stage" class="svg-stage">
+      <svg id="svg" viewBox="0 0 940 345" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="PVSSPW architecture diagram">
+        <defs>
+          <marker id="arrow" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+            <path d="M 1 1.5 L 8.5 5 L 1 8.5 z" fill="currentColor" opacity="0.65" />
+          </marker>
+        </defs>
+        <g id="viewport">
+          <rect x="20" y="18" width="222" height="304" rx="14" fill="none" stroke="rgba(148,163,184,0.22)" stroke-dasharray="5 4" />
+          <text x="34" y="38" class="node-kicker">工作台壳层与门禁 (web/)</text>
+
+          <rect x="268" y="18" width="406" height="304" rx="14" fill="none" stroke="rgba(56,189,248,0.28)" stroke-dasharray="5 4" />
+          <text x="282" y="38" class="node-kicker">补丁核心与同设备零拷贝后处理</text>
+
+          <rect x="700" y="18" width="220" height="304" rx="14" fill="none" stroke="rgba(16,185,129,0.28)" stroke-dasharray="5 4" />
+          <text x="714" y="38" class="node-kicker">本地服务、探针与结果库</text>
+
+          <path d="M 228 92 L 284 92" class="edge-line" />
+          <text x="256" y="84" class="edge-label">选核/参数</text>
+          <path d="M 228 214 L 284 214" class="edge-line" />
+          <text x="256" y="206" class="edge-label">Worker 拦截</text>
+
+          <path d="M 466 92 L 494 92" class="edge-line" />
+          <path d="M 466 214 L 494 214" class="edge-line" />
+          <path d="M 660 96 L 714 96" class="edge-line" />
+          <path d="M 660 218 L 714 218" class="edge-line" />
+
+          <g class="node active" tabindex="0" role="button" data-id="shell">
+            <rect class="box" x="34" y="54" width="194" height="82" />
+            <text x="48" y="76" class="node-kicker">1. 入口锁与库管理</text>
+            <text x="48" y="96" class="node-title">shell / library / files</text>
+            <text x="48" y="115" class="node-sub">pvsspw-library · gamedata-worker</text>
+          </g>
+
+          <g class="node" tabindex="0" role="button" data-id="gates">
+            <rect class="box" x="34" y="156" width="194" height="150" />
+            <text x="48" y="178" class="node-kicker">2. 启动前探测门禁</text>
+            <text x="48" y="198" class="node-title">platform + graphics</text>
+            <text x="48" y="217" class="node-sub">JSPI · OPFS · core/compat/fb</text>
+            <text x="48" y="242" class="node-title">chooseThreadPolicy</text>
+            <text x="48" y="261" class="node-sub">1..8 / 3t Xe-LPG / 90% plateau</text>
+          </g>
+
+          <g class="node" tabindex="0" role="button" data-id="patches">
+            <rect class="box" x="284" y="54" width="182" height="82" />
+            <text x="298" y="76" class="node-kicker">3. 四段补丁 Wasm</text>
+            <text x="298" y="96" class="node-title">Patched Vitaslop (MIT)</text>
+            <text x="298" y="115" class="node-sub">firmware/playback/battle/fsr1</text>
+          </g>
+
+          <g class="node" tabindex="0" role="button" data-id="ffworker">
+            <rect class="box" x="284" y="156" width="182" height="150" />
+            <text x="298" y="178" class="node-kicker">4. 同设备 AI 拦截层</text>
+            <text x="298" y="198" class="node-title">frameflow-worker.js</text>
+            <text x="298" y="217" class="node-sub">shader-f16 · 3-slot texture ring</text>
+            <text x="298" y="242" class="node-title">GameFI + GameSR 2x</text>
+            <text x="298" y="261" class="node-sub">software => off · sr => !fsr1</text>
+          </g>
+
+          <g class="node" tabindex="0" role="button" data-id="present">
+            <rect class="box" x="494" y="54" width="166" height="82" />
+            <text x="508" y="76" class="node-kicker">5a. 原生放大或互锁</text>
+            <text x="508" y="96" class="node-title">Fsr1 EASU -> RCAS</text>
+            <text x="508" y="115" class="node-sub">!srActive · fsr1-scratch</text>
+          </g>
+
+          <g class="node" tabindex="0" role="button" data-id="fallback">
+            <rect class="box" x="494" y="156" width="166" height="150" />
+            <text x="508" y="178" class="node-kicker">5b. 画布呈现与软件回退</text>
+            <text x="508" y="198" class="node-title">Offscreen / 2D</text>
+            <text x="508" y="217" class="node-sub">pvsspw-software-frame</text>
+            <text x="508" y="242" class="node-title">OPFS Flush on Exit</text>
+            <text x="508" y="261" class="node-sub">flush-game-data</text>
+          </g>
+
+          <g class="node" tabindex="0" role="button" data-id="serve">
+            <rect class="box" x="714" y="54" width="192" height="86" />
+            <text x="728" y="76" class="node-kicker">6a. 隔离预览与构建</text>
+            <text x="728" y="96" class="node-title">serve.py + prepare.py</text>
+            <text x="728" y="115" class="node-sub">COOP/COEP · vitaslop-sas.zip</text>
+          </g>
+
+          <g class="node" tabindex="0" role="button" data-id="bench">
+            <rect class="box" x="714" y="156" width="192" height="150" />
+            <text x="728" y="178" class="node-kicker">6b. 探针与对比归档</text>
+            <text x="728" y="198" class="node-title">worker-probe + battle</text>
+            <text x="728" y="217" class="node-sub">pvsspw-submit · 600s pixel diff</text>
+            <text x="728" y="242" class="node-title">report.py -> COMPARISON</text>
+            <text x="728" y="261" class="node-sub">SHA-256 校验帧与 JSON</text>
+          </g>
+        </g>
+      </svg>
+    </div>
+    <div class="inspector">
+      <div class="inspector-main">
+        <span id="ins-title" class="inspector-title">1. 入口锁与库管理</span>
+        <span id="ins-file" class="inspector-file">web/shell.js · library.js · files.js</span>
+        <span id="ins-desc" class="inspector-desc">通过 pvsspw-library 独占 Web Lock 防止多标签页破坏游戏库，并在导入/恢复存档时经独立 Worker 结构校验。</span>
+      </div>
+      <div class="controls">
+        <button type="button" class="ctrl-btn" id="zoom-out" title="缩小">−</button>
+        <button type="button" class="ctrl-btn" id="zoom-reset" title="重置视图">1:1</button>
+        <button type="button" class="ctrl-btn" id="zoom-in" title="放大">+</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var details = {
+        shell: {
+          title: '1. 工作台外壳、并发锁与存档导出',
+          file: 'web/shell.js · library.js · files.js',
+          desc: '以 pvsspw-library Web Lock 互斥访问游戏库，安装 ZIP/VPK/rePatch 并经 /gamedata-worker.js 检验存档 ZIP。'
+        },
+        gates: {
+          title: '2. 平台门禁、显卡探测与 SMP 策略',
+          file: 'web/platform.js · graphics.js · thread-policy.js',
+          desc: '缺失安全上下文/JSPI/OPFS 同步句柄即报 fatal；并行微测速按峰值吞吐九折选最少线程（Xe-LPG PCSG00214 固定 3 线程）。'
+        },
+        patches: {
+          title: '3. 四段递增源码补丁与 libsas 覆盖',
+          file: 'patches/vitaslop-*.patch · scripts/build_vitaslop.py',
+          desc: '经 apply_stack 无状态树验证重编单/多线程 Wasm，并单独提取验证过 SHA-256 的 libsas.suprx 生成 vitaslop-sas.zip。'
+        },
+        ffworker: {
+          title: '4. 同设备 WebGPU 三槽纹理环与 AI 协调',
+          file: 'web/frameflow-worker.js · web/engine.js',
+          desc: '优先附着 shader-f16，用 3 槽同设备环运行 GameFI(2x/3x) 与 GameSR(2x)；软件模式自动关闭 AI  presets。'
+        },
+        present: {
+          title: '5a. 原生 FSR 1 与 GameSR 互斥门控',
+          file: 'patches/vitaslop-fsr1.patch · web/engine.js',
+          desc: '当开启 GameSR 时 engine.js 显式将 output-size 的 fsr1 置为 false；未开 AI 超分时走 EASU -> RCAS。'
+        },
+        fallback: {
+          title: '5b. OffscreenCanvas 与软件二维回退',
+          file: 'web/engine.js',
+          desc: '无硬件适配器时通过 pvsspw-software-frame 呈递至 Canvas 2D，退出前等待 worker 释放 OPFS 同步句柄。'
+        },
+        serve: {
+          title: '6a. 锁定快照还原与 COOP/COEP 回环服务',
+          file: 'scripts/prepare.py · scripts/serve.py',
+          desc: '独立端口隔离 Vitaslop 与 Vita3K 存储；/__local/open-edge 严格校检回环 Host/Origin 与 X-PVSSPW-Action。'
+        },
+        bench: {
+          title: '6b. 非侵入 GPU 提交探针与自动制表',
+          file: 'bench/worker-probe.js · scripts/battle.mjs · report.py',
+          desc: '只对写入可见画布表面的独特提交发 pvsspw-submit，战斗采样与 FSR 无损对照经 SHA-256 核验写入 COMPARISON.md。'
+        }
+      };
+      var nodes = document.querySelectorAll('.node');
+      var tEl = document.getElementById('ins-title');
+      var fEl = document.getElementById('ins-file');
+      var dEl = document.getElementById('ins-desc');
+      nodes.forEach(function (n) {
+        function activate() {
+          nodes.forEach(function (x) { x.classList.remove('active'); });
+          n.classList.add('active');
+          var item = details[n.getAttribute('data-id')];
+          if (item) { tEl.textContent = item.title; fEl.textContent = item.file; dEl.textContent = item.desc; }
+        }
+        n.addEventListener('click', activate);
+        n.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activate(); } });
+      });
+
+      var vp = document.getElementById('viewport');
+      var stage = document.getElementById('stage');
+      var scale = 1, tx = 0, ty = 0, dragging = false, sx = 0, sy = 0;
+      function apply() { vp.setAttribute('transform', 'translate(' + tx + ',' + ty + ') scale(' + scale + ')'); }
+      document.getElementById('zoom-in').onclick = function () { scale = Math.min(2.2, scale + 0.18); apply(); };
+      document.getElementById('zoom-out').onclick = function () { scale = Math.max(0.7, scale - 0.18); apply(); };
+      document.getElementById('zoom-reset').onclick = function () { scale = 1; tx = 0; ty = 0; apply(); };
+      stage.addEventListener('pointerdown', function (e) {
+        if (e.target.closest('.node')) return;
+        dragging = true; sx = e.clientX - tx; sy = e.clientY - ty; stage.classList.add('dragging');
+      });
+      window.addEventListener('pointermove', function (e) { if (!dragging) return; tx = e.clientX - sx; ty = e.clientY - sy; apply(); });
+      window.addEventListener('pointerup', function () { dragging = false; stage.classList.remove('dragging'); });
+      if (!document.documentElement.hasAttribute('data-stage')) {
+        stage.addEventListener('wheel', function (e) {
+          e.preventDefault();
+          scale = Math.max(0.7, Math.min(2.2, scale + (e.deltaY < 0 ? 0.12 : -0.12)));
+          apply();
+        }, { passive: false });
+      }
+    })();
+  </script>
+</body>
+</html>

@@ -1,34 +1,34 @@
-# 工作台参数、后端与探针 API 参考
+---
+layout: page
+sidebar: false
+title: API 与探针参考
+description: PVSSPW 的 checkPlatform/findGraphics 门禁、存档校验、chooseThreadPolicy 自适应选核、同设备 frameflow-worker 纹理环、serve.py 与 GPU 探针参考。
+---
 
-本页依据 `web/engine.js`、`web/thread-policy.js`、`web/frameflow-worker.js`、`scripts/edge_backends.py`、`scripts/serve.py` 与 `bench/worker-probe.js` 整理内部控制协议与参数。
+<script setup lang="ts">
+import { apiSpecZh } from '../.vitepress/data/api-spec'
+</script>
 
-## `worker.js` 查询参数协商 (`web/engine.js`)
+<ApiExplorer :spec="apiSpecZh">
 
-当 `/worker.js` 创建并存在已探测图形配置时，`window.Worker` 自动追加以下查询参数：
+### 启动前置环境与显卡探测 (`checkPlatform` / `findGraphics`) {#platform-and-graphics}
 
-| 参数名 | 取值来源 / 候选值 | 作用说明 |
-| --- | --- | --- |
-| `uiGpu` | `high-performance` / `low-power` 等 | 指定适配器电源偏好 |
-| `uiMode` | `core` / `compatibility` / `fallback` | 指定 WebGPU 请求兼容模式 |
-| `uiPresent` | `'software'`（仅软件适配器设置） | 通知后端切换二维画布回退渲染并禁用 `GameFI` / `GameSR` |
-| `uiFrameflow` | `off` / `lite-2x` / `std-2x` / `lite-3x` / `std-3x` | 启用光流插帧并配置预设与目标倍率 |
-| `uiSr` | `off` / `sr-lite` / `sr-std` | 启用 2× AI 超分；启用时抑制原生 `fsr1` |
+校验安全上下文、JSPI、OffscreenCanvas 与 OPFS 同步文件句柄（缺失即报 `fatal`）；在 Worker 内探测硬件 WebGPU 适配器并识别软件回退。
 
-## 宿主控制桥 `window.vitaPlayer` (`web/engine.js`)
+### 存档 ZIP 导出与结构校验 (`exportSaves` / `restoreSaves`) {#save-zip-validation}
 
-- `start(title, selectedGraphics?)` / `stop()`：应用设置、执行 `chooseThreadPolicy()`、启动游戏并将路由更新为 `#/play/<titleId>`。
-- `setFrameflow(preset)` / `setGameSr(preset)`：向正在运行的核心工作线程实时发送 `pvsspw-frameflow` 与 `pvsspw-sr` 预设切换消息。
-- `flush()`：向工作线程发送 `flush-game-data`，触发即时写盘同步。
-- `resizeOutput()` / `menu()` / `resume()` / `screenshot()`：调整缩放输出、控制游玩菜单以及在软件渲染下从 `#softwareScreen` 导出 PNG 截图。
+支持单游戏或全档案 ZIP 备份，并在恢复覆盖前经 `/gamedata-worker.js` 结构检验与弹窗确认。
 
-## 回环服务端同源启动校验 (`POST /__local/open-edge`)
+### 自适应 SMP 线程池决策 (`chooseThreadPolicy`) {#thread-policy}
 
-仅在携带启动器选项启动 `scripts/serve.py` 时开放，强制核对以下全部条件（缺失任一项即返回 `403` 或 `400`）：
-- `Host` 须为 `127.0.0.1:<port>` 或 `localhost:<port>`；
-- `Origin` 须精确等于 `http://<Host>`，`Sec-Fetch-Site` 须为 `same-origin`；
-- 请求头须包含 `X-PVSSPW-Action: open-edge`，请求体长度 `0..256` 字节，且 `backend` 命中 `BACKENDS`（`webgpu`、`vulkan`、`nvidia`、`opengl`、`software`）。
+依据用户开关、已知硬件特例（Intel Xe-LPG `PCSG00214` 固定 3 线程）与并行微测速峰值九折选出最优工作线程数。
 
-## 性能探针与通路标签
+### 同设备零拷贝后处理环与 FSR 1 互斥 (`frameflow-worker.js`) {#frameflow-worker-bridge}
 
-- **GPU 提交探针 (`bench/worker-probe.js`)**：仅当 `queue.submit` 的命令缓冲区实际写入通过 `getCurrentTexture()` 获知的新主表面纹理时，才派发 `{ type: 'pvsspw-submit', time }`，屏蔽编译心跳与离屏渲染噪音。
-- **FSR 1 与三槽纹理环调试标签**：原生通道为 `present-scale`、`fsr1-easu`、`fsr1-rcas`（ scratch 纹理 `fsr1-scratch`）；共享环纹理依次命名为 `frameflow-ring-0`..`frameflow-ring-2`。
+按序加载拦截器请求 `shader-f16`，经 `frameflow-ring-0..2` 运行 `GameFI` / `GameSR` 并在启用 AI 超分时关闭原生 `fsr1`。
+
+### 回环服务、同源启动与 GPU 提交探针 (`serve.py` / `worker-probe.js`) {#serve-and-probes}
+
+注入 COOP/COEP 响应头并强核对 `/__local/open-edge` 同源四重请求头；`worker-probe.js` 只对写入主画布的独特提交发送 `pvsspw-submit`。
+
+</ApiExplorer>

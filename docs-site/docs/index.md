@@ -1,20 +1,20 @@
-# 概览与能力边界
+# 概览与运行边界
 
-**PVSSPW**（PlayStation Vita Simulator Suitable for Playing on the Web）将修复补丁后的 **Vitaslop**（MIT）与同一工作台壳层、离线播放器对照快照（`Vita3K Web`）及零拷贝后处理链路收拢到统一仓内，用于在浏览器环境下研究 PS Vita 模拟运行时表现与画质后处理。
+**PVSSPW**（PlayStation Vita Simulator Suitable for Playing on the Web）将修复补丁后的 **Vitaslop**（MIT）与同一工作台壳层、离线播放器对照快照（`Vita3K Web`）及零拷贝后处理链路收拢到统一仓内，用于对比评测不同核心、多线程调度与画质后处理方案的实际表现。
 
-## 核心层级与运行入口
+## 核心层级与工作区职责
 
 | 层级 | 目录 | 职责说明 |
 | --- | --- | --- |
-| 浏览器工作台壳层 | `web/` | 游戏库安装锁、平台检查（JSPI / OPFS）、图形适配探索、自适应选线程及同设备 AI 后处理桥接 |
-| 核心递增补丁 | `patches/` | 修复重定位解码、输入控制、战斗唤醒问题以及接入原生两通道 `FSR 1` |
-| 构建、服务与脚本 | `scripts/` | 还原对比快照、增量编译、COOP/COEP 回环服务、无头/安卓试跑与对比报告生成 |
-| 采样探针与单测 | `bench/` 与 `tests/` | GPU 提交探针、同帧 FSR 截帧对比，以及纯 JS 策略和工作台集成检查 |
+| 浏览器工作台壳层 | `web/` | 游戏库并发锁、JSPI/OPFS/WebGPU 门禁、自适应选线程、同设备 AI 后处理与存档校验 |
+| 核心递增补丁 | `patches/` | 修复重定位解码、输入流控、战斗唤醒问题以及接入原生两通道 `FSR 1` |
+| 构建、服务与脚本 | `scripts/` | 还原快照、增量重编、COOP/COEP 回环服务、无头/安卓运行器与实测制表 |
+| 探针、单测与结果库 | `bench/`、`tests/`、`results/` | 零干扰 GPU 提交探针、同帧对比截帧、策略单测与 SHA-256 锁定对比报告 |
 
 ## 前置运行门禁 (`checkPlatform` / `findGraphics`)
 
-- **安全上下文与底层能力**：启动前要求 `isSecureContext`、WebAssembly、JSPI（`WebAssembly.Suspending`）、`OffscreenCanvas.transferControlToOffscreen` 与 OPFS 同步文件句柄全部就绪（任一缺失即在界面给出 `fatal` 级拦截提示）。
-- **跨源隔离**：建议开启 `COOP: same-origin` 与 `COEP: require-corp` 以解锁多线程 `SharedArrayBuffer` 调度。
-- **图形适配器筛选**：在专用 Worker 内逐档尝试 `core` / `compatibility` / `fallback` 模式创建 `WebGPU` 设备，优先选中硬件设备。
+- **安全上下文与核心能力**：启动前要求 `isSecureContext`、WebAssembly、JSPI（`WebAssembly.Suspending`）、`OffscreenCanvas.transferControlToOffscreen` 与专用探针实测的 OPFS 同步文件句柄就绪，缺失任何一项即报告 `fatal` 级拦截。
+- **跨源隔离**：回环预览服务统一注入 `COOP: same-origin` 与 `COEP: require-corp` 以解锁多线程 `SharedArrayBuffer`。
+- **硬件显卡优先筛选**：专用 Worker 按 `core` → `compatibility` → `fallback` 尝试创建 WebGPU 设备；遇到软件光栅器标记时会尝试寻找硬件适配器。
 
-继续阅读：[准备、重编与本地服务](/docs/setup)、[对测方法与战斗复现](/docs/benchmarks) 或 [工作台参数、后端与探针 API](/api-reference/)。
+下一步：阅读 [输入准备、重编与回环服务](/docs/deployment) 或查看 [API 与探针参考](/api-reference/)。

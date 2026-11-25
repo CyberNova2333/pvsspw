@@ -2,6 +2,7 @@
 
 | Timestamp | Request | Actions | Verification | Result |
 | --- | --- | --- | --- | --- |
+| 2026-11-25 12:22 Asia/Shanghai | 同步其余文档站共享主题、`<ApiExplorer>`、`<DiagramFrame>` 架构交互图与统一样式编排 | 引入 `.vitepress/theme/`（蓝网格、纯享模式、字体与动效含 `i18n/toggle` 清理修复）、新增 `pvsspw-architecture.html` 与双语 `api-spec.ts`、统一首页/侧栏/文档分级结构，并补齐 `AGENTS.md` 与 `ASSETS_LICENSES.md` | 同步后将复跑 `validate_repo_docs.py`、`docs-site` 测试与生产构建、`meta.json`/UTF-8 及 `node --test` | Synced through 322eeb9ae057894d6012499c4e30e8e3f05098f6；本条随当前主题同步提交生效 |
 | 2026-11-25 11:04 Asia/Shanghai | 补齐 PVSSPW `repo-docs/` 中文源码指南并接入 VitePress 双语文档站与 Pages 工作流 | 新建 Standard 模式源码指南（总览、五步主流程、代码地图、三篇专题模块、术语表、源码证据、读者模拟复核），更新 `AGENTS.md`/`CLAUDE.md`、`meta.json`/`README*`，并构建 `docs-site/` 与 `.github/workflows/docs-pages.yml` | `validate_repo_docs.py`（0 errors, 2既有许可文本警告）；`pnpm --dir docs-site test`（1/1 通过）；`vitepress build --base /pvsspw/`（1.75s 通过）；`node --test tests/*.test.mjs`（11/11 通过）；`meta.json` & UTF-8 校验通过 | Synced through 92b65f433d7a027f3210bbb35d71727087d04796；上述校验已于本次提交前完整实跑通过 |
 
 ## 本轮验证与范围边界

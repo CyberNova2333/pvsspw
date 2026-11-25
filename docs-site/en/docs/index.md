@@ -1,20 +1,20 @@
 # Overview & Scope Boundaries
 
-**PVSSPW** combines patched **Vitaslop** (`MIT`), a unified browser workbench (`web/`), hash-locked **Vita3K Web** comparison snapshots, and zero-copy post-processing (**FSR 1**, **GameFI**, **GameSR 2×**) behind reproducible Playwright/ADB benchmark tooling.
+**PVSSPW** combines patched **Vitaslop** (`MIT`), a unified browser workbench (`web/`), hash-locked **Vita3K Web** comparison snapshots, and zero-copy post-processing (**FSR 1**, **GameFI**, **GameSR 2×**) behind repeatable Playwright/ADB benchmarks.
 
-## Architecture Layers
+## Layer Responsibilities
 
 | Layer | Path | Scope |
 | --- | --- | --- |
-| Browser Workbench | `web/` | Web Lock library guards, JSPI/OPFS/WebGPU checks, adaptive SMP selection, shared-device post-FX |
-| Vitaslop Patch Stack | `patches/` | 4 incremental patches (`firmware`, `playback`, `battle`, `fsr1`) compiled outside git history |
-| Tooling & Harness | `scripts/` | Snapshot extraction, Wasm patching, loopback COOP/COEP server, desktop/Android runners, report generation |
-| Probes & Tests | `bench/`, `tests/` | Zero-overhead GPU submission hooks, lossless FSR pass triplets, pure-JS unit tests & workbench checks |
+| Browser Workbench | `web/` | Web Lock guards, JSPI/OPFS/WebGPU readiness, adaptive SMP sizing, shared-GPUDevice post-FX |
+| Vitaslop Patch Stack | `patches/` | Four incremental patches (`firmware`, `playback`, `battle`, `fsr1`) compiled cleanly on checkout |
+| Tooling & Harness | `scripts/` | Snapshot extraction, Wasm builds, loopback COOP/COEP server, desktop/Android runners, reporting |
+| Probes, Tests & Reports | `bench/`, `tests/`, `results/` | Non-intrusive GPU submit hooks, lossless FSR pass captures, pure-JS unit checks, verified reports |
 
-## Runtime Gates Before Launch
+## Pre-Launch Runtime Gates
 
-- **Fatal checks (`web/platform.js`)**: `isSecureContext`, WebAssembly, JSPI (`WebAssembly.Suspending`), `OffscreenCanvas`, and OPFS `createSyncAccessHandle` inside a dedicated probe worker.
-- **Cross-origin isolation**: Loopback preview serves `COOP` / `COEP` headers enabling multi-threaded Wasm (`pthreads`) and `SharedArrayBuffer`.
-- **Adapter discovery (`web/graphics.js`)**: Dedicated worker probes `core` -> `compatibility` -> `fallback`, preferring hardware GPUs over software rasterizers.
+- **Fatal checks (`web/platform.js`)**: `isSecureContext`, WebAssembly, JSPI (`WebAssembly.Suspending`), `OffscreenCanvas`, and worker-verified OPFS `createSyncAccessHandle`.
+- **Cross-origin isolation**: Loopback server enforces `COOP` / `COEP` headers enabling multi-threaded Wasm (`pthreads`) and `SharedArrayBuffer`.
+- **Hardware GPU preference (`web/graphics.js`)**: Worker probes `core` -> `compatibility` -> `fallback` preferring hardware adapters over software rasterizers.
 
-Continue to [Setup, Rebuilding & Local Server](/en/docs/setup), [Benchmark Protocol](/en/docs/benchmarks), or [API & Probe Reference](/en/api-reference/).
+Continue to [Setup, Rebuilding & Loopback Server](/en/docs/deployment) or [API & Probe Reference](/en/api-reference/).

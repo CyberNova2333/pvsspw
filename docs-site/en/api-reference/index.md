@@ -1,30 +1,34 @@
-# Workbench Parameters, Backends & Probes Reference
+---
+layout: page
+sidebar: false
+title: API & Probe Reference
+description: Reference for PVSSPW preflight gates, ZIP save validation, chooseThreadPolicy SMP sizing, shared-GPUDevice frameflow-worker ring, serve.py, and GPU submit probes.
+---
 
-Aligned directly with `web/engine.js`, `web/thread-policy.js`, `web/frameflow-worker.js`, `scripts/serve.py`, `scripts/edge_backends.py`, and `bench/worker-probe.js`.
+<script setup lang="ts">
+import { apiSpecEn } from '../../.vitepress/data/api-spec'
+</script>
 
-## `/worker.js` Query Parameters (`web/engine.js`)
+<ApiExplorer :spec="apiSpecEn">
 
-| Query Param | Values / Source | Purpose |
-| --- | --- | --- |
-| `uiGpu` | `high-performance` / `low-power` / empty | Adapter power preference passed to worker |
-| `uiMode` | `core` / `compatibility` / `fallback` | WebGPU request feature level / fallback mode |
-| `uiPresent` | `'software'` (only on software adapters) | Switches to 2D canvas software presentation and forces AI presets off |
-| `uiFrameflow` | `off` / `lite-2x` / `std-2x` / `lite-3x` / `std-3x` | Enables FrameFlow `GameFI` optical-flow frame generation |
-| `uiSr` | `off` / `sr-lite` / `sr-std` | Enables FrameFlow `GameSR` 2× scaling (suppresses native `fsr1`) |
+### Platform & Adapter Preflight (`checkPlatform` / `findGraphics`) {#platform-and-graphics}
 
-## `window.vitaPlayer` & Worker Messages
+Enforces Secure Context, JSPI, OffscreenCanvas, and OPFS sync handles (`fatal` if missing) while preferring hardware WebGPU adapters inside a dedicated worker.
 
-- `start(title, selectedGraphics?)` / `stop()`: Resolves effective title settings + `chooseThreadPolicy()`, starts core, and updates hash to `#/play/<titleId>`.
-- `setFrameflow(preset)` / `setGameSr(preset)`: Posts `{ type: 'pvsspw-frameflow', preset }` or `{ type: 'pvsspw-sr', preset }` live to the active core worker.
-- `flush()`: Posts `{ type: 'flush-game-data' }` to flush OPFS save buffers.
+### Save ZIP Export & Verification (`exportSaves` / `restoreSaves`) {#save-zip-validation}
 
-## Same-Origin Loopback Launcher (`POST /__local/open-edge`)
+Exports per-title or full saves and runs `/gamedata-worker.js` schema validation before user confirmation.
 
-Enabled only when `serve.py` runs with the local launcher flag; rejects (`403`/`400`) unless:
-- `Host` is `127.0.0.1:<port>` or `localhost:<port>`, `Origin === http://<Host>`, `Sec-Fetch-Site === same-origin`, and `X-PVSSPW-Action === open-edge`.
-- JSON payload is `<= 256` bytes and selects one of `BACKENDS`: `webgpu`, `vulkan`, `nvidia`, `opengl`, or `software`.
+### Adaptive Guest SMP Policy (`chooseThreadPolicy`) {#thread-policy}
 
-## Render Pass & GPU Probe Labels
+Combines user overrides, measured hardware presets (3 workers for `PCSG00214` on Linux Edge 157 Intel Xe-LPG), and 90%-peak parallel worker probing.
 
-- **GPU Submit Probe (`bench/worker-probe.js`)**: Emits `{ type: 'pvsspw-submit', time }` only when a submitted command buffer wrote into a distinct visible swapchain texture acquired via `getCurrentTexture()`.
-- **Post-FX Labels**: Native passes use `present-scale`, `fsr1-easu`, `fsr1-rcas`, and `fsr1-scratch`; same-device ring slots are labeled `frameflow-ring-0..2`.
+### Shared-`GPUDevice` Post-FX Ring & FSR 1 Exclusion (`frameflow-worker.js`) {#frameflow-worker-bridge}
+
+Requests `shader-f16`, routes swapchains through `frameflow-ring-0..2` for `GameFI` / `GameSR`, disables AI in software mode, and suppresses native `fsr1` when `GameSR` runs.
+
+### Loopback Server & GPU Submit Probes (`serve.py` / `worker-probe.js`) {#serve-and-probes}
+
+Serves COOP/COEP isolation headers, guards `/__local/open-edge` with strict same-origin header checks, and emits `pvsspw-submit` only on visible canvas writes.
+
+</ApiExplorer>
