@@ -8,6 +8,7 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-AGPLv3-blue.svg" alt="License: AGPL-3.0" /></a>
   <img src="https://img.shields.io/badge/Runtime-WebAssembly%20%2F%20WebGPU-0ea5e9.svg" alt="Runtime: WebAssembly / WebGPU" />
   <img src="https://img.shields.io/badge/Post%20FX-FSR%201%20%7C%20GameFI%20%7C%20GameSR-6366f1.svg" alt="Post FX: FSR 1 | GameFI | GameSR" />
+  <a href="https://cybernova2333.github.io/pvsspw/"><img src="https://img.shields.io/badge/Docs-GitHub%20Pages-0ea5e9.svg" alt="Docs" /></a>
 </p>
 
 <p align="center">
@@ -15,7 +16,7 @@
 </p>
 
 <p align="center">
-  <a href="results/COMPARISON.md">设备与核心对比表</a> · <a href="results/DESKTOP-FIRST-FRAME.md">桌面首帧记录</a> · <a href="ASSETS_LICENSES.md">资产与许可清单</a> · <a href="#pvsspw-游玩界面">游玩界面与 AI 画质</a>
+  <a href="https://cybernova2333.github.io/pvsspw/docs/">在线文档站</a> · <a href="docs-site/api-reference/index.md">API 与探针参考</a> · <a href="repo-docs/README.md">源码指南</a> · <a href="results/COMPARISON.md">设备与核心对比表</a> · <a href="ASSETS_LICENSES.md">资产与许可清单</a>
 </p>
 
 修复版 Vitaslop 使用 PPSSPW 风格的游戏库、触控和存档界面。本机启动与日版样例的操作见 [PVSSPW 游玩界面](#pvsspw-游玩界面)。

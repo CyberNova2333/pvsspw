@@ -12,6 +12,7 @@
   "category": "media-engine",
   "featured": false,
   "repository": "https://github.com/CyberNova2333/pvsspw",
+  "docsUrl": "https://cybernova2333.github.io/pvsspw/",
   "license": "AGPL-3.0-only",
   "primaryLanguage": "JavaScript",
   "techStack": [
@@ -50,7 +51,8 @@
   "quickStart": [
     "python3 scripts/prepare.py players",
     "node --test tests/*.test.mjs",
-    "python3 scripts/serve.py vitaslop --fixed"
+    "python3 scripts/serve.py vitaslop --fixed",
+    "pnpm --dir docs-site run docs:dev"
   ],
   "roadmap": {
     "stage": "实验阶段 · 持续调优",
