@@ -12,7 +12,8 @@
   "category": "media-engine",
   "featured": false,
   "repository": "https://github.com/CyberNova2333/pvsspw",
-  "docsUrl": "https://cybernova2333.github.io/pvsspw/",
+  "homepage": "https://pvsspw.cbnv.me",
+  "docsUrl": "https://pvsspw.cbnv.me/docs/",
   "license": "AGPL-3.0-only",
   "primaryLanguage": "JavaScript",
   "techStack": [

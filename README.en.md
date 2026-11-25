@@ -8,7 +8,7 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-AGPLv3-blue.svg" alt="License: AGPL-3.0" /></a>
   <img src="https://img.shields.io/badge/Runtime-WebAssembly%20%2F%20WebGPU-0ea5e9.svg" alt="Runtime: WebAssembly / WebGPU" />
   <img src="https://img.shields.io/badge/Post%20FX-FSR%201%20%7C%20GameFI%20%7C%20GameSR-6366f1.svg" alt="Post FX: FSR 1 | GameFI | GameSR" />
-  <a href="https://cybernova2333.github.io/pvsspw/en/"><img src="https://img.shields.io/badge/Docs-GitHub%20Pages-0ea5e9.svg" alt="Docs" /></a>
+  <a href="https://pvsspw.cbnv.me/en/"><img src="https://img.shields.io/badge/Docs-pvsspw.cbnv.me-0ea5e9.svg" alt="Docs" /></a>
 </p>
 
 <p align="center">
@@ -16,7 +16,7 @@
 </p>
 
 <p align="center">
-  <a href="https://cybernova2333.github.io/pvsspw/en/docs/">Online Docs</a> · <a href="docs-site/en/api-reference/index.md">API &amp; Probes</a> · <a href="repo-docs/README.md">Source Guide (ZH)</a> · <a href="results/COMPARISON.md">Comparison Report (ZH)</a> · <a href="ASSETS_LICENSES.md">Assets &amp; Licenses (ZH)</a>
+  <a href="https://pvsspw.cbnv.me/en/docs/">Online Docs</a> · <a href="docs-site/en/api-reference/index.md">API &amp; Probes</a> · <a href="repo-docs/README.md">Source Guide (ZH)</a> · <a href="results/COMPARISON.md">Comparison Report (ZH)</a> · <a href="ASSETS_LICENSES.md">Assets &amp; Licenses (ZH)</a>
 </p>
 
 **PVSSPW** (**P**layStation **V**ita **S**imulator **S**uitable for **P**laying on the **W**eb) is an experimental browser PlayStation Vita workbench and benchmark suite pairing a patched **Vitaslop** WebGPU/Wasm core with a PPSSPW-style UI shell, reproducible **Vita3K Web** baselines, and zero-copy **FrameFlow** (`GameFI` interpolation + `GameSR` 2× super-resolution) + **FSR 1** post-processing. All device/core findings for the *Madoka Magica: The Battle Pentagram* (`PCSG00214`) baseline are archived in [`results/COMPARISON.md`](results/COMPARISON.md).
