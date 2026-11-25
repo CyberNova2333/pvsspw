@@ -1,10 +1,49 @@
-# PVSSPW · PS Vita 网页模拟器与对测
+<p align="center">
+  <img src="web/brand.svg" alt="PVSSPW" width="88" height="88" />
+</p>
+
+<h1 align="center">PVSSPW · PS Vita 网页模拟器与性能对测平台</h1>
+
+<p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-AGPLv3-blue.svg" alt="License: AGPL-3.0" /></a>
+  <img src="https://img.shields.io/badge/Runtime-WebAssembly%20%2F%20WebGPU-0ea5e9.svg" alt="Runtime: WebAssembly / WebGPU" />
+  <img src="https://img.shields.io/badge/Post%20FX-FSR%201%20%7C%20GameFI%20%7C%20GameSR-6366f1.svg" alt="Post FX: FSR 1 | GameFI | GameSR" />
+</p>
+
+<p align="center">
+  <strong>简体中文</strong> | <a href="README.en.md">English</a>
+</p>
+
+<p align="center">
+  <a href="results/COMPARISON.md">设备与核心对比表</a> · <a href="results/DESKTOP-FIRST-FRAME.md">桌面首帧记录</a> · <a href="ASSETS_LICENSES.md">资产与许可清单</a> · <a href="#pvsspw-游玩界面">游玩界面与 AI 画质</a>
+</p>
 
 修复版 Vitaslop 使用 PPSSPW 风格的游戏库、触控和存档界面。本机启动与日版样例的操作见 [PVSSPW 游玩界面](#pvsspw-游玩界面)。
 
 用同一份《剧场版 魔法少女小圆 The Battle Pentagram》日版（PCSG00214 v01.00），比较 Vitaslop 和 Vita3K Web 的冷启动、战斗场景持续帧率及游戏内存读档。实测记录见 [设备与核心对比表](results/COMPARISON.md)，表内链接指向对应的设备、输入指纹、启动阶段和播放器诊断。
 
 沿用隔壁 PPSSPW 的做法，每次试跑记录构建指纹、设备类别和固定场景，先保存原始结果，再生成比较表。对应的参考入口是 [PPSSPW 场景会话](../ppsspw/scripts/browser-scene-session.mjs) 和 [PPSSPW 性能比较](../ppsspw/scripts/compare-browser-performance.mjs)。两个 PSV 核心使用各自的渲染提交信号。
+
+## 能力边界与明确非目标
+
+- **能做到什么程度**：
+  - 在锁定提交的 Vitaslop（`MIT`）上补齐 ARM 跳转表修复、协程唤醒、`libsas` 覆盖、单/多线程 Wasm 构建及每局并行 CPU 测速选线程，提供纯本地回环游玩与对测工作台；
+  - 集成零拷贝共享 `GPUDevice` 的 **FSR 1 空间超分**、**FrameFlow `GameFI` 实时光流插帧**（`2×` / `3×`）与 **`GameSR` 2× 超分**，可单独或串联启用并在工作台即时生效；
+  - 提供桌面无头 Edge/Chromium（含 Intel Xe-LPG / SwiftShader 对照）与 Android Firefox/Chromium 的冷启动、首帧与 600 秒战斗持续帧率/逐像素帧更新采样流水线。
+- **明确不做什么**：
+  - **绝不分发商业游戏 ROM、Vita 固件或 PSN 密钥**：所有测试镜像 ZIP、rePatch 与固件包均由用户本地提供并保留在忽略目录；
+  - **不包含联机联调后台或强制云端依赖**：工作台所有玩家游戏库、存档、按键映射与测量导出全部离线保存在浏览器本地；
+  - **无硬件 WebGPU 时不强行跑 AI 后处理或高帧率软渲**：软件渲染模式自动禁用 `GameFI` / `GameSR`，桌面实测结论不未经实机直接外推至实体手机帧率。
+
+## 工作台与后处理架构
+
+```mermaid
+flowchart LR
+    U["用户浏览器 / 自动化测试<br/>本地 ZIP · VPK · Manifest"] --> W["Vitaslop / Vita3K Worker<br/>单线程或动态 SMP 线程池"]
+    W --> FX["WebGPU 同设备零拷贝环<br/>GameFI 插帧 -> GameSR 2× / FSR 1"]
+    FX --> C["OffscreenCanvas / DOM 壳层<br/>触摸 · 手柄映射 · 存档导出"]
+    W --> P["测量探针 & 对测报告<br/>results/COMPARISON.md"]
+```
 
 ## 准备
 
@@ -61,7 +100,7 @@ VK_DRIVER_FILES=/usr/share/vulkan/icd.d/intel_icd.json \
 
 「在线下载」接受本地 JSON 或 HTTPS 清单。沿用 PPSSPW 的版本 1 格式，字段为 `schemaVersion`、`id`、`name`（ZIP 或 VPK）、`size`、`chunkSize`、每块的 `sha256` 数组和镜像 `sources`。来源需支持 HTTP Range 和 206 响应，跨域时还须开放 CORS 及 `Content-Range` 响应头。重新载入同一清单可继续已校验的进度。完成后点「导入游戏库」。
 
-游戏卡片的「详情与附加内容」可以安装、启停和移除 rePatch 或附加内容。「画质与操作 → 键盘与手柄映射」可保存全局或单游戏配置。这两个页面、启动画面、暂停菜单和运行中断提示均使用 PVSSPW 界面。「画质与操作 → 画面」提供 **FSR 1 超分**开关（基于 EASU 边缘定向放大与 RCAS 锐化，接在 Vitaslop 最终 WebGPU 显示通道上，开启后自动切至「匹配屏幕像素」输出并即时生效；切回原生 960×544 上限时自动关闭）。
+游戏卡片的「详情与附加内容」可以安装、启停和移除 rePatch 或附加内容。「画质与操作 → 键盘与手柄映射」可保存全局或单游戏配置。这两个页面、启动画面、暂停菜单和运行中断提示均使用 PVSSPW 界面。「画质与操作 → 画面」提供 **FSR 1 超分**、**AI 插帧 (GameFI)**（`2× · Lite/Std`、`3× · Lite`）与 **AI 超分 (GameSR 2×)**（`Lite/Std`）开关：其中 FSR 1 接在 Vitaslop 最终 WebGPU 显示通道上，开启后自动切至「匹配屏幕像素」输出；`GameFI` 与 `GameSR` 通过 `web/frameflow-worker.js` 零拷贝复用共享 `GPUDevice`，支持单独开启或串联生效，且软件渲染模式下自动禁用以避免降帧。
 
 **Edge 显示 WebGPU 不可用时**，点「查看启动问题 → 重新检测」。工作台在渲染工作线程中依次试用图形设备并创建 WebGPU 设备，记录请求结果。若浏览器只提供软件设备，可以确认以软件渲染启动。桌面 Edge 可在 `edge://settings/system` 检查图形加速，重启后在 `edge://gpu` 检查 WebGPU 状态。[微软图形加速排查说明](https://learn.microsoft.com/en-us/troubleshoot/microsoft-edge/performance/edge-high-cpu-memory)
 
@@ -194,3 +233,11 @@ node scripts/battle.mjs single artifacts/verify-single
 发送 `battle-start sample 600` 开始计时。保持页面前台、角色静止，核对每分钟的截图和 `window-end.jpg`。切场景、阵亡或打开菜单时发送 `invalid discard` 作废。有效试次会在 `measurement.json` 中写出结果。以 `done exit` 关闭浏览器后，用 `multi` 和另一个空目录重做固定 3 个游戏执行线程的历史对照，或用 `auto` 测试随设备自动选取的线程数。例如 `node scripts/battle.mjs multi artifacts/verify-six 6` 可复测 6 个线程。实际运行参数见该次 `battle-start-setup.json`。
 
 复测 FSR 1 开关对照时，使用 `PV_FSR_COMPARE=1 node scripts/battle.mjs multi artifacts/verify-fsr` 进入同一出生点并验证跳跃落地，随后发送 `fsr fsr-compare`。脚本会将视口固定为 1440×900（输出纹理 1440×816），先在同一游戏帧采得无损原图三元组，再经界面开关顺序执行各 600 秒的 GPU 逐像素帧率对照并核验 `present-scale` 与 `fsr1-easu`/`fsr1-rcas` 通道计数。
+
+## 许可与上游致谢
+
+- 本项目第一方前端外壳、测试与编排脚本依据 [GNU AGPLv3](LICENSE)（`AGPL-3.0-only`）条款发布。
+- 上游 `Vitaslop` 依据其原有 **MIT 许可证**分发（见 [`web/vitaslop-license.txt`](web/vitaslop-license.txt) 与 [`bench/runtime/vitaslop-LICENSE.txt`](bench/runtime/vitaslop-LICENSE.txt)）；对照测试快照中的 `Vita3K Web` 沿用其 **GPL-2.0-or-later** 许可（见 [`bench/runtime/vita3k-LICENSE.txt`](bench/runtime/vita3k-LICENSE.txt)）。
+- 随静态界面整合的 `FrameFlow`（`GameFI` / `GameSR` 运行时与紧凑模型）、派生界面及字体、图标许可边界见 [`web/vendor/NOTICE.txt`](web/vendor/NOTICE.txt)、[`web/vendor/LICENSE.TXT`](web/vendor/LICENSE.TXT) 与 [`ASSETS_LICENSES.md`](ASSETS_LICENSES.md)。
+- **附加条款与资产规则**：本项目第一方原创部分依据 GNU AGPLv3 第 7 条适用 [`LICENSE-ADDITIONAL_TERMS-zh-CN.md`](LICENSE-ADDITIONAL_TERMS-zh-CN.md)（v1.6.7-r4；英文参考译文：[`LICENSE-ADDITIONAL_TERMS-en.md`](LICENSE-ADDITIONAL_TERMS-en.md)，以简体中文完整版正文为准），工程实施参考见 [`IMPLEMENTATION-GUIDE.zh-en.md`](IMPLEMENTATION-GUIDE.zh-en.md)，人员署名、AI 辅助工具、上游依赖与字体/标识资产清单见 [`ASSETS_LICENSES.md`](ASSETS_LICENSES.md)。未取得对应权利人明确授权的第三方材料仍受其原有有效许可证约束。
+

@@ -1,10 +1,67 @@
 {
+  "$schema": "https://raw.githubusercontent.com/CyberNova2333/cybernova-homepage/main/public/schemas/repo-meta.v1.json",
+  "schemaVersion": 1,
+  "slug": "pvsspw",
   "name": "PVSSPW",
-  "visibility": "upcoming",
-  "status": "experimental",
-  "summary": {
-    "zh": "在手机与桌面浏览器上对测 Vitaslop 和 Vita3K Web 的本地实验环境。",
-    "en": "Local comparison of Vitaslop and Vita3K Web on mobile and desktop browsers."
+  "title": {
+    "zh": "PVSSPW · 基于 Vitaslop 的网页版 PS Vita 模拟器与性能对测平台",
+    "en": "PVSSPW · WebAssembly PS Vita Emulator Workbench & Benchmark Suite"
   },
-  "techStack": ["WebAssembly", "WebGPU", "Python", "JavaScript", "Playwright", "WebDriver"]
+  "visibility": "public",
+  "status": "experimental",
+  "category": "media-engine",
+  "featured": false,
+  "repository": "https://github.com/CyberNova2333/pvsspw",
+  "license": "AGPL-3.0-only",
+  "primaryLanguage": "JavaScript",
+  "techStack": [
+    "WebAssembly",
+    "WebGPU",
+    "Rust",
+    "JavaScript",
+    "Playwright",
+    "WebGL 2"
+  ],
+  "tags": [
+    "browser-emulator",
+    "psv-emulator",
+    "psvita",
+    "webassembly",
+    "webgpu"
+  ],
+  "summary": {
+    "zh": "在手机与桌面浏览器上运行的网页端 PS Vita 模拟器与对测工作台，集成修复版 Vitaslop（libsas 覆盖、SMP 多线程、FSR 1 与 FrameFlow GameFI 插帧 / GameSR 2× 超分）及 Vita3K Web 对照评测流水线。",
+    "en": "Browser PlayStation Vita emulator workbench and benchmark suite integrating patched Vitaslop (libsas, SMP worker pool, FSR 1, FrameFlow GameFI interpolation and GameSR 2x SR) alongside reproducible Vita3K Web comparisons."
+  },
+  "highlights": {
+    "zh": [
+      "在锁定版 Vitaslop 基础上修复 ARM 跳转表与协程信号唤醒，构建单/多线程 Wasm 并支持每局并行 CPU 测速选线程（如 Intel Xe-LPG 3 线程战斗 21.99 FPS）",
+      "复用 PPSSPW 风格纯浏览器工作台界面，支持 ZIP/VPK 导入、HTTP Range 206 断点清单下载、rePatch/附加内容管理与逐游戏/全局存档 ZIP 导出恢复",
+      "集成基于 WebGPU 零拷贝共享设备的 FSR 1 空间超分、GameFI 光流插帧（2×/3×）与 GameSR 2× 超分，可独立开启或串联使用",
+      "配套 Playwright 无头 Edge/Chromium 与 Android Firefox/Chromium 自动化冷启动、首帧、600 秒战斗帧率及像素采样评测流水线"
+    ],
+    "en": [
+      "Patches locked Vitaslop to resolve ARM jump-table and thread-signal wakeups, supporting single- and multi-threaded Wasm builds with per-session thread-pool benchmarking",
+      "Provides a unified browser workbench UI with ZIP/VPK library imports, HTTP Range 206 resumable downloads, rePatch/DLC management, and confirmed per-game/full save ZIP export and restore",
+      "Integrates zero-copy shared-GPUDevice WebGPU post-processing: FSR 1 spatial scaling, FrameFlow GameFI optical-flow frame interpolation (2x/3x), and GameSR 2x neural super-resolution",
+      "Includes reproducible headless Edge/Chromium and Android WebDriver/CDP benchmarks measuring cold start, first frame, 600-second sustained battle FPS, and per-pixel frame updates"
+    ]
+  },
+  "quickStart": [
+    "python3 scripts/prepare.py players",
+    "node --test tests/*.test.mjs",
+    "python3 scripts/serve.py vitaslop --fixed"
+  ],
+  "roadmap": {
+    "stage": "实验阶段 · 持续调优",
+    "stageEn": "Experimental · Active Tuning",
+    "milestone": {
+      "zh": "已完成修复版 Vitaslop 网页工作台、FSR 1 与 FrameFlow（GameFI 插帧 + GameSR 2× 超分）零拷贝集成及无头 Edge 工作台验证；实体 Android/iOS 设备实测持续补齐中。",
+      "en": "Patched Vitaslop browser workbench, zero-copy FSR 1 and FrameFlow (GameFI + GameSR 2x) integration, and headless Edge verification are complete; physical mobile device measurements remain ongoing."
+    }
+  },
+  "additionalTermsConsent": {
+    "CyberNova": true
+  },
+  "updatedAt": "2026-11-25"
 }
